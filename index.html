@@ -47,43 +47,50 @@
     </section>
 
     <!-- 18:30 -->
-    <section class="dusk" id="dusk" data-chapter="Evening">
+    <section class="dusk band" id="dusk" data-chapter="Evening">
+      <div class="band__bg" aria-hidden="true">
+        <picture>
+          <source type="image/avif" sizes="100vw" srcset="img/01-dusk-open-office-960.avif 960w, img/01-dusk-open-office-1600.avif 1600w, img/01-dusk-open-office-2560.avif 2560w, img/01-dusk-open-office-3840.avif 3840w" />
+          <source type="image/webp" sizes="100vw" srcset="img/01-dusk-open-office-960.webp 960w, img/01-dusk-open-office-1600.webp 1600w, img/01-dusk-open-office-2560.webp 2560w, img/01-dusk-open-office-3840.webp 3840w" />
+          <img src="img/01-dusk-open-office-1600.webp" alt="" width="3840" height="2160" loading="lazy" decoding="async" />
+        </picture>
+      </div>
+      <div class="dusk__night" aria-hidden="true"></div>
       <div class="dusk__inner">
-        <div class="dusk__text">
-          <h2 class="display">The city goes home.</h2>
-          <p class="lead">Around six, the last laptop closes and the lights go out floor by floor.</p>
-          <p class="dusk__turn display">That’s when we start.</p>
-        </div>
-        <div class="tower" aria-hidden="true"><div class="tower__grid"></div></div>
+        <h2 class="display">The city goes home.</h2>
+        <p class="lead">Around six, the last laptop closes and the lights go out floor by floor.</p>
+        <p class="dusk__turn display">That’s when we start.</p>
       </div>
     </section>
 
     <!-- 21:00 -->
-    <section class="services" id="services" data-chapter="Night shift">
-      <h2 class="display services__title">What we look after.</h2>
-      <div class="services__grid">
-        <div class="services__group">
-          <h3 class="services__heading">Every night</h3>
-          <ul class="services__list">
-            <li><h4>Nightly office cleaning</h4><p>Desks, floors, bins and every touch point, done the same way each night.</p></li>
-            <li><h4>Washrooms and kitchens</h4><p>Scrubbed, sanitized and restocked before anyone needs them.</p></li>
-            <li><h4>Trash and recycling</h4><p>Sorted, bagged and out the door.</p></li>
-          </ul>
-        </div>
-        <figure class="services__photo">
-          <picture>
-            <source type="image/avif" sizes="(min-width: 900px) 30vw, 100vw" srcset="img/05-washroom-720.avif 720w, img/05-washroom-1200.avif 1200w, img/05-washroom-1800.avif 1800w, img/05-washroom-2400.avif 2400w" />
-            <source type="image/webp" sizes="(min-width: 900px) 30vw, 100vw" srcset="img/05-washroom-720.webp 720w, img/05-washroom-1200.webp 1200w, img/05-washroom-1800.webp 1800w, img/05-washroom-2400.webp 2400w" />
-            <img src="img/05-washroom-1200.webp" alt="A marble office washroom with a streak-free mirror, gleaming chrome taps and folded white towels." width="2336" height="3504" loading="lazy" decoding="async" />
-          </picture>
-        </figure>
-        <div class="services__group">
-          <h3 class="services__heading">When you need it</h3>
-          <ul class="services__list">
-            <li><h4>Floor care</h4><p>Carpets extracted, hard floors scrubbed and buffed.</p></li>
-            <li><h4>Windows and glass</h4><p>Interior glass and partitions, streak-free.</p></li>
-            <li><h4>Deep cleans</h4><p>Quarterly resets, move-ins and post-renovation cleanups.</p></li>
-          </ul>
+    <section class="services band" id="services" data-chapter="Night shift">
+      <div class="band__bg" aria-hidden="true">
+        <picture>
+          <source type="image/avif" sizes="100vw" srcset="img/02-reception-night-960.avif 960w, img/02-reception-night-1600.avif 1600w, img/02-reception-night-2560.avif 2560w, img/02-reception-night-3840.avif 3840w" />
+          <source type="image/webp" sizes="100vw" srcset="img/02-reception-night-960.webp 960w, img/02-reception-night-1600.webp 1600w, img/02-reception-night-2560.webp 2560w, img/02-reception-night-3840.webp 3840w" />
+          <img src="img/02-reception-night-1600.webp" alt="" width="3504" height="2336" loading="lazy" decoding="async" />
+        </picture>
+      </div>
+      <div class="services__inner">
+        <h2 class="display services__title">What we look after.</h2>
+        <div class="services__grid">
+          <div class="services__group">
+            <h3 class="services__heading">Every night</h3>
+            <ul class="services__list">
+              <li><h4>Nightly office cleaning</h4><p>Desks, floors, bins and every touch point, done the same way each night.</p></li>
+              <li><h4>Washrooms and kitchens</h4><p>Scrubbed, sanitized and restocked before anyone needs them.</p></li>
+              <li><h4>Trash and recycling</h4><p>Sorted, bagged and out the door.</p></li>
+            </ul>
+          </div>
+          <div class="services__group">
+            <h3 class="services__heading">When you need it</h3>
+            <ul class="services__list">
+              <li><h4>Floor care</h4><p>Carpets extracted, hard floors scrubbed and buffed.</p></li>
+              <li><h4>Windows and glass</h4><p>Interior glass and partitions, streak-free.</p></li>
+              <li><h4>Deep cleans</h4><p>Quarterly resets, move-ins and post-renovation cleanups.</p></li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
@@ -92,31 +99,7 @@
     <section class="work" id="work" data-chapter="Midnight">
       <h2 class="display work__title">Nobody sees the work.<br />Everyone sees the result.</h2>
       <div class="work__grid">
-        <figure class="shot shot--full" data-ratio="16/9">
-          <div class="shot__frame">
-            <picture>
-              <source type="image/avif" sizes="100vw" srcset="img/01-dusk-open-office-960.avif 960w, img/01-dusk-open-office-1600.avif 1600w, img/01-dusk-open-office-2560.avif 2560w, img/01-dusk-open-office-3840.avif 3840w" />
-              <source type="image/webp" sizes="100vw" srcset="img/01-dusk-open-office-960.webp 960w, img/01-dusk-open-office-1600.webp 1600w, img/01-dusk-open-office-2560.webp 2560w, img/01-dusk-open-office-3840.webp 3840w" />
-              <img src="img/01-dusk-open-office-1600.webp" alt="An empty open-plan office high above Toronto at dusk, pale oak desks cleared and chairs tucked in." width="3840" height="2160" loading="lazy" decoding="async" />
-            </picture>
-            <span class="shot__wipe" aria-hidden="true"></span>
-          </div>
-          <figcaption>Open office, 18:00</figcaption>
-        </figure>
-
-        <figure class="shot shot--a" data-ratio="3/2">
-          <div class="shot__frame">
-            <picture>
-              <source type="image/avif" sizes="(min-width: 900px) 58vw, 100vw" srcset="img/02-reception-night-960.avif 960w, img/02-reception-night-1600.avif 1600w, img/02-reception-night-2560.avif 2560w, img/02-reception-night-3840.avif 3840w" />
-              <source type="image/webp" sizes="(min-width: 900px) 58vw, 100vw" srcset="img/02-reception-night-960.webp 960w, img/02-reception-night-1600.webp 1600w, img/02-reception-night-2560.webp 2560w, img/02-reception-night-3840.webp 3840w" />
-              <img src="img/02-reception-night-1600.webp" alt="A travertine reception desk at night lit by one brass lamp, the stone floor spotless." width="3504" height="2336" loading="lazy" decoding="async" />
-            </picture>
-            <span class="shot__wipe" aria-hidden="true"></span>
-          </div>
-          <figcaption>Reception, 21:10</figcaption>
-        </figure>
-
-        <figure class="shot shot--b" data-ratio="2/3">
+        <figure class="shot shot--a" data-ratio="2/3">
           <div class="shot__frame">
             <picture>
               <source type="image/avif" sizes="(min-width: 900px) 34vw, 100vw" srcset="img/04-kitchen-720.avif 720w, img/04-kitchen-1200.avif 1200w, img/04-kitchen-1800.avif 1800w, img/04-kitchen-2400.avif 2400w" />
@@ -128,19 +111,19 @@
           <figcaption>Kitchen, 01:30</figcaption>
         </figure>
 
-        <figure class="shot shot--c" data-ratio="3/2">
+        <figure class="shot shot--b" data-ratio="2/3">
           <div class="shot__frame">
             <picture>
-              <source type="image/avif" sizes="(min-width: 900px) 84vw, 100vw" srcset="img/06-corridor-960.avif 960w, img/06-corridor-1600.avif 1600w, img/06-corridor-2560.avif 2560w, img/06-corridor-3840.avif 3840w" />
-              <source type="image/webp" sizes="(min-width: 900px) 84vw, 100vw" srcset="img/06-corridor-960.webp 960w, img/06-corridor-1600.webp 1600w, img/06-corridor-2560.webp 2560w, img/06-corridor-3840.webp 3840w" />
-              <img src="img/06-corridor-1600.webp" alt="A long office corridor with glass meeting rooms, the ceiling light reflected in a mirror-polished floor." width="3504" height="2336" loading="lazy" decoding="async" />
+              <source type="image/avif" sizes="(min-width: 900px) 34vw, 100vw" srcset="img/05-washroom-720.avif 720w, img/05-washroom-1200.avif 1200w, img/05-washroom-1800.avif 1800w, img/05-washroom-2400.avif 2400w" />
+              <source type="image/webp" sizes="(min-width: 900px) 34vw, 100vw" srcset="img/05-washroom-720.webp 720w, img/05-washroom-1200.webp 1200w, img/05-washroom-1800.webp 1800w, img/05-washroom-2400.webp 2400w" />
+              <img src="img/05-washroom-1200.webp" alt="A marble office washroom with a streak-free mirror, gleaming chrome taps and folded white towels." width="2336" height="3504" loading="lazy" decoding="async" />
             </picture>
             <span class="shot__wipe" aria-hidden="true"></span>
           </div>
-          <figcaption>Corridor, 03:00</figcaption>
+          <figcaption>Washroom, 02:15</figcaption>
         </figure>
 
-        <figure class="shot shot--d" data-ratio="2/3">
+        <figure class="shot shot--c" data-ratio="2/3">
           <div class="shot__frame">
             <picture>
               <source type="image/avif" sizes="(min-width: 900px) 34vw, 100vw" srcset="img/07-lobby-elevators-720.avif 720w, img/07-lobby-elevators-1200.avif 1200w, img/07-lobby-elevators-1800.avif 1800w, img/07-lobby-elevators-2400.avif 2400w" />
@@ -152,7 +135,7 @@
           <figcaption>Lobby, 04:20</figcaption>
         </figure>
 
-        <figure class="shot shot--e" data-ratio="3/2">
+        <figure class="shot shot--d" data-ratio="3/2">
           <div class="shot__frame">
             <picture>
               <source type="image/avif" sizes="(min-width: 900px) 58vw, 100vw" srcset="img/08-lounge-blue-hour-960.avif 960w, img/08-lounge-blue-hour-1600.avif 1600w, img/08-lounge-blue-hour-2560.avif 2560w, img/08-lounge-blue-hour-3840.avif 3840w" />
@@ -164,7 +147,7 @@
           <figcaption>Lounge, 05:40</figcaption>
         </figure>
 
-        <figure class="shot shot--f" data-ratio="3/2">
+        <figure class="shot shot--e" data-ratio="3/2">
           <div class="shot__frame">
             <picture>
               <source type="image/avif" sizes="(min-width: 900px) 66vw, 100vw" srcset="img/09-desk-first-light-960.avif 960w, img/09-desk-first-light-1600.avif 1600w, img/09-desk-first-light-2560.avif 2560w, img/09-desk-first-light-3840.avif 3840w" />
@@ -179,7 +162,15 @@
     </section>
 
     <!-- 03:00 -->
-    <section class="night" id="checklist" data-chapter="Small hours">
+    <section class="night band" id="checklist" data-chapter="Small hours">
+      <div class="band__bg" aria-hidden="true">
+        <picture>
+          <source type="image/avif" sizes="100vw" srcset="img/06-corridor-960.avif 960w, img/06-corridor-1600.avif 1600w, img/06-corridor-2560.avif 2560w, img/06-corridor-3840.avif 3840w" />
+          <source type="image/webp" sizes="100vw" srcset="img/06-corridor-960.webp 960w, img/06-corridor-1600.webp 1600w, img/06-corridor-2560.webp 2560w, img/06-corridor-3840.webp 3840w" />
+          <img src="img/06-corridor-1600.webp" alt="" width="3504" height="2336" loading="lazy" decoding="async" />
+        </picture>
+      </div>
+      <div class="night__inner">
       <div class="night__head">
         <h2 class="display">Nothing gets skipped.</h2>
         <p class="lead">A typical night, checked off as we go.</p>
@@ -193,6 +184,7 @@
         <li><time datetime="03:30">03:30</time><span class="checklist__tick" aria-hidden="true"></span><span>Glass and partitions polished</span></li>
         <li><time datetime="04:15">04:15</time><span class="checklist__tick" aria-hidden="true"></span><span>Lights off, doors checked, alarm set</span></li>
       </ol>
+      </div>
     </section>
 
     <!-- 05:00 -->
@@ -207,17 +199,19 @@
 
     <!-- 07:00 -->
     <section class="dawn" id="quote" data-chapter="Morning">
-      <div class="dawn__head">
-        <h2 class="dawn__title">Good morning.</h2>
-        <p class="lead">Your office, ready at seven.</p>
-      </div>
-      <figure class="dawn__photo">
+      <div class="dawn__band band">
+      <div class="band__bg" aria-hidden="true">
         <picture>
           <source type="image/avif" sizes="100vw" srcset="img/10-dawn-open-office-960.avif 960w, img/10-dawn-open-office-1600.avif 1600w, img/10-dawn-open-office-2560.avif 2560w, img/10-dawn-open-office-3840.avif 3840w" />
           <source type="image/webp" sizes="100vw" srcset="img/10-dawn-open-office-960.webp 960w, img/10-dawn-open-office-1600.webp 1600w, img/10-dawn-open-office-2560.webp 2560w, img/10-dawn-open-office-3840.webp 3840w" />
-          <img src="img/10-dawn-open-office-1600.webp" alt="Sunrise pouring across rows of spotless desks in an open-plan office above the Toronto skyline." width="3840" height="2160" loading="lazy" decoding="async" />
+          <img src="img/10-dawn-open-office-1600.webp" alt="" width="3840" height="2160" loading="lazy" decoding="async" />
         </picture>
-      </figure>
+      </div>
+        <div class="dawn__head">
+          <h2 class="dawn__title">Good morning.</h2>
+          <p class="lead">Your office, ready at seven.</p>
+        </div>
+      </div>
 
       <div class="quote">
         <div class="quote__intro">

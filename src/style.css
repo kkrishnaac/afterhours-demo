@@ -12,6 +12,7 @@
   --night: #0B1020;         /* the tower illustration */
   --on-night: #E9EDF3;
   --accent: #2F98CC;        /* window-glass blue, the only accent */
+  --accent-on-night: #8FD3F0; /* same blue, lifted for dark photo bands */
   --accent-ink: #0B1020;
   --lamp: #FFE3B8;          /* lit office windows */
   --crew: #DFF4FF;          /* our crew's lights */
@@ -181,49 +182,41 @@ ul, ol { padding: 0; list-style: none; }
 }
 @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 
-/* 18:30 DUSK: the tower switches off */
-.dusk { min-height: 100dvh; display: grid; align-items: center; padding: var(--section) var(--pad); }
-.dusk__inner {
-  width: min(1120px, 100%); margin: 0 auto;
-  display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 6vw, 96px); align-items: center;
+/* PHOTO BANDS: full-screen office photos behind the story sections.
+   A scrim keeps white text above 4.5:1 on any part of the photo. */
+.band { position: relative; isolation: isolate; overflow: hidden; color: var(--on-night); background: var(--night); }
+.band__bg { position: absolute; inset: -7% 0; z-index: -2; }
+.band__bg picture, .band__bg img { width: 100%; height: 100%; object-fit: cover; }
+.band::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(11, 16, 32, 0.78) 0%, rgba(11, 16, 32, 0.5) 55%, rgba(11, 16, 32, 0.3) 100%);
 }
-.dusk__turn { margin-top: 48px; color: var(--accent); }
-.js-motion .dusk__turn { opacity: 0; }
-.tower {
-  justify-self: center; width: min(300px, 80%, 44vh);
-  padding: 22px 18px 0; background: linear-gradient(180deg, #1a2240, var(--night));
-  box-shadow: 0 30px 60px -30px rgba(11, 16, 32, 0.45);
-}
-.tower__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; }
-.tower__grid span {
-  aspect-ratio: 3 / 4; background: var(--lamp);
-  box-shadow: 0 0 10px rgba(255, 227, 184, 0.45);
-  transition: background-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
-}
-.tower__grid span.is-off { background: #1b2340; box-shadow: none; }
-.tower__grid span.is-crew.is-crewlit { background: var(--crew); box-shadow: 0 0 16px rgba(223, 244, 255, 0.7); }
-@media (max-width: 820px) {
-  .dusk__inner { grid-template-columns: 1fr; }
-  .tower { width: min(220px, 60%, 34vh); }
-}
+.band .lead { color: rgba(233, 237, 243, 0.86); }
 
-/* 21:00 SERVICES: two groups around a tall photo */
-.services { padding: var(--section) var(--pad); width: min(1280px, 100%); margin: 0 auto; }
+/* 18:30 DUSK: the photo dims as the city goes home */
+.dusk { min-height: 100dvh; display: grid; align-items: center; padding: var(--section) var(--pad); }
+.dusk__night { position: absolute; inset: 0; z-index: -1; background: var(--night); opacity: 0; pointer-events: none; }
+.dusk__inner { width: min(1120px, 100%); margin: 0 auto; }
+.dusk__inner .display { max-width: 12ch; }
+.dusk__turn { margin-top: 48px; color: var(--accent-on-night); }
+.js-motion .dusk__turn { opacity: 0; }
+
+/* 21:00 SERVICES: over the night reception */
+.services { padding: var(--section) var(--pad); }
+.services::before { background: linear-gradient(180deg, rgba(11, 16, 32, 0.72), rgba(11, 16, 32, 0.6) 50%, rgba(11, 16, 32, 0.78)); }
+.services__inner { width: min(1120px, 100%); margin: 0 auto; }
 .services__title { max-width: 14ch; margin-bottom: clamp(48px, 8vh, 88px); }
-.services__grid { display: grid; grid-template-columns: 1fr 0.85fr 1fr; gap: clamp(28px, 4vw, 64px); align-items: start; }
-.services__group:last-child { padding-top: clamp(0px, 14vh, 160px); }
-.services__heading { font: 500 14px/1.2 var(--sans); color: var(--ink-muted); margin-bottom: 28px; letter-spacing: 0.01em; }
+.services__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 110px); align-items: start; }
+.services__group:last-child { padding-top: clamp(0px, 10vh, 120px); }
+.services__heading { font: 500 14px/1.2 var(--sans); color: rgba(233, 237, 243, 0.78); margin-bottom: 28px; letter-spacing: 0.01em; }
 .services__list { display: grid; gap: 36px; }
 .services__list li { position: relative; padding-left: 20px; }
-.services__list li::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 1px; background: var(--hairline); }
+.services__list li::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 1px; background: rgba(233, 237, 243, 0.3); }
 .services__list h4 { font: 600 clamp(1.5rem, 2.2vw, 1.9rem)/1.1 var(--serif); margin-bottom: 8px; }
-.services__list p { color: var(--ink-muted); max-width: 32ch; }
-.services__photo { aspect-ratio: 2 / 3; background: var(--bg-alt); overflow: hidden; }
-.services__photo img, .services__photo picture { width: 100%; height: 100%; object-fit: cover; }
-@media (max-width: 900px) {
+.services__list p { color: rgba(233, 237, 243, 0.82); max-width: 32ch; }
+@media (max-width: 820px) {
   .services__grid { grid-template-columns: 1fr; }
   .services__group:last-child { padding-top: 0; }
-  .services__photo { aspect-ratio: 4 / 5; }
 }
 
 /* 00:00 WORK: editorial gallery after the Alex Zarour reference */
@@ -250,13 +243,11 @@ ul, ol { padding: 0; list-style: none; }
   background: linear-gradient(180deg, transparent, var(--ink) 12%, var(--ink) 88%, transparent);
   box-shadow: -6px 0 14px rgba(255, 255, 255, 0.7);
 }
-.shot--full { grid-column: 1 / -1; }
-.shot--a { grid-column: 1 / span 7; }
-.shot--b { grid-column: 9 / span 4; margin-top: 18vh; }
-.shot--c { grid-column: 2 / span 10; }
-.shot--d { grid-column: 1 / span 4; }
-.shot--e { grid-column: 6 / span 7; margin-top: 16vh; }
-.shot--f { grid-column: 4 / span 8; }
+.shot--a { grid-column: 2 / span 4; }
+.shot--b { grid-column: 8 / span 4; margin-top: 16vh; }
+.shot--c { grid-column: 1 / span 4; }
+.shot--d { grid-column: 6 / span 7; margin-top: 12vh; }
+.shot--e { grid-column: 3 / span 8; }
 @media (max-width: 820px) {
   .work__grid { grid-template-columns: 1fr; row-gap: 48px; padding: 0; }
   .shot { grid-column: 1 / -1 !important; margin-top: 0 !important; }
@@ -264,37 +255,38 @@ ul, ol { padding: 0; list-style: none; }
   .shot--b .shot__frame { aspect-ratio: 4 / 5; }
 }
 
-/* 03:00 CHECKLIST */
-.night {
-  width: min(1120px, 100%); margin: 0 auto; padding: var(--section) var(--pad);
+/* 03:00 CHECKLIST: over the mirror-floored corridor */
+.night { padding: var(--section) var(--pad); }
+.night__inner {
+  width: min(1120px, 100%); margin: 0 auto;
   display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(40px, 8vw, 120px); align-items: start;
 }
 .night__head { position: sticky; top: 22vh; }
-.checklist { position: relative; display: grid; gap: 34px; padding-left: 0; counter-reset: none; }
+.checklist { position: relative; display: grid; gap: 34px; padding-left: 0; }
 .checklist::before, .checklist::after {
-  content: ''; position: absolute; left: 83px; top: 10px; bottom: 10px; width: 1px; background: var(--hairline);
+  content: ''; position: absolute; left: 83px; top: 10px; bottom: 10px; width: 1px; background: rgba(233, 237, 243, 0.3);
 }
-.checklist::after { background: var(--accent); transform-origin: top; transform: scaleY(var(--fill, 0)); }
+.checklist::after { background: var(--accent-on-night); transform-origin: top; transform: scaleY(var(--fill, 0)); }
 .checklist li {
   display: grid; grid-template-columns: 64px 40px 1fr; align-items: center;
-  font-size: clamp(1.1rem, 1.8vw, 1.35rem); color: var(--ink-muted);
+  font-size: clamp(1.1rem, 1.8vw, 1.35rem); color: rgba(233, 237, 243, 0.72);
   transition: color 0.5s var(--ease);
 }
 .checklist time { font-variant-numeric: tabular-nums; font-size: 14px; letter-spacing: 0.02em; }
 .checklist__tick {
   position: relative; z-index: 1; width: 16px; height: 16px; margin-left: 12px; border-radius: 999px;
-  background: var(--bg); box-shadow: inset 0 0 0 1px var(--ink-muted);
+  background: rgba(11, 16, 32, 0.6); box-shadow: inset 0 0 0 1px rgba(233, 237, 243, 0.7);
   transition: background-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
 }
 .checklist__tick::after {
   content: ''; position: absolute; left: 5px; top: 2.5px; width: 4px; height: 8px;
   border: solid var(--accent-ink); border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0); transition: transform 0.35s var(--ease) 0.1s;
 }
-.checklist li.is-done { color: var(--ink); }
-.checklist li.is-done .checklist__tick { background: var(--accent); box-shadow: none; }
+.checklist li.is-done { color: var(--on-night); }
+.checklist li.is-done .checklist__tick { background: var(--accent-on-night); box-shadow: none; }
 .checklist li.is-done .checklist__tick::after { transform: rotate(45deg) scale(1); }
 @media (max-width: 820px) {
-  .night { grid-template-columns: 1fr; }
+  .night__inner { grid-template-columns: 1fr; }
   .night__head { position: static; }
   .checklist::before, .checklist::after { left: 71px; }
   .checklist li { grid-template-columns: 52px 40px 1fr; }
@@ -322,14 +314,12 @@ ul, ol { padding: 0; list-style: none; }
   .areas__list { columns: 2; }
 }
 
-/* 07:00 DAWN */
-.dawn { padding-top: var(--section); }
-.dawn__head { text-align: center; padding: 0 var(--pad); margin-bottom: clamp(40px, 8vh, 88px); }
-.dawn__title { font: 600 clamp(3.6rem, 12vw, 10rem)/0.95 var(--serif); letter-spacing: -0.02em; color: var(--ink); }
-.dawn .lead { margin: 18px auto 0; }
-.dawn__photo { aspect-ratio: 21 / 9; overflow: hidden; background: var(--bg-alt); }
-.dawn__photo img, .dawn__photo picture { width: 100%; height: 100%; object-fit: cover; }
-@media (max-width: 720px) { .dawn__photo { aspect-ratio: 4 / 5; } }
+/* 07:00 DAWN: sunrise, full screen */
+.dawn__band { min-height: 92dvh; display: grid; align-items: end; padding: var(--section) var(--pad) clamp(56px, 10vh, 120px); }
+.dawn__band::before { background: linear-gradient(180deg, rgba(11, 16, 32, 0.05) 30%, rgba(11, 16, 32, 0.68) 100%); }
+.dawn__head { width: min(1120px, 100%); margin: 0 auto; }
+.dawn__title { font: 600 clamp(3.6rem, 12vw, 10rem)/0.95 var(--serif); letter-spacing: -0.02em; color: #fff; }
+.dawn .lead { margin-top: 18px; }
 
 .quote {
   width: min(1120px, 100%); margin: 0 auto; padding: var(--section) var(--pad);

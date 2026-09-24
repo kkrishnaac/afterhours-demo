@@ -1,5 +1,5 @@
 // Scroll story: one night, 18:00 to 07:00. Each effect exists to tell that
-// story: sky + clock (time passing), tower (the city leaving), photo wipes
+// story: sky + clock (time passing), the dusk photo dimming (the city leaving), photo wipes
 // (a squeegee pass), checklist (the work), map (where we work).
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -37,9 +37,10 @@ export function initStory({ reduceMotion }) {
   const timeEl = document.querySelector('.clock__time');
   const labelEl = document.querySelector('.clock__label');
 
-  // Section effects first: the pinned tower adds scroll length, and triggers
+  // Section effects first: the pinned dusk section adds scroll length, and triggers
   // further down must be measured after it.
-  initTower(reduceMotion);
+  initDusk(reduceMotion);
+  initBands(reduceMotion);
   initShots(reduceMotion);
   initChecklist(reduceMotion);
   initAreas(reduceMotion);
@@ -58,8 +59,10 @@ export function initStory({ reduceMotion }) {
     },
   });
   document.querySelectorAll('[data-chapter]').forEach((section) => {
+    // A pinned section sits inside a pin-spacer that carries its real scroll length.
+    const spacer = section.parentElement.classList.contains('pin-spacer') ? section.parentElement : section;
     ScrollTrigger.create({
-      trigger: section,
+      trigger: spacer,
       start: 'top 55%',
       end: 'bottom 55%',
       onToggle: (self) => { if (self.isActive) labelEl.textContent = section.dataset.chapter; },
@@ -67,48 +70,34 @@ export function initStory({ reduceMotion }) {
   });
 }
 
-function initTower(reduceMotion) {
-  const grid = document.querySelector('.tower__grid');
-  const turn = document.querySelector('.dusk__turn');
-  const COLS = 7, ROWS = 13;
-  const crew = new Set([24, 52, 80]); // three floors where our crew is working
-  const windows = [];
-  for (let i = 0; i < COLS * ROWS; i++) {
-    const w = document.createElement('span');
-    if (crew.has(i)) w.classList.add('is-crew');
-    grid.appendChild(w);
-    windows.push({ el: w, off: crew.has(i) ? 0.62 + Math.random() * 0.12 : Math.random() * 0.6, crew: crew.has(i) });
-  }
-
-  const render = (p) => {
-    for (const w of windows) {
-      if (w.crew) {
-        w.el.classList.toggle('is-off', p > w.off && p < w.off + 0.08);
-        w.el.classList.toggle('is-crewlit', p >= w.off + 0.08);
-      } else {
-        w.el.classList.toggle('is-off', p > w.off);
-      }
-    }
-  };
-
+// 18:30: pinned on the dusk office. As you scroll the room dims (the city
+// goes home), then the turn line arrives.
+function initDusk(reduceMotion) {
+  const section = document.querySelector('.dusk');
+  const night = section.querySelector('.dusk__night');
+  const turn = section.querySelector('.dusk__turn');
   if (reduceMotion) {
-    render(1);
+    gsap.set(night, { opacity: 0.45 });
     return;
   }
   document.documentElement.classList.add('js-motion');
-  const section = document.querySelector('.dusk');
   gsap.timeline({
-    scrollTrigger: {
-      trigger: section,
-      start: 'top top',
-      end: '+=120%',
-      pin: true,
-      scrub: 0.6,
-      onUpdate: (self) => render(self.progress),
-    },
-  }).to(turn, { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 0.8)
-    .fromTo(turn, { y: 16 }, { y: 0, duration: 0.2 }, 0.8)
-    .to({}, { duration: 0.2 });
+    scrollTrigger: { trigger: section, start: 'top top', end: '+=110%', pin: true, scrub: 0.6 },
+  })
+    .to(night, { opacity: 0.62, duration: 0.7, ease: 'none' }, 0)
+    .fromTo(turn, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 0.72)
+    .to({}, { duration: 0.15 });
+}
+
+// Background photos drift a little slower than the page, for depth.
+function initBands(reduceMotion) {
+  if (reduceMotion) return;
+  document.querySelectorAll('.band:not(.dusk) .band__bg').forEach((bg) => {
+    gsap.fromTo(bg, { yPercent: -5 }, {
+      yPercent: 5, ease: 'none',
+      scrollTrigger: { trigger: bg.parentElement, start: 'top bottom', end: 'bottom top', scrub: true },
+    });
+  });
 }
 
 // Each photo is uncovered by a squeegee stroke: a cover panel shrinks away to the

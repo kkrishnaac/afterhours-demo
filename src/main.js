@@ -11,12 +11,19 @@ import { initStory } from './story.js';
 import { initQuote } from './quote.js';
 import { runLoader } from './loader.js';
 import { initViewer } from './viewer.js';
+import { initHero } from './hero.js';
 
 gsap.registerPlugin(ScrollTrigger);
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Phones and tablets keep native scrolling: it is smoother there than any JS scroller.
+const touch = matchMedia('(hover: none), (pointer: coarse)').matches;
+
+// Mobile address bars resize the viewport mid-scroll; re-measuring on each of
+// those makes the page jump. Ignore them.
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 let lenis = null;
-if (!reduceMotion) {
+if (!reduceMotion && !touch) {
   lenis = new Lenis({ autoRaf: false, anchors: false });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
@@ -24,37 +31,33 @@ if (!reduceMotion) {
   ScrollTrigger.addEventListener('refresh', () => lenis.resize());
 }
 
-// In-page links go through Lenis so pinned sections stay in sync.
+// In-page links: smooth, and in step with the scroll effects.
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
   const target = document.querySelector(a.getAttribute('href'));
   if (!target) return;
   e.preventDefault();
-  if (lenis) lenis.scrollTo(target, { offset: 0, duration: 1.4 });
-  else target.scrollIntoView();
+  if (lenis) lenis.scrollTo(target, { offset: 0, duration: 1.2 });
+  else target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
   if (a.getAttribute('href') === '#main') target.focus?.();
 });
 
+const hero = initHero(document.querySelector('.hero'), { reduceMotion });
 initStory({ reduceMotion });
 initQuote();
 initViewer({ lenis, reduceMotion });
 
-// three.js loads after first paint. It builds behind the intro, and the clean
-// only starts once the page has arrived, so nobody misses the dirty name.
-const hero = document.querySelector('.hero');
-const heroReady = import('./hero.js')
-  .then(({ initHero }) => initHero(hero, { reduceMotion, autoplay: false }))
-  .catch(() => { hero.classList.add('no-webgl'); return null; });
-
-runLoader({ reduceMotion, ready: heroReady, lenis })
-  .catch(() => document.querySelector('.loader')?.remove())
-  .then(() => {
+// The intro hands over to the page, and the clean starts as the page settles.
+runLoader({ reduceMotion, lenis, onReveal: () => hero?.play(0.8) })
+  .then((ran) => {
     ScrollTrigger.refresh();
-    return heroReady;
+    if (!ran) hero?.play(0.4);
   })
-  .then((h) => { if (!reduceMotion) h?.play(); });
+  .catch(() => {
+    document.querySelector('.loader')?.remove();
+    hero?.showClean();
+  });
 
-// Pinned sections change page height once fonts and images settle.
 document.fonts?.ready.then(() => ScrollTrigger.refresh());
 window.addEventListener('load', () => ScrollTrigger.refresh());

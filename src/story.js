@@ -24,12 +24,13 @@ export function initStory({ reduceMotion }) {
   initClock();
 }
 
-// One name on the hero: the small brand in the bar appears once the big one is gone.
+// The bar stays out of sight while the hero's wordmark is visible, and slides
+// in once the name has scrolled up out of view.
 function initNav() {
   const nav = document.querySelector('.nav');
   // Sync on every toggle AND every re-measure, so a jump or refresh can't leave it stale.
   const sync = (self) => nav.classList.toggle('is-over-hero', self.isActive);
-  ScrollTrigger.create({ trigger: '.hero', start: 'top top', end: 'bottom 15%', onToggle: sync, onRefresh: sync });
+  ScrollTrigger.create({ trigger: '.hero__name', start: 'top bottom', end: 'bottom 40px', onToggle: sync, onRefresh: sync });
 }
 
 function initTurn(reduceMotion) {

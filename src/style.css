@@ -123,11 +123,15 @@ ul, ol { padding: 0; list-style: none; }
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
   padding: 0 8px 0 22px; border-radius: 999px;
 }
-.nav { transition: background-color 0.35s var(--ease), box-shadow 0.35s var(--ease); }
-.nav__brand { font: 600 26px/1 var(--serif); text-decoration: none; letter-spacing: -0.01em; transition: opacity 0.35s var(--ease), visibility 0.35s; }
-/* On the hero the big wordmark is the only name, and the bar steps back. */
-.nav.is-over-hero { background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
-.nav.is-over-hero .nav__brand { opacity: 0; visibility: hidden; }
+/* The bar only exists once the hero's wordmark has scrolled out of view: it
+   slides down into place, and slides away again when you scroll back up.
+   Tabbing into it (keyboard) brings it back, so it is never unreachable. */
+.nav { transition: transform 0.55s var(--ease), opacity 0.4s var(--ease); }
+.nav.is-over-hero:not(:focus-within) {
+  transform: translate(-50%, calc(-100% - 28px)); opacity: 0; pointer-events: none;
+  transition: transform 0.4s var(--ease), opacity 0.25s var(--ease);
+}
+.nav__brand { font: 600 26px/1 var(--serif); text-decoration: none; letter-spacing: -0.01em; }
 @media (hover: none) {
   .nav { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(248, 250, 252, 0.97); }
 }

@@ -159,7 +159,7 @@ function makeStarTexture() {
   return t;
 }
 
-export async function initHero(root, { reduceMotion = false, onCleaned } = {}) {
+export async function initHero(root, { reduceMotion = false, autoplay = true, onCleaned } = {}) {
   const canvas = root.querySelector('canvas');
   let renderer;
   try {
@@ -368,7 +368,7 @@ export async function initHero(root, { reduceMotion = false, onCleaned } = {}) {
     star.scale.setScalar(0.001);
 
     tl = gsap.timeline({ onComplete: () => onCleaned?.() });
-    tl.fromTo(canvas, { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'power2.out' }, 0)
+    tl.to(canvas, { opacity: 1, duration: 0.8, ease: 'power2.out' }, 0)
       // 1. Hold on the dirt so it registers.
       .to({}, { duration: 1.5 })
       // 2. Mist of cleaner.
@@ -407,8 +407,12 @@ export async function initHero(root, { reduceMotion = false, onCleaned } = {}) {
   // Compile before the first visible frame so the dirt shows instantly.
   renderer.compile(scene, camera);
   root.classList.add('is-3d');
-  if (reduceMotion) showClean();
-  else play();
   setRunning(true);
+  if (reduceMotion) showClean();
+  else if (autoplay) play();
+  else {
+    // Waiting behind the intro: show the grimy name, still, until play().
+    canvas.style.opacity = '1';
+  }
   return { play };
 }

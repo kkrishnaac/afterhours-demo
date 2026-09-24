@@ -9,6 +9,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { initStory } from './story.js';
 import { initQuote } from './quote.js';
+import { runLoader } from './loader.js';
+import { initViewer } from './viewer.js';
 
 gsap.registerPlugin(ScrollTrigger);
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -36,12 +38,22 @@ document.addEventListener('click', (e) => {
 
 initStory({ reduceMotion });
 initQuote();
+initViewer({ lenis, reduceMotion });
 
-// three.js loads after first paint so the headline copy and CTA show at once.
+// three.js loads after first paint. It builds behind the intro, and the clean
+// only starts once the page has arrived, so nobody misses the dirty name.
 const hero = document.querySelector('.hero');
-import('./hero.js')
-  .then(({ initHero }) => initHero(hero, { reduceMotion }))
-  .catch(() => hero.classList.add('no-webgl'));
+const heroReady = import('./hero.js')
+  .then(({ initHero }) => initHero(hero, { reduceMotion, autoplay: false }))
+  .catch(() => { hero.classList.add('no-webgl'); return null; });
+
+runLoader({ reduceMotion, ready: heroReady, lenis })
+  .catch(() => document.querySelector('.loader')?.remove())
+  .then(() => {
+    ScrollTrigger.refresh();
+    return heroReady;
+  })
+  .then((h) => { if (!reduceMotion) h?.play(); });
 
 // Pinned sections change page height once fonts and images settle.
 document.fonts?.ready.then(() => ScrollTrigger.refresh());

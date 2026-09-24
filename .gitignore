@@ -3,3 +3,9 @@ dist
 assets/raw
 .DS_Store
 .playwright-mcp
+.preview
+.env
+.env.*
+!.env.example
+*.pem
+*.key

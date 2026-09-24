@@ -323,7 +323,7 @@ export async function initHero(root, { reduceMotion = false, onCleaned } = {}) {
     const hfov = 2 * Math.atan(Math.tan(vfov / 2) * camera.aspect);
     const dist = Math.max((W / 2 / frac) / Math.tan(hfov / 2), (H / 2 / 0.3) / Math.tan(vfov / 2));
     const visibleH = 2 * dist * Math.tan(vfov / 2);
-    camera.position.set(0, -visibleH * (w < 700 ? 0.1 : 0.08), dist + frontZ);
+    camera.position.set(0, -visibleH * (w < 700 ? 0.015 : 0.08), dist + frontZ);
     camera.updateProjectionMatrix();
   }
   fit();
@@ -338,13 +338,10 @@ export async function initHero(root, { reduceMotion = false, onCleaned } = {}) {
   });
   root.addEventListener('pointerleave', () => { target.x = 0; target.y = 0; });
 
-  const t0 = performance.now();
   function tick() {
-    const t = (performance.now() - t0) / 1000;
-    const sway = reduceMotion ? 0 : Math.sin(t * 0.35) * 0.05;
-    wordGroup.rotation.y += (target.x * 0.1 + sway - wordGroup.rotation.y) * 0.06;
+    // Only the visitor's pointer moves the sign; no endless idle motion.
+    wordGroup.rotation.y += (target.x * 0.1 - wordGroup.rotation.y) * 0.06;
     wordGroup.rotation.x += (target.y * 0.06 - wordGroup.rotation.x) * 0.06;
-    if (!reduceMotion) wordGroup.position.y = Math.sin(t * 0.8) * 0.015;
     renderer.render(scene, camera);
   }
 

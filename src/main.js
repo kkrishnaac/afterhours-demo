@@ -19,6 +19,7 @@ if (!reduceMotion) {
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
+  ScrollTrigger.addEventListener('refresh', () => lenis.resize());
 }
 
 // In-page links go through Lenis so pinned sections stay in sync.

@@ -111,15 +111,17 @@ function initTower(reduceMotion) {
     .to({}, { duration: 0.2 });
 }
 
+// Each photo is uncovered by a squeegee stroke: a cover panel shrinks away to the
+// right with a bright blade line on its edge. The image itself is never clipped,
+// so native lazy-loading still sees it and fetches it.
 function initShots(reduceMotion) {
   if (reduceMotion) return;
   document.querySelectorAll('.shot__frame').forEach((frame) => {
     const wipe = frame.querySelector('.shot__wipe');
-    const media = frame.querySelector('picture');
-    gsap.set(media, { clipPath: 'inset(0 100% 0 0)' });
+    gsap.set(frame, { '--cover': 1 });
     gsap.timeline({ scrollTrigger: { trigger: frame, start: 'top 82%', once: true } })
       .set(wipe, { opacity: 1, left: 0 })
-      .to(media, { clipPath: 'inset(0 0% 0 0)', duration: 1.3, ease: 'power3.inOut' }, 0)
+      .to(frame, { '--cover': 0, duration: 1.3, ease: 'power3.inOut' }, 0)
       .to(wipe, { left: '100%', duration: 1.3, ease: 'power3.inOut' }, 0)
       .to(wipe, { opacity: 0, duration: 0.3 }, '-=0.2');
   });

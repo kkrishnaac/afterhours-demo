@@ -29,6 +29,9 @@ const SHORE = [
   [43.865, -78.86], [43.868, -78.74],
 ];
 
+// Labelled on phones, where all 16 names would collide.
+const MAJOR = new Set(['Toronto', 'Mississauga', 'Brampton', 'Markham', 'Oakville', 'Oshawa']);
+
 const BOUNDS = { latMin: 43.2, latMax: 44.12, lonMin: -80.0, lonMax: -78.74 };
 const VIEW_W = 1000;
 const K = Math.cos((43.7 * Math.PI) / 180);
@@ -57,7 +60,7 @@ export function buildMap(host) {
   }).sort((a, b) => a.d - b.d);
 
   const cities = placed.map((c) => {
-    const g = el('g', { class: 'city' });
+    const g = el('g', { class: MAJOR.has(c.name) ? 'city city--major' : 'city' });
     g.appendChild(el('circle', { class: 'halo', cx: c.x, cy: c.y, r: 26 }));
     g.appendChild(el('circle', { class: 'dot', cx: c.x, cy: c.y, r: 6 }));
     const t = el('text', { x: c.x + c.dx, y: c.y + c.dy, 'text-anchor': c.anchor });

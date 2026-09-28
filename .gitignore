@@ -9,3 +9,7 @@ assets/raw
 !.env.example
 *.pem
 *.key
+
+# Client material stays local: the repo is public.
+docs/client/*
+!docs/client/.gitkeep

@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 
 const css = readFileSync(new URL('../src/style.css', import.meta.url), 'utf8');
 const root = css.slice(css.indexOf(':root'), css.indexOf('}', css.indexOf(':root')));
-const tokens = Object.fromEntries([...root.matchAll(/--([a-z-]+):\s*(#[0-9A-Fa-f]{6})/g)].map((m) => [m[1], m[2]]));
+const tokens = Object.fromEntries([...root.matchAll(/--([a-z0-9-]+):\s*(#[0-9A-Fa-f]{6})/g)].map((m) => [m[1], m[2]]));
 
 const lum = (hex) => {
   const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
@@ -25,8 +25,10 @@ const PAIRS = [
   ['accent-ink', 'accent', 4.5, 'button labels'],
   ['accent-ink', 'accent-hover', 4.5, 'button labels on hover'],
   ['accent', 'bg', 3, 'icons, focus ring, links (non-text 3:1; link text needs 4.5)'],
-  ['accent', 'bg', 4.5, 'green link text'],
+  ['accent', 'bg', 4.5, 'link text'],
   ['accent', 'wash', 3, 'icons on wash chips'],
+  ['accent-2', 'bg', 3, 'logo sparkles and swoosh on the page (graphic, 3:1)'],
+  ['accent-2', 'surface', 3, 'logo sparkles and swoosh on the nav bar (graphic, 3:1)'],
   ['on-band', 'band', 4.5, 'text in the dark security band'],
   ['on-band-muted', 'band', 4.5, 'secondary text in the band'],
   ['error', 'bg', 4.5, 'field errors'],

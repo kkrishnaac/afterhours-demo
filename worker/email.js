@@ -11,9 +11,9 @@ export const emailHeld = (env) => env.EMAIL_MODE === 'hold';
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ESC[c]);
 
-const shell = (inner) => `<!doctype html><html><body style="margin:0;padding:24px;background:#FBFCFB;font-family:Arial,Helvetica,sans-serif;color:#0E1B17">
-<div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #D9E2DC;border-radius:16px;padding:28px">
-<p style="margin:0 0 20px;font-weight:bold;letter-spacing:.14em;color:#13503F">HARA</p>${inner}</div></body></html>`;
+const shell = (inner) => `<!doctype html><html><body style="margin:0;padding:24px;background:#FAFBFD;font-family:Arial,Helvetica,sans-serif;color:#0E1A33">
+<div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #D8DFEB;border-radius:16px;padding:28px">
+<p style="margin:0 0 20px;font-weight:bold;letter-spacing:.14em;color:#0B3A80">HARA</p>${inner}</div></body></html>`;
 
 function rows(r) {
   return [
@@ -36,8 +36,8 @@ export function notificationEmail(r, env) {
     subject: `New walkthrough request: ${r.name}, ${r.city}`,
     html: shell(`<h1 style="font-size:20px;margin:0 0 16px">New walkthrough request</h1>
 <table style="border-collapse:collapse;width:100%;font-size:15px">${list.map(([k, v]) =>
-      `<tr><td style="padding:8px 12px 8px 0;color:#4A5954;vertical-align:top;white-space:nowrap">${esc(k)}</td><td style="padding:8px 0">${esc(v)}</td></tr>`).join('')}</table>
-<p style="margin:20px 0 0;font-size:14px;color:#4A5954">Reply to this email to answer ${esc(r.name)} directly. Reference ${esc(r.id)}.</p>`),
+      `<tr><td style="padding:8px 12px 8px 0;color:#4B5873;vertical-align:top;white-space:nowrap">${esc(k)}</td><td style="padding:8px 0">${esc(v)}</td></tr>`).join('')}</table>
+<p style="margin:20px 0 0;font-size:14px;color:#4B5873">Reply to this email to answer ${esc(r.name)} directly. Reference ${esc(r.id)}.</p>`),
     text: `New walkthrough request\n\n${list.map(([k, v]) => `${k}: ${v}`).join('\n')}\n\nReply to this email to answer directly. Reference ${r.id}.`,
   };
 }

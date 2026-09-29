@@ -1,7 +1,18 @@
-# Handoff: HARA website, next session = colour palette and logo
+# Handoff: HARA website
 
-Written 2026-09-28 at the end of the build session. Read `CLAUDE.md` first (stack, file map,
-brand section, decisions, gotchas). This file is where things stand and what to do next.
+Updated 2026-09-28 (evening). Read `CLAUDE.md` first (stack, file map, brand, decisions, gotchas).
+
+## Latest: client's logo + 3D hero (LIVE, on main)
+
+- Krishna chose the client's original logo after four rounds of new designs. It is traced to
+  vector (`docs/client/logo/vectorize_original.py` -> `export_brand.py`), the palette is sampled
+  from it, and the hero builds the logo once in 3D (three.js, lazy) before resting on crisp vector.
+- Deployed to production after the security re-run (note appended to
+  `security/golive/2026-09-28-backend-GO.md`); committed, merged to `main` and pushed. `main`
+  matches production. Everything left needs the domain or HARA (see `docs/DEPLOY.md`), apart
+  from a Cloudflare notification for Worker errors, which Krishna can add now in the dashboard.
+- Open: favicon is small at 16px (the mark is wide); the old navy/tile/lettering explorations in
+  `docs/client/logo/navy/` are unused.
 
 ## Where things stand
 

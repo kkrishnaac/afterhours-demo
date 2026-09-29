@@ -133,3 +133,24 @@ This is a structured audit against 50 attack classes, not a penetration test.
 
 The GitHub Pages address (kkrishnaac.github.io/afterhours-demo) now serves only a static redirect
 page to the production URL: no scripts, CSP `default-src 'none'`, `noindex`, `no-referrer`.
+
+## Re-run 2026-09-28 (evening): client logo, navy palette, 3D hero logo build: GO
+
+Change set: the client's logo traced to SVG (`public/brand/`, favicon, touch icon, share image),
+palette tokens, a hero whose logo builds itself once in 3D (`src/hero-logo.js`, lazy chunk
+`src/hero-build.js`), colour values in `worker/email.js`. No new forms, endpoints, data flows,
+keys or third-party origins.
+
+- `golive_scan.sh`: 2 BLOCK + 1 CRITICAL, all false positives, checked by hand: T17 matched a
+  local `.wrangler/tmp` source map (gitignored, never shipped; every D1 query binds `?1`/`?2`);
+  T19 matched preview scripts in `docs/client/` (gitignored; no `innerHTML` in `src/` or the built
+  bundles); T31 and the AI-feature notice match words in our own docs (no webhook handler, no AI code).
+- T37/T38 dependency: `three@0.186.1` (MIT, github.com/mrdoob/three.js), pinned with an integrity
+  hash in `package-lock.json`, no install scripts, `npm audit --omit=dev`: 0 vulnerabilities.
+  Loaded as a same-origin lazy chunk only when the build plays.
+- T19/T47: the 3D build parses only the logo paths bundled in `src/logo-parts.js` (no user input
+  reaches `DOMParser`); the brand SVGs contain paths, gradients and a title, no scripts or links.
+  CSP unchanged (`script-src 'self'`, no inline script or style); the hero was run under the real
+  `_headers` on the local Worker: build completes, no CSP violations or console errors.
+- T36: no source maps in `dist/`. Worker tests: 52 passed.
+- Follow-up (same evening): one CSS line so the vector appears under the canvas at handoff (no colour dip). CSS only; redeployed.

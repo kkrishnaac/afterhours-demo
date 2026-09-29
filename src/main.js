@@ -2,6 +2,7 @@ import '@fontsource-variable/mona-sans/wdth.css';
 import './style.css';
 
 import Lenis from 'lenis';
+import { initHeroLogo } from './hero-logo.js';
 import { initMotion } from './motion.js';
 import { initQuote } from './quote.js';
 import { initViewer } from './viewer.js';
@@ -40,6 +41,7 @@ lists.forEach((d) => d.querySelector('summary').addEventListener('click', (e) =>
   if (wide.matches) e.preventDefault();
 }));
 
+initHeroLogo({ reduceMotion });
 initMotion({ reduceMotion });
 initQuote();
 initViewer({ lenis, reduceMotion });

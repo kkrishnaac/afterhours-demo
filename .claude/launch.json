@@ -1,6 +1,23 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "afterhours", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 4331 }
+    {
+      "name": "afterhours",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 4331
+    },
+    {
+      "name": "hara-worker",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "worker:dev"
+      ],
+      "port": 8787
+    }
   ]
 }

@@ -13,3 +13,9 @@ assets/raw
 # Client material stays local: the repo is public.
 docs/client/*
 !docs/client/.gitkeep
+
+# Cloudflare Workers: local secrets and local state never leave this machine.
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+.wrangler

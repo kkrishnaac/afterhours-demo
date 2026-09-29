@@ -10,6 +10,21 @@
 - Next: Krishna's feedback; client confirms the security claims and real phone/email; then SOW
   (frontend + backend for the walkthrough form) and the security plan, both in `docs/client/`.
 
+## Update 2026-09-28 (later): SOW written, backend built
+
+- SOW (editable Word, prices blank for Krishna): `docs/client/HARA-Website-Scope-of-Work.docx`
+  (source `docs/client/build-sow.js`). Five phases + optional add-ons + security checklist.
+- Krishna's decisions: Cloudflare hosting; requests go to email + database (dashboard later);
+  HARA has no domain or business email yet; backend first.
+- Phase 3 backend built on branch `backend-walkthrough` (not yet committed or pushed; Krishna to OK):
+  Worker + D1 + Turnstile + rate limit + Resend, 50 passing tests, verified end to end locally
+  (`npm run dev:worker`): stored row, consent recorded, hostile requests refused, no PII in logs.
+- Waiting on HARA: Cloudflare account, domain, Resend, lead inbox. Then `docs/DEPLOY.md`.
+- Launch blockers still open: privacy policy page (must match the D1 schema), real phone/email,
+  HARA confirming the security practices, remove noindex, security-protocol GO on the Worker.
+- Next without accounts: Phase 1 leftovers (404 page, social image), privacy policy + terms drafts,
+  Phase 4 pages (Services, Security, FAQ, About, city pages), the detailed security plan (step 4).
+
 ## Earlier state (2026-09-24, the old Afterhours design, kept for history)
 
 - **Live demo:** https://kkrishnaac.github.io/afterhours-demo/ (last commit `075e3b4`, "Tighter hero").

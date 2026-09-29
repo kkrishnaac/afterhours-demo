@@ -1,0 +1,6 @@
+# Local development secrets for `wrangler dev`. Copy to .dev.vars (gitignored).
+# These are Cloudflare's published Turnstile TEST keys: the secret below always
+# passes. Real keys only ever go in via `wrangler secret put`, never in a file.
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+# Leave empty locally; EMAIL_MODE=dry-run sends nothing.
+RESEND_API_KEY=

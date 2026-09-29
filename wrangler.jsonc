@@ -1,0 +1,43 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "hara-website",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-12",
+
+  // Pages are served straight from dist/ (headers from dist/_headers). The Worker
+  // runs only for /api/* and on the cron trigger.
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+
+  // The database id is a placeholder until HARA's Cloudflare account exists:
+  // `wrangler d1 create hara-walkthroughs` prints the real one.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "hara-walkthroughs", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }
+  ],
+
+  // 5 walkthrough requests per minute per visitor IP.
+  "ratelimits": [
+    { "name": "WALKTHROUGH_LIMITER", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }
+  ],
+
+  // Retry failed notifications and apply the retention rule.
+  "triggers": { "crons": ["*/15 * * * *"] },
+
+  "observability": { "enabled": true },
+
+  // Local development defaults. Production values go in env.production once
+  // the domain exists. Secrets (TURNSTILE_SECRET_KEY, RESEND_API_KEY) are never
+  // here: locally they come from .dev.vars, in production from `wrangler secret put`.
+  "vars": {
+    "ALLOWED_ORIGINS": "http://localhost:8787",
+    "TURNSTILE_HOSTNAMES": "",
+    "EMAIL_MODE": "dry-run",
+    "EMAIL_FROM": "HARA Facilities Cleaning <walkthroughs@example.com>",
+    "LEAD_TO_EMAIL": "leads@example.com",
+    "RETENTION_DAYS": "730"
+  }
+}

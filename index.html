@@ -340,14 +340,30 @@
             </div>
             <div class="field">
               <label for="phone">Phone <span class="field__optional">(optional)</span></label>
-              <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" />
+              <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="phone-error" />
+              <p class="field__error" id="phone-error" aria-live="polite" hidden>Enter a phone number with at least 7 digits, or leave it empty.</p>
             </div>
+            <label class="check" for="marketing">
+              <input id="marketing" name="marketing" type="checkbox" />
+              <span>Send me occasional updates from <span translate="no">HARA</span>. You can unsubscribe at any time.</span>
+            </label>
+            <p class="quote__consent">We use your details only to arrange your walkthrough and send your quote.</p>
+            <div class="hp" aria-hidden="true">
+              <label for="company_site">Company website (leave this empty)</label>
+              <input id="company_site" name="company_site" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+            <div class="turnstile" data-turnstile></div>
           </fieldset>
+
+          <div class="quote__send-error" id="send-error" role="alert" tabindex="-1" hidden>
+            <p data-send-error-text></p>
+            <a class="call" href="tel:+14165550199"><i data-icon="phone"></i>(416) 555-0199</a>
+          </div>
 
           <div class="quote__actions">
             <button class="btn btn--ghost" type="button" data-back hidden>Back</button>
             <button class="btn btn--primary" type="button" data-next>Next</button>
-            <button class="btn btn--primary" type="submit" data-submit hidden>Request walkthrough</button>
+            <button class="btn btn--primary" type="submit" data-submit hidden><span data-label>Request walkthrough</span></button>
           </div>
 
           <div class="quote__done" hidden tabindex="-1">

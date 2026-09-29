@@ -25,9 +25,22 @@ material lives in `docs/client/` (gitignored, the repo is public). See `HANDOFF.
 
 ## Stack
 
-Static site, no backend yet. Vite 8 (vanilla JS modules, plain CSS), Lenis 1.3 (desktop wheel only),
-Mona Sans variable (wdth + wght, self-hosted via @fontsource-variable), Phosphor icons inlined at
-build time. No GSAP, no framework, no Tailwind. Page JS is ~10 KB gzip.
+Vite 8 (vanilla JS modules, plain CSS), Lenis 1.3 (desktop wheel only), Mona Sans variable
+(self-hosted), Phosphor icons inlined at build time. Page JS ~10 KB gzip. No framework, no Tailwind.
+
+Backend (built and tested locally 2026-09-28, not deployed yet; waits on HARA's Cloudflare account
+and domain): a Cloudflare Worker (`worker/`) serves `dist/` as static assets and handles only
+`POST /api/walkthrough` (`run_worker_first: ["/api/*"]`) plus a 15-minute cron. D1 database for
+requests, Turnstile for spam, Workers rate-limit binding, Resend for email. Deploy runbook with the
+launch blockers: `docs/DEPLOY.md`.
+
+Two builds from one codebase:
+- `npm run build`: GitHub Pages demo (current live URL). Form is a demo, CSP in a `<meta>` tag.
+- `npm run build:cf`: Cloudflare. `.env.cloudflare` (gitignored) sets `VITE_WALKTHROUGH_API` and the
+  Turnstile site key; CSP + HSTS + frame/nosniff/permissions headers go in a generated `dist/_headers`.
+
+Commands: `npm test` (50 Worker tests inside workerd with a local D1), `npm run dev:worker`
+(build:cf + local migrations + `wrangler dev` on :8787, launch config `hara-worker`).
 
 ## File map
 
@@ -39,10 +52,17 @@ build time. No GSAP, no framework, no Tailwind. Page JS is ~10 KB gzip.
 | `src/motion.js` | IntersectionObserver reveals (`data-reveal`, staggered by `--i`), week grid wave, map light-up. One-time, no scroll listeners |
 | `src/photos.js` | Photo data shared by the page, the viewer and vite.config.js (ladders, srcset, sizes) |
 | `src/viewer.js` | Photo viewer dialog (focus trap, Esc, arrows, swipe, thumbnails) for the 7 service photos |
-| `src/quote.js` | 4-step walkthrough request (size, timing, city, contact). DEMO ONLY: nothing is sent anywhere |
+| `src/quote.js` | 4-step walkthrough request (size, timing, city, contact + unticked marketing opt-in, honeypot). Live build posts to the Worker; demo build sends nothing |
 | `src/map.js` | GTA SVG map from real lat/long, 16 cities; exports `CITY_NAMES` for the form |
 | `src/style.css` | All styles. Tokens in `:root` |
 | `scripts/optimize-images.mjs` | `npm run images`: 4K masters in `assets/raw/` (gitignored) -> AVIF/WebP ladders in `public/img/` + `og.jpg` |
+| `worker/` | Cloudflare Worker: `index.js` (router + cron), `walkthrough.js` (the endpoint: origin, JSON-only, size, rate limit, honeypot, validation, Turnstile, dedupe, store, email), `validate.js`, `turnstile.js`, `email.js` (escaped templates, Resend, dry-run), `maintenance.js` (retry failed notifications, 24-month retention), `http.js` (API security headers, PII-free logs) |
+| `migrations/` | D1 schema (`walkthrough_requests`: form fields + CASL consent + email statuses, no IPs) |
+| `test/` | Vitest + `@cloudflare/vitest-plugin`: validation, every refusal path, abuse limits, retry, retention, no PII in logs |
+| `src/form-options.js`, `src/cities.js` | Form choices shared by page and Worker (tests check index.html matches) |
+| `src/turnstile.js` | Loads Turnstile only at the form's last step (explicit render, invisible unless needed) |
+| `wrangler.jsonc`, `.dev.vars.example`, `.env.example` | Worker config (dev defaults; production env goes in per `docs/DEPLOY.md`), secret templates |
+| `docs/DEPLOY.md` | Cloudflare setup, launch blockers, deploy and post-deploy checks |
 | `security/golive/` | Go-live reports (2026-09-23, 09-24 old design; 2026-09-28 GO for HARA) |
 
 Photo masters were generated with Higgsfield (GPT Image 2.5 via `marketing-studio/image/flare`,
@@ -114,5 +134,11 @@ index for the new hashed CSS filename. Run `security-protocol` before every depl
 - Lenis already honours CSS `scroll-padding-top` and `scroll-margin-top`: never pass a manual
   offset to `lenis.scrollTo` or it doubles. `.section` uses a negative scroll-margin so nav links
   land on the heading.
+- Worker responses do NOT get `_headers`; `worker/http.js` sets the API's own security headers.
+- Wrangler environments don't inherit vars, routes or bindings: `env.production` must repeat them.
+- Turnstile test keys: site `1x00000000000000000000AA`, secret `1x0000000000000000000000000000000AA`
+  (always pass). Siteverify with test keys reports a placeholder hostname, so `TURNSTILE_HOSTNAMES`
+  is empty locally.
+- The home-level `~/.claude/launch.json` (not the project's) is what the Browser pane reads.
 - The Browser pane pauses requestAnimationFrame when hidden (Lenis stops, screenshots go blank).
   Use the playwright MCP for scroll/animation tests and final screenshots.

@@ -1,29 +1,61 @@
 import { readFileSync } from 'node:fs';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import { srcset, smallest, dimensions } from './src/photos.js';
 
-// GitHub Pages cannot set response headers, so the production page carries its
-// own CSP and referrer policy. Dev is left alone (Vite HMR needs inline scripts).
-const CSP = [
-  "default-src 'self'",
-  "script-src 'self'",
-  "style-src 'self'",
-  "img-src 'self' data:",
-  "font-src 'self'",
-  "connect-src 'self'",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-].join('; ');
+// Content Security Policy. The demo build (GitHub Pages) allows nothing but the
+// site itself. The live build (Cloudflare) also allows Turnstile, the spam check
+// on the walkthrough form, and nothing else.
+function csp(liveForm) {
+  const turnstile = liveForm ? ' https://challenges.cloudflare.com' : '';
+  return [
+    "default-src 'self'",
+    `script-src 'self'${turnstile}`,
+    "style-src 'self'",
+    "img-src 'self' data:",
+    "font-src 'self'",
+    `connect-src 'self'${turnstile}`,
+    liveForm ? 'frame-src https://challenges.cloudflare.com' : "frame-src 'none'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join('; ');
+}
 
-const securityMeta = {
+// GitHub Pages can't set response headers, so the demo build carries its CSP
+// and referrer policy as <meta> tags. Dev is left alone (Vite HMR needs inline scripts).
+const securityMeta = (policy) => ({
   name: 'security-meta',
   apply: 'build',
   transformIndexHtml: () => [
-    { tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: CSP }, injectTo: 'head-prepend' },
+    { tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: policy }, injectTo: 'head-prepend' },
     { tag: 'meta', attrs: { name: 'referrer', content: 'strict-origin-when-cross-origin' }, injectTo: 'head-prepend' },
   ],
-};
+});
+
+// Cloudflare serves dist/_headers with every static file: real HTTP security
+// headers, including the ones a <meta> tag can't set (frame-ancestors, HSTS).
+const cloudflareHeaders = (policy) => ({
+  name: 'cloudflare-headers',
+  apply: 'build',
+  generateBundle() {
+    const lines = [
+      '/*',
+      `  Content-Security-Policy: ${policy}; frame-ancestors 'none'`,
+      '  Strict-Transport-Security: max-age=31536000; includeSubDomains',
+      '  X-Content-Type-Options: nosniff',
+      '  X-Frame-Options: DENY',
+      '  Referrer-Policy: strict-origin-when-cross-origin',
+      '  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
+      '  Cross-Origin-Opener-Policy: same-origin',
+      '/assets/*',
+      '  Cache-Control: public, max-age=31536000, immutable',
+      '/img/*',
+      '  Cache-Control: public, max-age=2592000',
+      '',
+    ];
+    this.emitFile({ type: 'asset', fileName: '_headers', source: lines.join('\n') });
+  },
+});
 
 // Keeps index.html readable: short tags expand into static markup before Vite
 // processes the page, so the shipped HTML is complete without any JavaScript.
@@ -71,11 +103,19 @@ const fontPreload = {
   },
 };
 
-// Relative base so the build works on a GitHub Pages project path.
-export default defineConfig({
-  base: './',
-  plugins: [staticMarkup, securityMeta, fontPreload],
-  build: { target: 'es2020', assetsInlineLimit: 0, sourcemap: false },
-  server: { port: 4331, strictPort: true },
-  preview: { port: 4332, strictPort: true },
+// Two builds from one codebase:
+//   npm run build     -> GitHub Pages demo (form is a demo, CSP in <meta>)
+//   npm run build:cf  -> Cloudflare (form posts to the Worker, CSP as real headers)
+// The live build is switched on by VITE_WALKTHROUGH_API in .env.cloudflare.
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), 'VITE_');
+  const liveForm = Boolean(env.VITE_WALKTHROUGH_API);
+  const policy = csp(liveForm);
+  return {
+    base: liveForm ? '/' : './',  // relative for the GitHub Pages project path
+    plugins: [staticMarkup, liveForm ? cloudflareHeaders(policy) : securityMeta(policy), fontPreload],
+    build: { target: 'es2020', assetsInlineLimit: 0, sourcemap: false },
+    server: { port: 4331, strictPort: true },
+    preview: { port: 4332, strictPort: true },
+  };
 });

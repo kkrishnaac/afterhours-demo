@@ -32,7 +32,7 @@
   --max: 1200px;
   --pad: clamp(20px, 5vw, 64px);
   --section: clamp(88px, 13vh, 148px);
-  --nav-h: 64px;
+  --nav-h: 54px;
 
   /* Motion: everything settles softly, nothing snaps. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -99,8 +99,8 @@ ul, ol { padding: 0; list-style: none; }
 h3 { font-size: 1.12rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; }
 
 .brand { display: inline-flex; align-items: baseline; gap: 10px; text-decoration: none; }
-.brand__name { font-weight: 680; font-stretch: 125%; letter-spacing: 0.14em; font-size: 20px; line-height: 1; }
-.brand__sub { font-size: 13px; color: var(--ink-muted); letter-spacing: 0.01em; white-space: nowrap; }
+.brand__name { font-weight: 680; font-stretch: 125%; letter-spacing: 0.14em; font-size: 18px; line-height: 1; }
+.brand__sub { font-size: 12.5px; color: var(--ink-muted); letter-spacing: 0.01em; white-space: nowrap; }
 
 
 /* BUTTONS: pills. Hover lifts a pixel and nudges the arrow; press sinks. */
@@ -133,13 +133,15 @@ h3 { font-size: 1.12rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.
 .call:hover { text-decoration-color: currentColor; }
 
 
-/* NAV: a floating rounded bar, always there. */
+/* NAV: a slim floating bar, always there. 1112px wide so the logo lines up with
+   the page content below (1200px container minus 64px padding, plus the bar's own 20px).
+   Three columns keep the links truly centred whatever the logo and button widths. */
 .nav {
   position: fixed; z-index: var(--z-chrome);
   top: max(12px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
-  width: min(var(--max), calc(100% - 24px)); height: var(--nav-h);
-  display: flex; align-items: center; justify-content: space-between; gap: 24px;
-  padding: 0 8px 0 24px; border-radius: var(--r-pill);
+  width: min(1112px, calc(100% - 24px)); height: var(--nav-h);
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px;
+  padding: 0 7px; border-radius: var(--r-pill);
   background: rgba(251, 252, 251, 0.8);
   -webkit-backdrop-filter: blur(16px) saturate(150%); backdrop-filter: blur(16px) saturate(150%);
   box-shadow: inset 0 0 0 1px rgba(217, 226, 220, 0.9), 0 12px 32px -20px rgba(14, 27, 23, 0.25);
@@ -147,20 +149,28 @@ h3 { font-size: 1.12rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.
 @media (hover: none), (prefers-reduced-transparency: reduce) {
   .nav { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(251, 252, 251, 0.97); }
 }
-.nav__links { display: flex; gap: 4px; font-size: 15px; }
+.nav .brand { justify-self: start; margin-left: 13px; } /* 7 + 13 = 20px from the bar's edge; even padding keeps the links centred */
+.nav__links { display: flex; gap: 2px; font-size: 14px; }
 .nav__links a {
-  padding: 8px 14px; border-radius: var(--r-pill); text-decoration: none; color: var(--ink-muted);
+  padding: 7px 12px; border-radius: var(--r-pill); text-decoration: none; color: var(--ink-muted);
   transition: color 0.3s var(--ease-out), background-color 0.3s var(--ease-out);
 }
 .nav__links a:hover { color: var(--ink); background: var(--stone); }
-.nav__cta { min-height: 46px; padding: 10px 20px; font-size: 15px; }
+.nav__cta {
+  justify-self: end; min-height: 40px; padding: 8px 18px; font-size: 14px;
+  box-shadow: 0 6px 14px -10px rgba(19, 80, 63, 0.7);
+}
 .cta-short { display: none; }
-@media (max-width: 900px) { .nav__links { display: none; } }
+@media (max-width: 900px) {
+  .nav { grid-template-columns: 1fr auto; }
+  .nav__links { display: none; }
+}
 @media (max-width: 560px) {
-  :root { --nav-h: 58px; }
-  .nav { padding-left: 18px; gap: 12px; }
+  :root { --nav-h: 52px; }
+  .nav { gap: 12px; }
+  .nav .brand { margin-left: 11px; }
   .nav .brand__sub { display: none; }
-  .nav__cta { min-height: 42px; padding: 8px 16px; font-size: 14px; }
+  .nav__cta { min-height: 38px; padding: 8px 16px; }
 }
 @media (max-width: 400px) {
   .cta-full { display: none; }

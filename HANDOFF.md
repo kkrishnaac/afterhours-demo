@@ -10,6 +10,16 @@
 - Next: Krishna's feedback; client confirms the security claims and real phone/email; then SOW
   (frontend + backend for the walkthrough form) and the security plan, both in `docs/client/`.
 
+## Update 2026-09-28 (latest): production live, domain is the only step left
+
+- Live: https://hara-website.chaudharikrishna0415.workers.dev (Cloudflare, Krishna's account).
+  GitHub Pages URL redirects there. Security gate GO: `security/golive/2026-09-28-backend-GO.md`.
+- Built this round: privacy policy, terms, accessibility statement, 404, robots.txt, branded
+  og.jpg, footer legal links, email hold mode, http→https, production env, leads/PIPEDA scripts.
+- Client security plan (PDF): `docs/client/security/HARA-Security-Plan.pdf`.
+- Launch blockers: 2FA confirmed on all accounts, real phone/email, HARA confirms security practices,
+  lawyer review, photo licence, alerts. Then the domain steps in `docs/DEPLOY.md`.
+
 ## Update 2026-09-28 (later): SOW written, backend built
 
 - SOW (editable Word, prices blank for Krishna): `docs/client/HARA-Website-Scope-of-Work.docx`

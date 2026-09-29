@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { defineConfig, loadEnv } from 'vite';
 import { srcset, smallest, dimensions } from './src/photos.js';
 
@@ -47,6 +48,7 @@ const cloudflareHeaders = (policy) => ({
       '  Referrer-Policy: strict-origin-when-cross-origin',
       '  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
       '  Cross-Origin-Opener-Policy: same-origin',
+      '  Cross-Origin-Resource-Policy: same-origin',
       '/assets/*',
       '  Cache-Control: public, max-age=31536000, immutable',
       '/img/*',
@@ -59,6 +61,7 @@ const cloudflareHeaders = (policy) => ({
 
 // Keeps index.html readable: short tags expand into static markup before Vite
 // processes the page, so the shipped HTML is complete without any JavaScript.
+//   <x-include src="partials/x.html">  -> that file's markup (shared header and footer)
 //   <i data-icon="broom"></i>  -> the Phosphor "regular" SVG, inline
 //   <x-photo id=".." sizes=".." alt=".." [eager]></x-photo>  -> AVIF/WebP <picture>
 const attrs = (s) => Object.fromEntries([...s.matchAll(/([a-z-]+)(?:="([^"]*)")?/g)].map(([, k, v]) => [k, v ?? true]));
@@ -83,6 +86,8 @@ const staticMarkup = {
   transformIndexHtml: {
     order: 'pre',
     handler: (html) => html
+      // Shared header/footer: <x-include src="partials/footer.html"></x-include>
+      .replace(/<x-include src="([a-z0-9/._-]+)"><\/x-include>/g, (_, file) => readFileSync(resolve(import.meta.dirname, file), 'utf8').trim())
       .replace(/<i data-icon="([a-z-]+)"><\/i>/g, (_, name) => icon(name))
       .replace(/<x-photo ([^>]*)><\/x-photo>/g, (_, a) => picture(attrs(a))),
   },
@@ -103,6 +108,44 @@ const fontPreload = {
   },
 };
 
+// The public address. Unset (demo, workers.dev before the domain): every page
+// keeps `noindex` and there is no sitemap. Set VITE_SITE_URL=https://domain at
+// launch: pages become indexable (404 stays noindex), links become canonical,
+// share images absolute, and robots.txt + sitemap.xml are generated.
+// VITE_SECURITY_CONTACT (e.g. mailto:security@domain) adds /.well-known/security.txt.
+const PAGES = ['index.html', 'privacy.html', 'terms.html', 'accessibility.html', '404.html'];
+const PATHS = { 'index.html': '/', 'privacy.html': '/privacy', 'terms.html': '/terms', 'accessibility.html': '/accessibility' };
+
+const siteUrl = (site, contact) => ({
+  name: 'site-url',
+  apply: 'build',
+  transformIndexHtml(html, { path: p }) {
+    const file = p.replace(/^\//, '');
+    if (!site || file === '404.html') return html;
+    const url = site + (PATHS[file] || '/');
+    return html
+      .replace(/\s*<meta name="robots" content="noindex" \/>/, '')
+      .replace('</head>', `  <link rel="canonical" href="${url}" />\n  <meta property="og:url" content="${url}" />\n</head>`)
+      .replace('<meta property="og:image" content="og.jpg" />', `<meta property="og:image" content="${site}/og.jpg" />`);
+  },
+  generateBundle() {
+    const robots = ['User-agent: *', 'Allow: /'];
+    if (site) {
+      robots.push(`Sitemap: ${site}/sitemap.xml`);
+      const today = new Date().toISOString().slice(0, 10);
+      const urls = Object.values(PATHS).map((u) => `  <url><loc>${site}${u}</loc><lastmod>${today}</lastmod></url>`).join('\n');
+      this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n` });
+    }
+    this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robots.join('\n') + '\n' });
+    if (contact) {
+      const expires = new Date(Date.now() + 365 * 86_400_000).toISOString();
+      const lines = [`Contact: ${contact}`, `Expires: ${expires}`, 'Preferred-Languages: en'];
+      if (site) lines.push(`Canonical: ${site}/.well-known/security.txt`, `Policy: ${site}/privacy`);
+      this.emitFile({ type: 'asset', fileName: '.well-known/security.txt', source: lines.join('\n') + '\n' });
+    }
+  },
+});
+
 // Two builds from one codebase:
 //   npm run build     -> GitHub Pages demo (form is a demo, CSP in <meta>)
 //   npm run build:cf  -> Cloudflare (form posts to the Worker, CSP as real headers)
@@ -113,8 +156,11 @@ export default defineConfig(({ mode }) => {
   const policy = csp(liveForm);
   return {
     base: liveForm ? '/' : './',  // relative for the GitHub Pages project path
-    plugins: [staticMarkup, liveForm ? cloudflareHeaders(policy) : securityMeta(policy), fontPreload],
-    build: { target: 'es2020', assetsInlineLimit: 0, sourcemap: false },
+    plugins: [staticMarkup, liveForm ? cloudflareHeaders(policy) : securityMeta(policy), fontPreload, siteUrl(env.VITE_SITE_URL?.replace(/\/$/, ''), env.VITE_SECURITY_CONTACT)],
+    build: {
+      target: 'es2020', assetsInlineLimit: 0, sourcemap: false,
+      rolldownOptions: { input: Object.fromEntries(PAGES.map((f) => [f.replace('.html', ''), resolve(import.meta.dirname, f)])) },
+    },
     server: { port: 4331, strictPort: true },
     preview: { port: 4332, strictPort: true },
   };

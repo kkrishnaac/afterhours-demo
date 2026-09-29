@@ -6,7 +6,7 @@
 import { json, readLimited, log, logError } from './http.js';
 import { validateWalkthrough } from './validate.js';
 import { verifyTurnstile } from './turnstile.js';
-import { notificationEmail, confirmationEmail, sendEmail } from './email.js';
+import { notificationEmail, confirmationEmail, sendEmail, emailHeld } from './email.js';
 import { CONSENT_VERSION } from '../src/form-options.js';
 
 const MAX_BODY = 8 * 1024;
@@ -86,6 +86,15 @@ export async function handleWalkthrough(request, env) {
     record.id, record.created_at, d.size, d.timing, d.city, d.name, d.email, d.phone,
     d.marketing ? 1 : 0, d.marketing ? record.created_at : null, CONSENT_VERSION,
   ).run();
+
+  // Email not connected yet (no verified domain): keep the HARA notification
+  // pending for the cron to deliver later; a days-late confirmation would only
+  // confuse the requester, so that one is skipped.
+  if (emailHeld(env)) {
+    await env.DB.prepare("UPDATE walkthrough_requests SET confirm_status = 'skipped' WHERE id = ?1").bind(record.id).run();
+    log('walkthrough.stored', { id: record.id, email: 'held' });
+    return json({ ok: true }, 201);
+  }
 
   const [notify, confirm] = await Promise.all([
     sendEmail(notificationEmail(record, env), env, `notify-${record.id}`),

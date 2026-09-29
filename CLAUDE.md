@@ -5,9 +5,11 @@ name is **HARA Facilities Cleaning** (the client writes HARA in caps); "Afterhou
 name and is gone from the code. The live demo URL and repo name still say afterhours. Client
 material lives in `docs/client/` (gitignored, the repo is public). See `HANDOFF.md` for next steps.
 
-- Live demo (HARA design, deployed 2026-09-28): https://kkrishnaac.github.io/afterhours-demo/
-  (GitHub Pages, public repo `kkrishnaac/afterhours-demo`, `robots: noindex`). Krishna wants
-  updates pushed to this URL, never a new localhost link.
+- **Production (live, pre-domain):** https://hara-website.chaudharikrishna0415.workers.dev
+  (Cloudflare Worker `hara-website` in Krishna's account, D1 `hara-walkthroughs`, `noindex`).
+  Only the domain connection is left: `docs/DEPLOY.md`. The old GitHub Pages URL
+  (https://kkrishnaac.github.io/afterhours-demo/) is now a redirect to production.
+  Krishna wants updates at the live URL, never a new localhost link.
 - Local dev: `npm run dev` (port 4331, launch config `afterhours`); production preview
   `npm run build && npm run preview` (port 4332)
 - Node via nvm: run `source ~/.nvm/nvm.sh` before npm in a fresh shell.
@@ -27,20 +29,24 @@ material lives in `docs/client/` (gitignored, the repo is public). See `HANDOFF.
 
 Vite 8 (vanilla JS modules, plain CSS), Lenis 1.3 (desktop wheel only), Mona Sans variable
 (self-hosted), Phosphor icons inlined at build time. Page JS ~10 KB gzip. No framework, no Tailwind.
+Five pages: `index.html`, `privacy.html`, `terms.html`, `accessibility.html`, `404.html`, sharing
+`partials/nav-page.html` and `partials/footer.html` via `<x-include>` (expanded at build time).
 
-Backend (built and tested locally 2026-09-28, not deployed yet; waits on HARA's Cloudflare account
-and domain): a Cloudflare Worker (`worker/`) serves `dist/` as static assets and handles only
-`POST /api/walkthrough` (`run_worker_first: ["/api/*"]`) plus a 15-minute cron. D1 database for
-requests, Turnstile for spam, Workers rate-limit binding, Resend for email. Deploy runbook with the
-launch blockers: `docs/DEPLOY.md`.
+Backend: a Cloudflare Worker (`worker/`) receives every request (`run_worker_first: true`) so plain
+http 301s to https; pages come from `dist/` via `env.ASSETS` (which still applies `dist/_headers`).
+It handles `POST /api/walkthrough` and a 15-minute cron. D1 for requests, Turnstile for spam, the
+Workers rate-limit binding, Resend for email. `EMAIL_MODE`: `hold` in production until the domain
+can send email (requests stored, HARA notifications pending, delivered by the cron once switched to
+`resend`), `dry-run` locally.
 
-Two builds from one codebase:
-- `npm run build`: GitHub Pages demo (current live URL). Form is a demo, CSP in a `<meta>` tag.
-- `npm run build:cf`: Cloudflare. `.env.cloudflare` (gitignored) sets `VITE_WALKTHROUGH_API` and the
-  Turnstile site key; CSP + HSTS + frame/nosniff/permissions headers go in a generated `dist/_headers`.
+Builds (one codebase): `npm run build` = old GitHub Pages demo (no longer deployed), `build:cf` =
+local Worker testing (Turnstile test key, `.env.cloudflare`), `build:prod` = production
+(`.env.production-cf`, real site key; add `VITE_SITE_URL` at domain launch to drop noindex and
+generate sitemap/canonical/security.txt). CSP + security headers go in a generated `dist/_headers`.
 
-Commands: `npm test` (50 Worker tests inside workerd with a local D1), `npm run dev:worker`
-(build:cf + local migrations + `wrangler dev` on :8787, launch config `hara-worker`).
+Commands: `npm test` (52 tests in workerd), `npm run dev:worker` (local on :8787, launch config
+`hara-worker`), `npm run deploy` (tests + build:prod + deploy), `npm run db:migrate`,
+`npm run leads`, `npm run data-request -- export|delete <email>`.
 
 ## File map
 
@@ -62,7 +68,10 @@ Commands: `npm test` (50 Worker tests inside workerd with a local D1), `npm run 
 | `src/form-options.js`, `src/cities.js` | Form choices shared by page and Worker (tests check index.html matches) |
 | `src/turnstile.js` | Loads Turnstile only at the form's last step (explicit render, invisible unless needed) |
 | `wrangler.jsonc`, `.dev.vars.example`, `.env.example` | Worker config (dev defaults; production env goes in per `docs/DEPLOY.md`), secret templates |
-| `docs/DEPLOY.md` | Cloudflare setup, launch blockers, deploy and post-deploy checks |
+| `docs/DEPLOY.md` | Production state, launch blockers, the connect-the-domain runbook, everyday commands |
+| `partials/` | Shared page header (simple pages) and footer (with Privacy / Terms / Accessibility links) |
+| `privacy.html`, `terms.html`, `accessibility.html`, `404.html` | Legal pages (PIPEDA, CASL, AODA) and 404; entry `src/page.js` (styles only) |
+| `scripts/leads.mjs` | Operator CLI: leads CSV export, PIPEDA export/delete by email (output to gitignored docs/client/leads/) |
 | `security/golive/` | Go-live reports (2026-09-23, 09-24 old design; 2026-09-28 GO for HARA) |
 
 Photo masters were generated with Higgsfield (GPT Image 2.5 via `marketing-studio/image/flare`,
@@ -108,16 +117,12 @@ for now, security conscious, free walkthrough before every quote. The page is bu
 - Company facts come from the client's DOCX (`docs/client/hara-website-direction.docx`). Krishna
   directs the site; use the doc for company information only, not as layout instructions.
 
-## Deploy (GitHub Pages)
+## Deploy
 
-```bash
-source ~/.nvm/nvm.sh && npm run build && touch dist/.nojekyll
-D=$(mktemp -d) && cp -R dist/. "$D"/ && cd "$D" && git init -q -b gh-pages && git add -A \
-  && git commit -qm "Deploy" && git config http.postBuffer 524288000 \
-  && git push -qf https://github.com/kkrishnaac/afterhours-demo.git gh-pages; cd - && rm -rf "$D"
-```
-Source goes to `main` as normal commits. Pages rebuilds in ~45 s; confirm by curling the live
-index for the new hashed CSS filename. Run `security-protocol` before every deploy.
+`npm run deploy` (runs tests, builds production, `wrangler deploy --env production`). Run
+`security-protocol` before every deploy; latest report `security/golive/2026-09-28-backend-GO.md`.
+Wrangler is logged in to Krishna's Cloudflare account (OAuth; token scopes include D1, Workers and
+Turnstile widgets). Connecting the domain: `docs/DEPLOY.md`.
 
 ## Gotchas (learned the hard way)
 
@@ -134,7 +139,13 @@ index for the new hashed CSS filename. Run `security-protocol` before every depl
 - Lenis already honours CSS `scroll-padding-top` and `scroll-margin-top`: never pass a manual
   offset to `lenis.scrollTo` or it doubles. `.section` uses a negative scroll-margin so nav links
   land on the heading.
-- Worker responses do NOT get `_headers`; `worker/http.js` sets the API's own security headers.
+- `env.ASSETS.fetch()` responses DO carry `_headers` (verified), so routing every request through
+  the Worker for the https redirect keeps the page security headers.
+- workers.dev serves plain http unless the Worker redirects it (it does now).
+- Before launch, confirm 2FA on every account (Cloudflare `GET /user` shows it); never record
+  account security status in this public repo.
+- Turnstile's own iframe logs console noise (OTS font warning, "No available adapters"); not ours.
+- Worker responses built in code do NOT get `_headers`; `worker/http.js` sets the API's own security headers.
 - Wrangler environments don't inherit vars, routes or bindings: `env.production` must repeat them.
 - Turnstile test keys: site `1x00000000000000000000AA`, secret `1x0000000000000000000000000000000AA`
   (always pass). Siteverify with test keys reports a placeholder hostname, so `TURNSTILE_HOSTNAMES`

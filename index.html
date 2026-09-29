@@ -10,6 +10,11 @@
   <meta property="og:description" content="Office cleaning across Toronto and the GTA, any day and any time. Free walkthrough before every quote." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="HARA Facilities Cleaning logo beside a spotless open-plan office above the Toronto skyline. Every desk ready. Every door locked." />
+  <meta property="og:site_name" content="HARA Facilities Cleaning" />
+  <meta property="og:locale" content="en_CA" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
@@ -347,7 +352,7 @@
               <input id="marketing" name="marketing" type="checkbox" />
               <span>Send me occasional updates from <span translate="no">HARA</span>. You can unsubscribe at any time.</span>
             </label>
-            <p class="quote__consent">We use your details only to arrange your walkthrough and send your quote.</p>
+            <p class="quote__consent">We use your details only to arrange your walkthrough and send your quote. See our <a href="privacy.html">privacy policy</a>.</p>
             <div class="hp" aria-hidden="true">
               <label for="company_site">Company website (leave this empty)</label>
               <input id="company_site" name="company_site" type="text" tabindex="-1" autocomplete="off" />
@@ -377,12 +382,7 @@
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="footer__brand" translate="no"><svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="15" /><path d="M15 22H25.5V31H38.5V16L49 10V51H38.5V37.5H25.5V51H15Z" /></svg><span class="brand__name">HARA</span><span class="brand__sub">Facilities Cleaning</span></div>
-    <p>Office cleaning across Toronto and the GTA, any day and any time.</p>
-    <p><a href="tel:+14165550199">(416) 555-0199</a><br /><a href="mailto:hello@example.com">hello@example.com</a></p>
-    <p class="footer__note">Demo site. The phone number and email are placeholders.</p>
-  </footer>
+  <x-include src="partials/footer.html"></x-include>
 
   <div class="viewer" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
     <p class="viewer__brand" translate="no"><svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="15" /><path d="M15 22H25.5V31H38.5V16L49 10V51H38.5V37.5H25.5V51H15Z" /></svg>HARA</p>

@@ -4,13 +4,13 @@
   "main": "worker/index.js",
   "compatibility_date": "2026-09-12",
 
-  // Pages are served straight from dist/ (headers from dist/_headers). The Worker
-  // runs only for /api/* and on the cron trigger.
+  // Every request reaches the Worker first (to force https); it serves pages from
+  // dist/ via env.ASSETS, which still applies dist/_headers.
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": true
   },
 
   // The database id is a placeholder until HARA's Cloudflare account exists:
@@ -32,6 +32,34 @@
   // Local development defaults. Production values go in env.production once
   // the domain exists. Secrets (TURNSTILE_SECRET_KEY, RESEND_API_KEY) are never
   // here: locally they come from .dev.vars, in production from `wrangler secret put`.
+  // Production. Live now on workers.dev; connecting the domain adds its routes,
+  // origins and Turnstile hostnames here (see docs/DEPLOY.md, "Connect the domain").
+  // Routes, vars and bindings are not inherited from the top level, so each is repeated.
+  "env": {
+    "production": {
+      "name": "hara-website",
+      "workers_dev": true,
+      "preview_urls": false,
+      "d1_databases": [
+        { "binding": "DB", "database_name": "hara-walkthroughs", "database_id": "e055cd87-bc11-40d9-843d-3c26a0e5a7a2", "migrations_dir": "migrations" }
+      ],
+      "ratelimits": [
+        { "name": "WALKTHROUGH_LIMITER", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }
+      ],
+      "triggers": { "crons": ["*/15 * * * *"] },
+      "vars": {
+        "ALLOWED_ORIGINS": "https://hara-website.chaudharikrishna0415.workers.dev",
+        "TURNSTILE_HOSTNAMES": "hara-website.chaudharikrishna0415.workers.dev",
+        // hold: requests are stored and HARA's notifications wait until the
+        // domain can send email; switch to "resend" then (cron delivers the backlog).
+        "EMAIL_MODE": "hold",
+        "EMAIL_FROM": "HARA Facilities Cleaning <walkthroughs@example.com>",
+        "LEAD_TO_EMAIL": "leads@example.com",
+        "RETENTION_DAYS": "730"
+      }
+    }
+  },
+
   "vars": {
     "ALLOWED_ORIGINS": "http://localhost:8787",
     "TURNSTILE_HOSTNAMES": "",

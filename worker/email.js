@@ -1,8 +1,12 @@
 // The two emails a walkthrough request sends: a notification to HARA (reply
 // goes straight to the requester) and a confirmation to the requester. Every
-// visitor-supplied value is HTML-escaped. Sent through Resend's HTTP API; in
-// local development (EMAIL_MODE=dry-run) nothing is sent and nothing personal
-// is logged.
+// visitor-supplied value is HTML-escaped.
+// EMAIL_MODE:
+//   resend   send through Resend's HTTP API (production, once the domain is verified)
+//   hold     send nothing yet: requests are stored with the HARA notification
+//            'pending', and the cron delivers them all once the mode is switched to resend
+//   dry-run  local development: send nothing, log only the idempotency key
+export const emailHeld = (env) => env.EMAIL_MODE === 'hold';
 
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ESC[c]);

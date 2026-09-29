@@ -1,5 +1,4 @@
-// Turns the 4K masters in assets/raw into responsive AVIF + WebP in public/img,
-// plus the social share image. Landscape and portrait get their own width ladders
+// Turns the 4K masters in assets/raw into responsive AVIF + WebP in public/img. Landscape and portrait get their own width ladders
 // to match the srcset lists in index.html.
 import { readdirSync, mkdirSync, existsSync } from 'node:fs';
 import { join, parse } from 'node:path';
@@ -30,8 +29,5 @@ for (const file of files) {
   console.log(`${id}: ${width}x${height} -> ${ladder.join(', ')}`);
 }
 
-const share = files.find((f) => f.startsWith('01-'));
-if (share) {
-  await sharp(join(RAW, share)).resize(1200, 630, { fit: 'cover' }).jpeg({ quality: 82, mozjpeg: true }).toFile('public/og.jpg');
-  console.log('og.jpg written');
-}
+// public/og.jpg (the social share image) is designed separately with the logo
+// and headline (source in docs/client/logo/og.html), so it is not regenerated here.

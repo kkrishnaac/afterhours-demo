@@ -188,6 +188,12 @@ describe('POST /api/walkthrough: refusals', () => {
     expect(res.headers.get('Allow')).toBe('POST');
   });
 
+  it('redirects plain http to https before serving anything', async () => {
+    const res = await worker.fetch(new Request('http://hara.test/privacy?x=1'), env);
+    expect(res.status).toBe(301);
+    expect(res.headers.get('Location')).toBe('https://hara.test/privacy?x=1');
+  });
+
   it('returns a JSON 404 for other API paths', async () => {
     const res = await worker.fetch(new Request('https://hara.test/api/admin'), env);
     expect(res.status).toBe(404);
@@ -237,6 +243,29 @@ describe('abuse and reliability', () => {
     expect(row.notify_status).toBe('sent');
     expect(row.notify_attempts).toBe(2);
     expect(net.emails[0].headers.get('Idempotency-Key')).toBe(`notify-${row.id}`);
+  });
+
+  it('holds email until it is connected, then the scheduled job delivers every held request', async () => {
+    const net = network();
+    const held = { ...env, EMAIL_MODE: 'hold' };
+    const res = await worker.fetch(new Request('https://hara.test/api/walkthrough', {
+      method: 'POST', headers: { Origin: 'https://hara.test', 'CF-Connecting-IP': nextIp(), 'Content-Type': 'application/json' }, body: JSON.stringify(valid),
+    }), held);
+    expect(res.status).toBe(201);
+    let [row] = await rows();
+    expect(row).toMatchObject({ notify_status: 'pending', notify_attempts: 0, confirm_status: 'skipped' });
+    expect(net.emails).toHaveLength(0);
+
+    // Still held: the cron sends nothing and uses up no attempts.
+    await runMaintenance(held, Date.now() + 3 * 60 * 1000);
+    [row] = await rows();
+    expect(row).toMatchObject({ notify_status: 'pending', notify_attempts: 0 });
+
+    // Email connected: the next cron run delivers the held notification to HARA.
+    await runMaintenance(env, Date.now() + 3 * 60 * 1000);
+    [row] = await rows();
+    expect(row).toMatchObject({ notify_status: 'sent', notify_attempts: 1 });
+    expect(net.emails.map((e) => e.body.to[0])).toEqual(['leads@hara.test']);
   });
 
   it('deletes requests older than the retention period', async () => {

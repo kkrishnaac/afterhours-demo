@@ -6,8 +6,8 @@ const PORTRAIT_IDS = new Set(['04-kitchen', '05-washroom', '07-lobby-elevators']
 
 // The service cards, in page order. The photo viewer walks through these.
 export const PHOTOS = [
-  { id: '10-dawn-open-office', title: 'Offices',
-    alt: 'Sunrise across rows of spotless desks in an open-plan office above the Toronto skyline.' },
+  { id: '01-dusk-open-office', title: 'Open offices',
+    alt: 'An empty open-plan office above Toronto at dusk, desks cleared and chairs tucked in.' },
   { id: '09-desk-first-light', title: 'Workstations',
     alt: 'A dust-free oak desk in morning sun with a closed laptop, a white cup and a pencil set parallel to the edge.' },
   { id: '06-corridor', title: 'Meeting rooms',
@@ -16,9 +16,9 @@ export const PHOTOS = [
     alt: 'An office kitchen with stainless steel counters wiped spotless and clean glasses lined up on the shelf.' },
   { id: '05-washroom', title: 'Washrooms',
     alt: 'A marble office washroom with a streak-free mirror, gleaming chrome taps and folded white towels.' },
-  { id: '08-lounge-blue-hour', title: 'Common areas',
+  { id: '08-lounge-blue-hour', title: 'Reception and lounges',
     alt: 'An office lounge with cushions aligned on a boucle sofa and fresh vacuum lines in the rug.' },
-  { id: '07-lobby-elevators', title: 'Floors',
+  { id: '07-lobby-elevators', title: 'Entrances and floors',
     alt: 'Polished bronze elevator doors in a quiet lobby, the dark stone floor gleaming.' },
 ];
 

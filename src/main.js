@@ -29,6 +29,17 @@ document.addEventListener('click', (e) => {
   if (id === '#main') target.focus?.({ preventScroll: true });
 });
 
+// Service lists: closed on phones so the page stays short, always open side by
+// side on wider screens (and re-opened if a narrow window is widened).
+const wide = matchMedia('(min-width: 821px)');
+const lists = document.querySelectorAll('.svc-list');
+const syncLists = () => lists.forEach((d) => { d.open = wide.matches; });
+syncLists();
+wide.addEventListener('change', syncLists);
+lists.forEach((d) => d.querySelector('summary').addEventListener('click', (e) => {
+  if (wide.matches) e.preventDefault();
+}));
+
 initMotion({ reduceMotion });
 initQuote();
 initViewer({ lenis, reduceMotion });

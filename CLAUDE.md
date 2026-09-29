@@ -5,9 +5,9 @@ name is **HARA Facilities Cleaning** (the client writes HARA in caps); "Afterhou
 name and is gone from the code. The live demo URL and repo name still say afterhours. Client
 material lives in `docs/client/` (gitignored, the repo is public). See `HANDOFF.md` for next steps.
 
-- Live demo (still the OLD Afterhours design): https://kkrishnaac.github.io/afterhours-demo/
-  (GitHub Pages, public repo `kkrishnaac/afterhours-demo`, `robots: noindex`)
-- Redesign (2026-09-28) is on branch `hara-redesign`, uncommitted until Krishna approves it.
+- Live demo (HARA design, deployed 2026-09-28): https://kkrishnaac.github.io/afterhours-demo/
+  (GitHub Pages, public repo `kkrishnaac/afterhours-demo`, `robots: noindex`). Krishna wants
+  updates pushed to this URL, never a new localhost link.
 - Local dev: `npm run dev` (port 4331, launch config `afterhours`); production preview
   `npm run build && npm run preview` (port 4332)
 - Node via nvm: run `source ~/.nvm/nvm.sh` before npm in a fresh shell.
@@ -33,45 +33,48 @@ build time. No GSAP, no framework, no Tailwind. Page JS is ~10 KB gzip.
 
 | Path | What it is |
 |---|---|
-| `index.html` | All markup: nav, hero, why HARA (6 cards), what we clean (7 photo cards), after-hours band + timeline, how it works (5 steps), areas (chips + map), quote panel + form, footer, photo viewer dialog. Uses two build-time shorthands, see `vite.config.js` |
+| `index.html` | All markup: nav, hero (vision line), why HARA (4 linked cards = the client's priorities), any day any time (week grid), what we clean (7 photo cards + 2 service lists as `<details>`), security band, how it works (5 steps, walkthrough first), areas (chips + map), walkthrough request form, footer, photo viewer. Uses two build-time shorthands, see `vite.config.js` |
 | `vite.config.js` | `static-markup` plugin: `<i data-icon="name"></i>` becomes the Phosphor regular SVG, `<x-photo id sizes alt [eager]>` becomes the full AVIF/WebP `<picture>`. Also the build-only CSP meta and a font preload |
 | `src/main.js` | Entry: font + CSS imports, Lenis (non-touch, lerp 0.085), in-page link glide, wires motion, quote, viewer |
-| `src/motion.js` | IntersectionObserver reveals (`data-reveal`, staggered by `--i`), timeline draw, map light-up. One-time, no scroll listeners |
+| `src/motion.js` | IntersectionObserver reveals (`data-reveal`, staggered by `--i`), week grid wave, map light-up. One-time, no scroll listeners |
 | `src/photos.js` | Photo data shared by the page, the viewer and vite.config.js (ladders, srcset, sizes) |
 | `src/viewer.js` | Photo viewer dialog (focus trap, Esc, arrows, swipe, thumbnails) for the 7 service photos |
-| `src/quote.js` | 4-step quote form. DEMO ONLY: nothing is sent anywhere |
+| `src/quote.js` | 4-step walkthrough request (size, timing, city, contact). DEMO ONLY: nothing is sent anywhere |
 | `src/map.js` | GTA SVG map from real lat/long, 16 cities; exports `CITY_NAMES` for the form |
 | `src/style.css` | All styles. Tokens in `:root` |
 | `scripts/optimize-images.mjs` | `npm run images`: 4K masters in `assets/raw/` (gitignored) -> AVIF/WebP ladders in `public/img/` + `og.jpg` |
-| `security/golive/` | Go-live reports for the old design (2026-09-23, 2026-09-24) |
+| `security/golive/` | Go-live reports (2026-09-23, 09-24 old design; 2026-09-28 GO for HARA) |
 
 Photo masters were generated with Higgsfield (GPT Image 2.5 via `marketing-studio/image/flare`,
 4K) by `~/higgsfield/sites/afterhours_stills.py`. 9 of 10 exist; `03-boardroom` failed (not charged).
 
-## Design decisions (2026-09-28 redesign, pending Krishna's approval)
+## Design decisions (Krishna approved the redesign 2026-09-28)
 
-Krishna asked for: rename to HARA, remove all the showy animation ("very professional"), smooth
-scrolling, soft nudges on boxes, rounded rather than sharp edges, and a new font + palette.
+Client priorities (docs/client/company-notes.md): flexible hours (any day, any time), offices only
+for now, security conscious, free walkthrough before every quote. The page is built around those.
+- Vision line / hero: "Every desk ready. Every door locked." (second line in the accent green).
+  One CTA label everywhere: "Book a free walkthrough" ("Free walkthrough" in the nav under 400px).
 - Token structure after the Cohere DESIGN.md (white canvas, one deep-green band, rounded media
   cards, pill actions, flat depth). Palette is our own, green because "hara" is Hindi for green:
   `--bg #FBFCFB`, `--ink #0E1B17`, `--ink-muted #4A5954`, `--stone #EDF2EE`, ONE accent
-  `--accent #13503F` (white text 9.3:1), `--band #0B2F27` for the after-hours section only.
-- Type: Mona Sans only. Headings run at `font-stretch: 112%`, weight 560, tight tracking; the HARA
-  logotype at 125% width, 0.14em tracking. Body at normal width.
+  `--accent #13503F` (white text 9.3:1), `--band #0B2F27` for the security section only.
+- Type: Mona Sans only. Headings at `font-stretch: 112%`, weight 560, tight tracking; HARA
+  logotype at 125% width, 0.14em tracking. Body at normal width. Hero lines never wrap mid-sentence.
 - Shapes: interactive = pill; cards 24px; photos inside cards 16px; panels 32px. Nothing sharp.
-- Motion: hero rises on load (CSS), sections settle in once as they enter view, cards lift 4px on
-  hover with a pre-rendered shadow fading in (transform + opacity only), after-hours line draws once.
-  Removed: intro loader, squeegee wordmark, photo wipes, button glint, clock pill, checklist.
-- Nav is always visible (no big wordmark in the hero any more).
-- Stills only: super-clean offices, no people, no before/after, no video. Hero = 01 dusk office,
-  band = 02 reception, the 7 service cards use the other 7 photos.
-- Phone: native scroll (no Lenis), no pinning, no parallax, `svh` units, services become a
-  swipeable scroll-snap row, map labels only Toronto/Burlington/Newmarket/Oshawa.
+- Motion: hero rises on load (CSS), sections settle in once, cards lift 4px with a pre-rendered
+  shadow fading in (transform + opacity only), week grid fills in a diagonal wave, map lights up.
+  Removed for good: loader, squeegee wordmark, photo wipes, button glint, clock pill, night story.
+- Nav always visible. Why cards are links to their sections (the hover lift implies a click).
+- Stills only: super-clean offices, no people, no before/after, no video. Hero = 10 dawn office,
+  security band = 02 reception, service cards use the other 7.
+- Phone: native scroll, no pinning/parallax, `svh` units, services become a swipe row, service
+  lists start closed, map labels only Toronto/Burlington/Newmarket/Oshawa.
 - Light theme only ("white gives very clean vibes"). No background gradients.
+- The security section's practices are claims: the client must confirm them before a real launch.
 
 ## Conventions
 
-- Visible copy: no em or en dashes. Sentence case. One CTA label per intent ("Get a free quote").
+- Visible copy: no em or en dashes. Sentence case. One CTA label per intent ("Book a free walkthrough").
 - Every animation honours `prefers-reduced-motion` (JS checks + CSS override at the end of style.css).
 - Contrast: body text >= 4.5:1. `translate="no"` on the brand. `[hidden]` is forced to display:none.
 - Placeholders still in the page: phone `(416) 555-0199`, `hello@example.com`. Footer says so.

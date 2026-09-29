@@ -1,6 +1,6 @@
 // Quiet, professional motion. Everything here is a one-time "settle into place"
-// as it scrolls into view: cards rise in sequence, the after-hours line draws
-// from close to morning, and the GTA map lights up from Toronto outward.
+// as it scrolls into view: cards rise in sequence, the week grid fills in a
+// diagonal wave (any day, any time), and the GTA map lights up from Toronto outward.
 // IntersectionObserver only: no scroll listeners, nothing pinned, nothing scrubbed.
 import { buildMap } from './map.js';
 
@@ -20,11 +20,12 @@ export function initMotion({ reduceMotion }) {
   cities.forEach((c, i) => c.style.setProperty('--i', i));
 
   const reveals = [...document.querySelectorAll('[data-reveal]')];
-  const timeline = document.querySelector('.timeline');
+  const week = document.querySelector('.week');
   const map = document.querySelector('.map');
+  week?.querySelectorAll('.week__cell').forEach((cell, n) => cell.style.setProperty('--i', (n % 7) + Math.floor(n / 7)));
 
   if (reduceMotion || !('IntersectionObserver' in window)) {
-    timeline?.classList.add('is-in');
+    week?.classList.add('is-on');
     map?.classList.add('is-on');
     return;
   }
@@ -36,6 +37,6 @@ export function initMotion({ reduceMotion }) {
     el.style.setProperty('--i', Math.max(0, siblings.indexOf(el)));
   });
   onceInView(reveals, (el) => el.classList.add('is-in'));
-  if (timeline) onceInView([timeline], (el) => el.classList.add('is-in'), { threshold: 0.35 });
+  if (week) onceInView([week], (el) => el.classList.add('is-on'), { threshold: 0.4 });
   if (map) onceInView([map], (el) => el.classList.add('is-on'), { threshold: 0.3 });
 }

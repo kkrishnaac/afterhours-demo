@@ -1,4 +1,4 @@
-// Four-step quote request. Demo only: nothing leaves the browser.
+// Four-step walkthrough request. Demo only: nothing leaves the browser.
 // Tapping a chip moves on by itself; keyboard users use Next, which is never
 // disabled: an empty step explains what it needs instead.
 import { CITY_NAMES } from './map.js';
@@ -38,7 +38,7 @@ export function initQuote() {
   }
 
   function stepValid() {
-    const choice = ['size', 'frequency'][i];
+    const choice = ['size', 'timing'][i];
     if (choice) {
       const ok = Boolean(valueOf(choice));
       form.querySelector(`#${choice}-error`).hidden = ok;

@@ -1,21 +1,16 @@
 # Session handoff: Afterhours demo -> real client build
 
-## Update 2026-09-28 (second session): HARA redesign
+## Update 2026-09-28 (second session): HARA redesign, live
 
-- Real name: **HARA Facilities Cleaning**. Client brief arrived as a DOCX (not a PDF), saved to
-  `docs/client/hara-website-direction.docx`. Krishna: take company info from it, ignore its layout
-  instructions; he directs the site.
-- Step 2 (design) done on branch `hara-redesign`, uncommitted, not deployed, awaiting his approval
-  of desktop + phone screenshots. Details in CLAUDE.md "Design decisions".
-- Still to do: his feedback on the redesign; then step 1 brief summary questions if he wants them,
-  step 3 SOW, step 4 security plan (all client-derived docs go in `docs/client/`). Run
-  `security-protocol` before any deploy; the live demo still shows the old Afterhours design.
+- Real name: **HARA Facilities Cleaning**. Client inputs in `docs/client/` (gitignored): the DOCX,
+  a priorities note (flexible hours, offices only, security conscious, free walkthroughs), and
+  `company-notes.md` (vision line options, the service list we drafted, claims to confirm).
+- Krishna directs the site; the client docs are for company facts only.
+- Redesign approved and deployed to the Pages URL after a GO gate (`security/golive/2026-09-28-GO.md`).
+- Next: Krishna's feedback; client confirms the security claims and real phone/email; then SOW
+  (frontend + backend for the walkthrough form) and the security plan, both in `docs/client/`.
 
-
-Written 2026-09-28 at the end of the build session (2026-09-23 to 09-24). Read `CLAUDE.md` first
-for the stack, file map, locked decisions and gotchas. This file is the story and the next steps.
-
-## Where things stand
+## Earlier state (2026-09-24, the old Afterhours design, kept for history)
 
 - **Live demo:** https://kkrishnaac.github.io/afterhours-demo/ (last commit `075e3b4`, "Tighter hero").
   Working tree clean. Verified on phone (390 px, 3x) and desktop (1440 px), 0 console errors.

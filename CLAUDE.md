@@ -65,6 +65,13 @@ for now, security conscious, free walkthrough before every quote. The page is bu
   shadow fading in (transform + opacity only), week grid fills in a diagonal wave, map lights up.
   Removed for good: loader, squeegee wordmark, photo wipes, button glint, clock pill, night story.
 - Nav always visible. Why cards are links to their sections (the hover lift implies a click).
+- Logo (2026-09-28, Krishna picked "Tower" and asked for the tower to be redesigned): a rounded
+  green square with an H whose right stem rises into an office tower with a slanted roof (echoes
+  the rooflines and swoosh of the client's old navy logo). Wordmark HARA in Mona Sans 680 at 125%
+  width, 0.12em tracking; subline FACILITIES CLEANING 540 at 108%, 0.2em. Mark path lives inline in
+  `index.html` (header, footer, viewer) and in `public/favicon.svg`. Source kit, generator
+  (`build_logo.py`, outlines the lettering from the site's font) and SVG/PNG exports:
+  `docs/client/logo/` (gitignored).
 - Stills only: super-clean offices, no people, no before/after, no video. Hero = 10 dawn office,
   security band = 02 reception, service cards use the other 7.
 - Phone: native scroll, no pinning/parallax, `svh` units, services become a swipe row, service

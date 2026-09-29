@@ -81,7 +81,7 @@ npm run data-request -- export|delete <email>   # PIPEDA access / deletion reque
 | `scripts/` | `contrast.mjs` (palette WCAG check), `leads.mjs` (leads/PIPEDA CLI), `optimize-images.mjs` (4K masters -> AVIF/WebP) |
 | `public/` | `brand/` (logo SVGs), `favicon.svg`, `apple-touch-icon.png`, `og.jpg` (branded share image), `img/` photo ladders |
 | `docs/DEPLOY.md` | Production state, launch blockers, connect-the-domain runbook, everyday commands |
-| `security/golive/` | Go-live reports; latest `2026-09-28-backend-GO.md` |
+| `security/golive/` | Go-live reports; latest full gate `2026-09-28-full-GO.md` |
 | `docs/client/` (gitignored) | Client brief + priorities, company notes, SOW (docx + generator), security plan (PDF), logo kit, leads exports |
 
 Photo masters were generated with Higgsfield (GPT Image 2.5 via `marketing-studio/image/flare`,

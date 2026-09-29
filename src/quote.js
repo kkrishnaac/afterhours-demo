@@ -1,5 +1,6 @@
 // Four-step quote request. Demo only: nothing leaves the browser.
-// Tapping a chip moves on by itself; keyboard users use Next.
+// Tapping a chip moves on by itself; keyboard users use Next, which is never
+// disabled: an empty step explains what it needs instead.
 import { CITY_NAMES } from './map.js';
 
 export function initQuote() {
@@ -27,13 +28,7 @@ export function initQuote() {
     back.hidden = i === 0;
     next.hidden = i === steps.length - 1;
     submit.hidden = i !== steps.length - 1;
-    updateNext();
     if (focus) steps[i].querySelector('input, select')?.focus({ preventScroll: true });
-  }
-
-  function updateNext() {
-    const need = ['size', 'frequency'][i];
-    next.disabled = need ? !valueOf(need) : false;
   }
 
   function setError(input, errId, bad) {
@@ -43,6 +38,13 @@ export function initQuote() {
   }
 
   function stepValid() {
+    const choice = ['size', 'frequency'][i];
+    if (choice) {
+      const ok = Boolean(valueOf(choice));
+      form.querySelector(`#${choice}-error`).hidden = ok;
+      if (!ok) steps[i].querySelector('input')?.focus();
+      return ok;
+    }
     if (i === 2) return setError(city, 'city-error', !city.value);
     if (i === 3) {
       const nameOk = setError(form.elements.name, 'name-error', !valueOf('name'));
@@ -54,7 +56,9 @@ export function initQuote() {
     return true;
   }
 
-  form.addEventListener('change', updateNext);
+  form.addEventListener('change', (e) => {
+    if (e.target.type === 'radio') form.querySelector(`#${e.target.name}-error`).hidden = true;
+  });
   form.querySelectorAll('.chips label').forEach((label) => {
     label.addEventListener('pointerup', () => setTimeout(() => { if (i < 2) show(i + 1); }, 260));
   });

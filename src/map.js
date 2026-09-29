@@ -1,4 +1,4 @@
-// The GTA at night: real city coordinates projected onto an SVG, with the
+// The GTA: real city coordinates projected onto an SVG, with the
 // Lake Ontario shoreline traced from approximate lakeshore points.
 const NS = 'http://www.w3.org/2000/svg';
 
@@ -29,8 +29,9 @@ const SHORE = [
   [43.865, -78.86], [43.868, -78.74],
 ];
 
-// Labelled on phones, where all 16 names would collide.
-const MAJOR = new Set(['Toronto', 'Mississauga', 'Brampton', 'Markham', 'Oakville', 'Oshawa']);
+// Labelled on phones, where all 16 names would collide: the centre and three far
+// corners, so the reach reads at a glance. The full list sits above the map.
+const MAJOR = new Set(['Toronto', 'Burlington', 'Newmarket', 'Oshawa']);
 
 const BOUNDS = { latMin: 43.2, latMax: 44.12, lonMin: -80.0, lonMax: -78.74 };
 const VIEW_W = 1000;

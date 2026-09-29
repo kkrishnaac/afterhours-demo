@@ -1,13 +1,12 @@
-// Photo viewer, after alexzarour.com: the photo whole and centred, title at the
-// top, a counter, a strip of grey thumbnails, and the pill turned into Close.
-import { PHOTOS, imgNo, srcset, smallest } from './photos.js';
+// Photo viewer: tap a service photo to see it whole and centred, with its name,
+// a counter and a thumbnail strip. Esc, arrow keys and swipe all work.
+import { PHOTOS, srcset, smallest } from './photos.js';
 
 export function initViewer({ lenis, reduceMotion }) {
   const root = document.querySelector('.viewer');
   if (!root) return;
   const stage = root.querySelector('.viewer__stage');
   const titleEl = root.querySelector('[data-v-title]');
-  const subEl = root.querySelector('[data-v-sub]');
   const countEl = root.querySelector('[data-v-count]');
   const thumbs = root.querySelector('.viewer__thumbs');
   const closeBtn = root.querySelector('.viewer__close');
@@ -18,11 +17,11 @@ export function initViewer({ lenis, reduceMotion }) {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'viewer__thumb';
-    b.setAttribute('aria-label', `${imgNo(i)}, ${photo.title}, ${photo.time}`);
+    b.setAttribute('aria-label', `Show ${photo.title}`);
     const img = document.createElement('img');
     img.alt = '';
     img.decoding = 'async';
-    img.dataset.src = smallest(photo); // fetched on first open, not on page load
+    img.dataset.src = smallest(photo.id); // fetched on first open, not on page load
     b.appendChild(img);
     b.addEventListener('click', () => show(i));
     thumbs.appendChild(b);
@@ -35,11 +34,11 @@ export function initViewer({ lenis, reduceMotion }) {
       const s = document.createElement('source');
       s.type = `image/${ext}`;
       s.sizes = '(min-width: 900px) 64vw, 92vw';
-      s.srcset = srcset(photo, ext);
+      s.srcset = srcset(photo.id, ext);
       pic.appendChild(s);
     }
     const img = document.createElement('img');
-    img.src = smallest(photo);
+    img.src = smallest(photo.id);
     img.alt = photo.alt;
     img.decoding = 'async';
     pic.appendChild(img);
@@ -50,10 +49,9 @@ export function initViewer({ lenis, reduceMotion }) {
     index = (i + PHOTOS.length) % PHOTOS.length;
     const photo = PHOTOS[index];
     const pic = picture(photo);
-    if (!reduceMotion) pic.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' });
+    if (!reduceMotion) pic.animate([{ opacity: 0, transform: 'scale(0.985)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
     stage.replaceChildren(pic);
     titleEl.textContent = photo.title;
-    subEl.textContent = `${imgNo(index)} / ${photo.time}`;
     countEl.textContent = `${String(index + 1).padStart(2, '0')} / ${String(PHOTOS.length).padStart(2, '0')}`;
     thumbButtons.forEach((b, k) => b.toggleAttribute('aria-current', k === index));
     thumbButtons[index].scrollIntoView({ block: 'nearest', inline: 'nearest' });

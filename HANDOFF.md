@@ -1,5 +1,17 @@
 # Session handoff: Afterhours demo -> real client build
 
+## Update 2026-09-28 (second session): HARA redesign
+
+- Real name: **HARA Facilities Cleaning**. Client brief arrived as a DOCX (not a PDF), saved to
+  `docs/client/hara-website-direction.docx`. Krishna: take company info from it, ignore its layout
+  instructions; he directs the site.
+- Step 2 (design) done on branch `hara-redesign`, uncommitted, not deployed, awaiting his approval
+  of desktop + phone screenshots. Details in CLAUDE.md "Design decisions".
+- Still to do: his feedback on the redesign; then step 1 brief summary questions if he wants them,
+  step 3 SOW, step 4 security plan (all client-derived docs go in `docs/client/`). Run
+  `security-protocol` before any deploy; the live demo still shows the old Afterhours design.
+
+
 Written 2026-09-28 at the end of the build session (2026-09-23 to 09-24). Read `CLAUDE.md` first
 for the stack, file map, locked decisions and gotchas. This file is the story and the next steps.
 

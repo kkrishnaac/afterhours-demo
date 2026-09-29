@@ -1,63 +1,34 @@
-import '@fontsource/cormorant-garamond/500.css';
-import '@fontsource/cormorant-garamond/600.css';
-import '@fontsource/hanken-grotesk/400.css';
-import '@fontsource/hanken-grotesk/500.css';
+import '@fontsource-variable/mona-sans/wdth.css';
 import './style.css';
 
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { initStory } from './story.js';
+import { initMotion } from './motion.js';
 import { initQuote } from './quote.js';
-import { runLoader } from './loader.js';
 import { initViewer } from './viewer.js';
-import { initHero } from './hero.js';
 
-gsap.registerPlugin(ScrollTrigger);
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Phones and tablets keep native scrolling: it is smoother there than any JS scroller.
 const touch = matchMedia('(hover: none), (pointer: coarse)').matches;
 
-// Mobile address bars resize the viewport mid-scroll; re-measuring on each of
-// those makes the page jump. Ignore them.
-ScrollTrigger.config({ ignoreMobileResize: true });
+// Desktop wheel scrolling glides to a stop instead of stepping. A slightly
+// lower lerp than the default (0.1) gives a calmer, heavier settle.
+const lenis = !reduceMotion && !touch ? new Lenis({ autoRaf: true, lerp: 0.085 }) : null;
 
-let lenis = null;
-if (!reduceMotion && !touch) {
-  lenis = new Lenis({ autoRaf: false, anchors: false });
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add((time) => lenis.raf(time * 1000));
-  gsap.ticker.lagSmoothing(0);
-  ScrollTrigger.addEventListener('refresh', () => lenis.resize());
-}
-
-// In-page links: smooth, and in step with the scroll effects.
+// In-page links: one smooth glide that stops just below the floating nav.
+// Both Lenis and scrollIntoView honour the CSS scroll-padding-top, so no offset here.
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
-  const target = document.querySelector(a.getAttribute('href'));
+  const id = a.getAttribute('href');
+  const target = id === '#top' ? document.body : document.querySelector(id);
   if (!target) return;
   e.preventDefault();
-  if (lenis) lenis.scrollTo(target, { offset: 0, duration: 1.2 });
+  if (lenis) lenis.scrollTo(id === '#top' ? 0 : target, { duration: 1.4 });
+  else if (id === '#top') window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
   else target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
-  if (a.getAttribute('href') === '#main') target.focus?.();
+  if (id === '#main') target.focus?.({ preventScroll: true });
 });
 
-const hero = initHero(document.querySelector('.hero'), { reduceMotion });
-initStory({ reduceMotion });
+initMotion({ reduceMotion });
 initQuote();
 initViewer({ lenis, reduceMotion });
-
-// The intro hands over to the page, and the clean starts as the page settles.
-runLoader({ reduceMotion, lenis, onReveal: () => hero?.play(0.8) })
-  .then((ran) => {
-    ScrollTrigger.refresh();
-    if (!ran) hero?.play(0.4);
-  })
-  .catch(() => {
-    document.querySelector('.loader')?.remove();
-    hero?.showClean();
-  });
-
-document.fonts?.ready.then(() => ScrollTrigger.refresh());
-window.addEventListener('load', () => ScrollTrigger.refresh());

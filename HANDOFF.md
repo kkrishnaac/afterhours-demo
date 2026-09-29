@@ -1,111 +1,79 @@
-# Session handoff: Afterhours demo -> real client build
+# Handoff: HARA website, next session = colour palette and logo
 
-## Update 2026-09-28 (second session): HARA redesign, live
+Written 2026-09-28 at the end of the build session. Read `CLAUDE.md` first (stack, file map,
+brand section, decisions, gotchas). This file is where things stand and what to do next.
 
-- Real name: **HARA Facilities Cleaning**. Client inputs in `docs/client/` (gitignored): the DOCX,
-  a priorities note (flexible hours, offices only, security conscious, free walkthroughs), and
-  `company-notes.md` (vision line options, the service list we drafted, claims to confirm).
-- Krishna directs the site; the client docs are for company facts only.
-- Redesign approved and deployed to the Pages URL after a GO gate (`security/golive/2026-09-28-GO.md`).
-- Next: Krishna's feedback; client confirms the security claims and real phone/email; then SOW
-  (frontend + backend for the walkthrough form) and the security plan, both in `docs/client/`.
+## Where things stand
 
-## Update 2026-09-28 (latest): production live, domain is the only step left
+- **Live (pre-domain):** https://hara-website.chaudharikrishna0415.workers.dev on Cloudflare
+  (Worker `hara-website`, version `9c30b59b`, D1 `hara-walkthroughs`, `noindex`). The old GitHub
+  Pages URL redirects there. `main` is pushed and matches production.
+- **Done:** redesign (green palette, Mona Sans, rounded shapes, quiet motion), content built on the
+  client's four priorities, tower logo + full logo kit, walkthrough request backend (validation,
+  Turnstile, rate limits, D1, email with hold mode, retries, retention), legal pages (privacy,
+  terms, accessibility), 404, share image, security headers, https redirect, operator scripts,
+  52 tests, security gate GO (`security/golive/2026-09-28-backend-GO.md`).
+- **Client documents (private, `docs/client/`):** SOW (`HARA-Website-Scope-of-Work.docx`),
+  security plan (`security/HARA-Security-Plan.pdf`), company notes, logo kit.
+- **Waiting on HARA:** domain, business email + Resend, real phone/email, confirmation of the
+  security practices on the site, lawyer review of the privacy policy. Then `docs/DEPLOY.md`.
+- **Krishna's own action:** confirm 2FA on Cloudflare, GitHub and Resend (details in the private
+  security plan).
 
-- Live: https://hara-website.chaudharikrishna0415.workers.dev (Cloudflare, Krishna's account).
-  GitHub Pages URL redirects there. Security gate GO: `security/golive/2026-09-28-backend-GO.md`.
-- Built this round: privacy policy, terms, accessibility statement, 404, robots.txt, branded
-  og.jpg, footer legal links, email hold mode, http→https, production env, leads/PIPEDA scripts.
-- Client security plan (PDF): `docs/client/security/HARA-Security-Plan.pdf`.
-- Launch blockers: 2FA confirmed on all accounts, real phone/email, HARA confirms security practices,
-  lawyer review, photo licence, alerts. Then the domain steps in `docs/DEPLOY.md`.
+## Next session: colour palette and logo
 
-## Update 2026-09-28 (later): SOW written, backend built
+Krishna said: "I want to work on colour palette next and the logo of the company."
+He didn't say what he dislikes yet, so **ask first, one question at a time**, for example:
+1. What should change about the palette: the green itself, how much green there is, the
+   neutrals, or a different direction entirely (e.g. back toward the client's navy/blue)?
+2. For the logo: refine the tower mark, or explore new directions?
+3. Does HARA (the client) want continuity with their original navy-and-blue logo?
 
-- SOW (editable Word, prices blank for Krishna): `docs/client/HARA-Website-Scope-of-Work.docx`
-  (source `docs/client/build-sow.js`). Five phases + optional add-ons + security checklist.
-- Krishna's decisions: Cloudflare hosting; requests go to email + database (dashboard later);
-  HARA has no domain or business email yet; backend first.
-- Phase 3 backend built on branch `backend-walkthrough` (not yet committed or pushed; Krishna to OK):
-  Worker + D1 + Turnstile + rate limit + Resend, 50 passing tests, verified end to end locally
-  (`npm run dev:worker`): stored row, consent recorded, hostile requests refused, no PII in logs.
-- Waiting on HARA: Cloudflare account, domain, Resend, lead inbox. Then `docs/DEPLOY.md`.
-- Launch blockers still open: privacy policy page (must match the D1 schema), real phone/email,
-  HARA confirming the security practices, remove noindex, security-protocol GO on the Worker.
-- Next without accounts: Phase 1 leftovers (404 page, social image), privacy policy + terms drafts,
-  Phase 4 pages (Services, Security, FAQ, About, city pages), the detailed security plan (step 4).
+### What exists today
 
-## Earlier state (2026-09-24, the old Afterhours design, kept for history)
+- Palette tokens and every place colour lives: `CLAUDE.md` → "Brand" → "Palette".
+- Logo description, mark path and every place the logo lives: `CLAUDE.md` → "Brand" → "Logo".
+- The client's original logo: `docs/client/logo/original-client-logo.jpg` (deep navy lettering
+  about `#0B2A5B`, bright-blue gradient swoosh and sparkles, an H with a building).
+- Logo explorations already shown to Krishna:
+  - `docs/client/logo/concepts.html`: A Doorway (arched door in the H), **B Tower (his pick)**,
+    C Clean pass (diagonal crossbar).
+  - `docs/client/logo/tower-variants.html`: he asked to redesign the tower; B2 slanted roof was
+    chosen over B1 setback crown, B3 curtain-wall slit, B4 twin towers, B5 slant + slit.
+  - Final kit and brand sheet: `docs/client/logo/final/` (`hara-logo-sheet.png`).
 
-- **Live demo:** https://kkrishnaac.github.io/afterhours-demo/ (last commit `075e3b4`, "Tighter hero").
-  Working tree clean. Verified on phone (390 px, 3x) and desktop (1440 px), 0 console errors.
-- **Security:** go-live gate GO (`security/golive/2026-09-24-GO.md`). Static site, no backend,
-  no secrets, CSP meta, npm audit 0 vulnerabilities.
-- **What the site is today:** one long page telling one night in an office, 18:00 to 07:00.
-  1. Intro loader: tiny word flicks through GTA cities, lands on the name, becomes the cobalt pill.
-  2. Hero: 2D wordmark arrives dirty, squeegee wipes it clean (auto, ~2.3 s), one line + "Get a quote".
-  3. Dusk band ("The city goes home. That's when we start.") on the dusk office photo.
-  4. Services on the night-reception photo (two groups: every night / when you need it). PLACEHOLDER list.
-  5. Gallery: edge-to-edge photos after alexzarour.com, IMG 01-09 captions, tap opens the photo viewer.
-  6. "Nothing gets skipped" checklist on the corridor photo (ticks as you scroll). PLACEHOLDER times.
-  7. "Every city in the GTA" map, 16 cities light up from Toronto outward.
-  8. "Good morning" dawn band, then a 4-step quote form (office size, frequency, city, name/email).
-     DEMO ONLY: it validates and shows a thank-you, sends nothing.
-  9. Footer with placeholder phone/email and a "demo site" note.
-- **Assets:** 9 Higgsfield 4K stills (masters in `assets/raw/`, gitignored; web ladders in
-  `public/img/`). Roughly $5.50 of the Higgsfield API balance used (~$4.60 left of $10.17 on 09-23;
-  confirm on console.higgsfield.ai).
+### What Krishna has said about brand so far
 
-## How we got here (so the next session doesn't repeat rejected ideas)
+- Wants: professional, minimal, iconic; elegant brand-grounded type (not robotic defaults);
+  "white gives very clean vibes"; smooth, soft shapes rather than sharp edges.
+- Rejected before: 3D anything, sky-blue + warm beige gradient palette, swooshes/sparkles/gradients
+  in the logo, a showy animated wordmark.
+- Green was chosen because "hara" is Hindi for green. Worth confirming he still wants that link.
 
-- Started with a 3D (three.js) chrome wordmark on a dark night theme. Krishna moved to a white site,
-  then glossy black letters, then rejected 3D entirely as "not crisp" and too slow. It's now 2D SVG.
-- He disliked: sky-blue CTA + warm beige gradient palette, empty-looking hero, having to tap the name
-  to replay the animation, two "Afterhours" names visible on the hero, janky phone scrolling.
-- He liked / asked for: alexzarour.com mechanics (city-name loader, fixed pill, edge-to-edge photo
-  placement, viewer), photos as full-screen section backgrounds, super simple + easy to use.
-- Hero options offered 2026-09-24: photo below the name / photo behind / tighten text-only. He chose
-  **tighten, text-only**. It may still read empty on phones; revisit only if he raises it.
-- Phone scroll fix measured: main-thread work while scrolling down 53% (per frame 3.8 ms -> 1.3 ms).
+### How to work (suggested)
 
-## Next session: goals Krishna set
+1. Run `engineering-team`, then `design-md-library`, `design-taste-frontend`,
+   `redesign-existing-projects`; `ui-ux-pro-max` for palette ideas; the `design` skill for logo
+   styles (no GEMINI_API_KEY, so build marks as vector like `build_logo.py` does).
+2. Show 2 or 3 palette directions side by side before changing the site: a quick way is a sheet
+   under `docs/client/` rendered through the dev server (`/docs/client/...`), or temporary
+   `:root` overrides injected in the browser for real-page screenshots.
+3. Change the palette only through the tokens and the list in `CLAUDE.md`; run
+   `npm run contrast` (all PASS) and screenshot desktop + phone with the playwright MCP.
+4. For the logo, edit `MARKS` in `docs/client/logo/build_logo.py`, run
+   `python3 build_logo.py --final` (from that folder) and `node docs/client/logo/png.mjs`
+   (from the repo root), then update the inline mark in `index.html` and `partials/`,
+   `public/favicon.svg`, `public/apple-touch-icon.png` and `public/og.jpg`.
+5. Ship to the live URL with `npm run deploy` after a security re-run note; tell Krishna the link.
 
-He now has **the real company name** and **a PDF from the client describing what he wants on the
-website**. The next session should:
+## Other open work (after brand)
 
-1. **Absorb the inputs.** Read the PDF fully (use the `pdf` skill). Extract: services, service area,
-   pages/sections wanted, features (quote/booking/contact, portals, payments?), brand cues, content
-   the client will supply, tone, must-haves vs nice-to-haves, contact details, deadlines/budget if stated.
-   Quote the client's own words where requirements are ambiguous.
-2. **Design work.** Rename from "Afterhours" to the real name (procedure in `CLAUDE.md`), then
-   reconcile the demo with the brief: what stays, what changes, what's new. Follow the design
-   protocol (design-md-library + design-taste-frontend + redesign-existing-projects). Keep Krishna's
-   locked decisions unless the client's brief contradicts them; if it does, surface the conflict and ask.
-3. **Scope of work (SOW)** for the full build, written as a document Krishna can share with the
-   client: frontend + backend, split into phases/milestones, each with deliverables, acceptance
-   criteria, assumptions, what the client must provide, and what's out of scope. Include hosting,
-   domain, email, analytics, SEO basics (local SEO for the GTA), accessibility (AODA/WCAG 2.1 AA),
-   and a maintenance/handoff section. Estimate effort per item; leave pricing to Krishna unless he asks.
-4. **Security for both ends.** Frontend: CSP/headers, form hardening, dependency hygiene, privacy of
-   anything collected. Backend: whatever the SOW introduces (form endpoint, email, database, admin,
-   bookings, payments) run through `build-security` (Part A technical + Part B legal: PIPEDA privacy
-   policy, CASL consent for any marketing email, cookie consent if analytics, AODA) and the
-   `security-protocol` 50-threat gate as a pre-launch plan. Produce a security plan per end, not just a pass/fail.
+- Phase 4 of the SOW: Services, Security, FAQ, About and city pages; structured data.
+- Alerts for Worker errors and failed notifications (set up with the domain).
+- Dev-only `undici` advisories in wrangler's local tooling: update wrangler when a fix ships.
 
-## Decisions the next session will need from Krishna (ask early, one at a time)
+## Short history
 
-- Where the real site will live: keep static hosting + a small serverless backend, or a full platform?
-  Today's host (GitHub Pages) can't run server code or set security headers. Likely candidates:
-  Cloudflare Pages + Workers, Netlify + Functions, or Vercel. Let the PDF's features drive this.
-- Where quote requests should go (email inbox, CRM, spreadsheet, a simple admin page).
-- Custom domain and business email (does the client own them yet?).
-- Real photos vs keeping the Higgsfield stills (check the Higgsfield plan's commercial-use terms
-  before launch either way).
-- Whether the repo should become private once it holds client content (Pages on a free plan
-  needs a public repo; moving hosts removes that constraint).
-
-## Known gaps / placeholders to replace for launch
-
-Services list, phone, email, checklist times, business name everywhere, `noindex` meta, quote form
-backend + spam protection + privacy policy + consent wording, real testimonials (none exist; do not
-invent any), JSON-LD LocalBusiness once details are real, 404 page, favicon/OG image with the real name.
+- 09-23/24: "Afterhours" demo (night story, squeegee wordmark, GitHub Pages).
+- 09-28: real name HARA; professional redesign; client priorities; tower logo; SOW; backend;
+  Cloudflare production; security plan. Git history has the details.

@@ -7,7 +7,7 @@ import { BUSINESS } from './business.js';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // Typographic apostrophes in visible copy, as on the rest of the site.
-const t = (s) => esc(s).replace(/(\w)'(\w)/g, '$1\u2019$2');
+export const t = (s) => esc(s).replace(/(\w)'(\w)/g, '$1\u2019$2');
 const byName = new Map(AREAS.map((a) => [a.name, a]));
 
 export const HUB_FILE = 'service-areas.html';
@@ -17,7 +17,7 @@ export const HUB_PATH = '/service-areas';
 export const ALL_PAGES = () => [HUB_FILE, ...AREAS.map(areaFile)];
 export const ALL_PATHS = () => ({ [HUB_FILE]: HUB_PATH, ...Object.fromEntries(AREAS.map((a) => [areaFile(a), areaPath(a)])) });
 
-const head = ({ title, description }) => `<!doctype html>
+export const head = ({ title, description }) => `<!doctype html>
 <html lang="en-CA">
 <head>
   <meta charset="utf-8" />
@@ -35,25 +35,30 @@ const head = ({ title, description }) => `<!doctype html>
   <meta property="og:site_name" content="HARA Facilities Cleaning" />
   <meta property="og:locale" content="en_CA" />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="icon" href="favicon.ico?v=2" sizes="48x48" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2" />
   <meta name="robots" content="noindex" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <x-include src="partials/nav-page.html"></x-include>
 `;
-const foot = `  <x-include src="partials/footer.html"></x-include>
+export const foot = `  <x-include src="partials/footer.html"></x-include>
   <script type="module" src="/src/page.js"></script>
 </body>
 </html>
 `;
 
 const book = (city) => `./?city=${encodeURIComponent(city)}#walkthrough`;
-const actions = (city, label = 'Book a free walkthrough') => `    <div class="area__actions">
+export const actions = (city, label = 'Book a free walkthrough') => `    <div class="area__actions">
       <a class="btn btn--primary btn--lg" href="${city ? book(city) : './#walkthrough'}">${label}</a>
       <a class="call" href="tel:${BUSINESS.phoneE164}"><i data-icon="phone"></i>${BUSINESS.phoneDisplay}</a>
     </div>`;
+// Breadcrumb for the simple pages: [[label, href], ..., [label]] (the last is the current page).
+export const trail = (items) => `    <nav class="crumbs" aria-label="Breadcrumb">
+      ${items.map(([l, h], i) => (i === items.length - 1 ? `<span aria-current="page">${t(l)}</span>` : `<a href="${h}">${t(l)}</a>`)).join(' <span aria-hidden="true">/</span> ')}
+    </nav>`;
 const crumbs = (last) => `    <nav class="crumbs" aria-label="Breadcrumb">
       <a href="./">Home</a>${last ? ` <span aria-hidden="true">/</span> <a href="${HUB_FILE}">Service areas</a> <span aria-hidden="true">/</span> <span aria-current="page">${t(last)}</span>` : ` <span aria-hidden="true">/</span> <span aria-current="page">Service areas</span>`}
     </nav>`;
@@ -86,7 +91,7 @@ ${a.faqs.map(([q, an]) => `    <details class="faq">
     </details>`).join('\n')}
 
     <h2>How it works</h2>
-    <p>We visit your office first, free, and see the size and condition of the space. You get a clear quote, and cleaning starts on the days and at the times you choose. Offices only, any day and any time.</p>
+    <p>We visit your office first, free, and see the size and condition of the space. You get a clear quote, and cleaning starts on the days and at the times you choose. Offices only, any day and any time. See <a href="services.html">everything we clean</a> and <a href="security.html">how we protect your office</a>.</p>
 ${actions(a.name)}
 
     <h2>Also serving</h2>

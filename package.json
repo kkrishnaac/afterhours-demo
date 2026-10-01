@@ -9,6 +9,7 @@
     "build": "npm run areas && vite build",
     "preview": "vite preview",
     "images": "node scripts/optimize-images.mjs",
+    "favicons": "node scripts/favicons.mjs",
     "test": "vitest run",
     "build:cf": "npm run areas && vite build --mode cloudflare",
     "dev:worker": "npm run build:cf && wrangler d1 migrations apply DB --local && wrangler dev",

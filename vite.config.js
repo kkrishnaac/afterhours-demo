@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig, loadEnv } from 'vite';
 import { srcset, smallest, dimensions } from './src/photos.js';
-import { ALL_PAGES, ALL_PATHS, structuredData, ldScript } from './src/area-pages.js';
+import { ALL_PAGES, ALL_PATHS, structuredData, ldScript } from './src/site-pages.js';
 
 // Content Security Policy. The demo build (GitHub Pages) allows nothing but the
 // site itself. The live build (Cloudflare) also allows Turnstile, the spam check

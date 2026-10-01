@@ -137,7 +137,12 @@ export function initQuote() {
     if (e.target.type === 'radio') form.querySelector(`#${e.target.name}-error`).hidden = true;
   });
   form.querySelectorAll('.chips label').forEach((label) => {
-    label.addEventListener('pointerup', () => setTimeout(() => { if (i < 2) show(i + 1); }, 260));
+    // Advance from the step the chip was on, and only if the visitor hasn't already pressed
+    // Next in the meantime (otherwise a quick chip + Next skipped the following step).
+    label.addEventListener('pointerup', () => {
+      const from = i;
+      setTimeout(() => { if (i === from && from < 2) show(from + 1); }, 260);
+    });
   });
   next.addEventListener('click', () => { if (stepValid()) show(i + 1); });
   back.addEventListener('click', () => show(i - 1));

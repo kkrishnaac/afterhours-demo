@@ -163,6 +163,9 @@ ends, with a 3.6s CSS-only failsafe for no-JS. Verified on a production build 20
 Client priorities (`docs/client/company-notes.md`): flexible hours (any day, any time), offices
 only for now, security conscious, free walkthrough before every quote.
 - Vision line / hero: "Every desk ready. Every door locked." (second line in the accent).
+  Tagline (Krishna asked for one, 2026-10-01): "Ready before you are." in the footer under the logo
+  (`partials/footer.html`, `.footer__tag`). Alternatives he didn't pick: "Clean. Locked. Ready.",
+  "Spotless, on your schedule."
   One CTA label everywhere: "Book a free walkthrough" ("Free walkthrough" in the nav under 400px).
 - Type: Mona Sans only. Headings at `font-stretch: 112%`, weight 560, tight tracking. Hero lines
   never wrap mid-sentence.

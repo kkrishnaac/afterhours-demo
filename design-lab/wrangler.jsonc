@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  // Static design alternates for review. No Worker code, no form backend: the pages are
+  // noindex and the form is a visual demo that links to the live site.
+  "name": "hara-design-lab",
+  "compatibility_date": "2026-09-12",
+  "assets": { "directory": "./dist", "not_found_handling": "404-page" },
+  "workers_dev": true,
+  "preview_urls": false
+}

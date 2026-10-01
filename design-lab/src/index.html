@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HARA design lab</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/shared.css" />
+  <style>
+    .lab-page { max-width: 880px; margin: 0 auto; padding: 64px var(--pad) 96px; }
+    .lab-page h1 { font-weight: 480; font-size: 2.2rem; letter-spacing: -0.02em; }
+    .lab-page .lead { margin-top: 12px; }
+    .options { display: grid; gap: 16px; margin-top: 36px; }
+    .option { display: grid; grid-template-columns: 56px 1fr auto; gap: 18px; align-items: center; padding: 22px 24px; background: var(--surface); border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--hairline); text-decoration: none; color: inherit; }
+    .option b { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: var(--wash); color: var(--accent); font-size: 1.4rem; font-weight: 500; }
+    .option p { color: var(--ink-muted); font-size: 15px; margin-top: 2px; }
+    .option .icon { color: var(--ink-muted); }
+    .note { margin-top: 36px; font-size: 14px; color: var(--ink-muted); }
+  </style>
+</head>
+<body>
+  <main class="lab-page">
+    <h1>HARA design lab</h1>
+    <p class="lead">Three alternate layouts for review. Same logo, same navy and white, same words and photos as the live site, lighter type. The form is a preview; the working one is on the live site.</p>
+    <div class="options">
+      <a class="option" href="/a/"><b>A</b><span><strong>Light and airy</strong><p>White canvas, large photo beside the headline, services as a photo strip, skyline panel for security. Mona Sans at light weights.</p></span><i data-icon="arrow-right"></i></a>
+      <a class="option" href="/b/"><b>B</b><span><strong>Navy band</strong><p>Deep navy hero and closing band, white cards and a photo grid between them, a step timeline. Plus Jakarta Sans.</p></span><i data-icon="arrow-right"></i></a>
+      <a class="option" href="/c/"><b>C</b><span><strong>Photo first</strong><p>Full-screen office photo behind the headline, editorial gallery, the Toronto skyline behind the security section. Mona Sans at light weights.</p></span><i data-icon="arrow-right"></i></a>
+      <a class="option" href="https://hara-website.chaudharikrishna0415.workers.dev/"><b>Live</b><span><strong>Current site</strong><p>For comparison.</p></span><i data-icon="arrow-up-right"></i></a>
+    </div>
+    <p class="note">Private review link. Not indexed.</p>
+  </main>
+</body>
+</html>

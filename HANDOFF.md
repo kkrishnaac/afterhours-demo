@@ -77,7 +77,19 @@ write secrets or account security status into this public repo.
   size, so the system is chosen as a whole. The real print files follow in `~/hara-print`.
 - Fonts: self-hosted latin variable woff2 in `design-lab/public/fonts` (OFL, from
   `@fontsource-variable/hanken-grotesk`, `ibm-plex-sans`, `manrope`, devDependencies).
-- Claude's recommendation: E for the trust-first brief, D if the client wants the photos to lead.
+- Krishna rejected D, E and F too (2026-10-01, late): wants animated colour gradients, depth, type
+  with character ("not 2D everything", fonts "unseasoned"). He then pointed at
+  https://www.coreastudios.com and asked for that site mimicked for HARA: its transitions,
+  choreography and gradient, "including fonts".
+- G = Studio (`g.html`, `g.css`, `g.js`): the Corea system rebuilt for HARA. Dark #161515 canvas,
+  cream #f3f1e2 type, blur-in loader (40px backdrop blur fading over 2s), diagonal spectrum glare
+  sweep on navigation (Web Animations, 0.9s), arc dial menu that turns to the section in view,
+  horizontal reel of uppercase photo cards (CSS scroll-driven animation, grid toggle, stacked on
+  phones), drifting gradient blob behind the hero card and the panels, translucent blurred
+  buttons, live Toronto clock with the pulsing red dot, giant wordmark footer. Their fonts (TWK
+  Lausanne, Record Disc) are commercial: Hanken Grotesk and Archivo (wdth 112, wght 850) stand in.
+  Research in the scratchpad was throwaway; the extracted tokens are described in `g.css` comments.
+  This reverses the earlier "light theme only, no gradients" rule, on Krishna's instruction.
 
 ## 1. What is live
 

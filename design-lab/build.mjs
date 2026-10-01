@@ -35,6 +35,6 @@ for (const f of pages) {
   mkdirSync(dest, { recursive: true });
   writeFileSync(resolve(dest, 'index.html'), html);
 }
-for (const f of readdirSync(resolve(here, 'src')).filter((f) => f.endsWith('.css'))) cpSync(resolve(here, 'src', f), resolve(out, f));
+for (const f of readdirSync(resolve(here, 'src')).filter((f) => f.endsWith('.css') || f.endsWith('.js'))) cpSync(resolve(here, 'src', f), resolve(out, f));
 writeFileSync(resolve(out, '_headers'), `/*\n  X-Robots-Tag: noindex, nofollow\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: DENY\n  Referrer-Policy: strict-origin-when-cross-origin\n  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'\n/img/*\n  Cache-Control: public, max-age=86400\n/fonts/*\n  Cache-Control: public, max-age=86400\n`);
 console.log('design-lab: built', pages.map((p) => p.replace('.html', '')).join(', '));

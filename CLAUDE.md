@@ -121,8 +121,11 @@ on a separate Worker. `node design-lab/build.mjs` expands `<i data-icon>` (Phosp
 `/c/` photo first (Mona Sans); A, B, C were rejected on 2026-10-01 (same template, not premium,
 wrong type family). `/d/` Gallery (Apple DESIGN.md structure, Hanken Grotesk), `/e/` Ledger (IBM
 Carbon structure, IBM Plex Sans 300), `/f/` Concierge (BMW corporate structure, Manrope) are
-different skeletons on `src/base.css` (palette only) plus their own CSS; `/print/` previews the
-card and brochure cover in each. A, B, C share `src/shared.css`; `_form.html` is a visual demo
+different skeletons on `src/base.css` (palette only) plus their own CSS (rejected too); `/g/` Studio
+is coreastudios.com's system rebuilt for HARA on Krishna's instruction (dark canvas, blur-in
+loader, spectrum glare on navigation, dial menu, horizontal reel, gradient blob, live clock;
+`g.js` is the only scripted page, copied by `build.mjs`); `/print/` previews the card and brochure
+cover in D, E, F. A, B, C share `src/shared.css`; `_form.html` is a visual demo
 of step 1 linking to the live form; `_lab.html` carries the A to F / Live switch (included by `_footer.html` and the new pages). Local preview:
 `python3 -m http.server 4340 --directory design-lab/dist`. Screenshot script pattern in
 `/tmp/qa-live/lab-shots.mjs` (recreate from `scripts/qa/shot.mjs` if gone).
@@ -207,7 +210,9 @@ only for now, security conscious, free walkthrough before every quote.
   wordmark, photo wipes, button glint, clock pill, the night story, and any other 3D (the one
   exception is the hero logo build below).
 - Header: slim (54px) floating bar, always visible, aligned to the content column, links centred.
-- Light theme only ("white gives very clean vibes"). No background gradients.
+- Light theme only ("white gives very clean vibes"). No background gradients. **Reversed by Krishna
+  on 2026-10-01 for the redesign:** he asked for animated colour gradients and the dark
+  coreastudios.com look (design lab `/g/`). Whichever direction he confirms sets the new rule.
 - Phone: native scroll, no pinning or parallax, `svh` units, services become a swipe row.
 - Logo: the client's original (2026-09-28), shown off in the hero. This reverses his earlier "no
   swooshes, sparkles or gradients" wish; it is his call. Four rounds of new designs were rejected.

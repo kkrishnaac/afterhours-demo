@@ -19,7 +19,7 @@ No secret ever goes in this repo. Local secrets live in `.dev.vars` and `.env.*`
 ## Before the domain goes live (launch blockers)
 
 - [ ] **2FA confirmed** on Cloudflare, GitHub, registrar, Resend and the Gmail inbox (steps: `HANDOFF.md` section 3).
-- [ ] **Cloudflare notification for Worker errors** added (steps: `HANDOFF.md` section 3).
+- [x] **Cloudflare notification for Worker errors** (alert policy "HARA website Worker errors", 2026-10-01).
 - [ ] HARA confirms every security practice described on the page, and approves the photos.
 - [ ] Lawyer review of the privacy policy and terms (recommended).
 - [ ] HARA's inbox for `LEAD_TO_EMAIL` decided (placeholder in `wrangler.jsonc`, set in step 4 below).
@@ -87,7 +87,6 @@ Replace `DOMAIN` with the real one, e.g. `harafacilities.ca`.
    - Submit a real request from a phone: HARA's inbox gets it within a minute, the
      confirmation arrives, and `npm run leads` shows it.
    - Search Console and Bing Webmaster Tools: add the site, submit `https://DOMAIN/sitemap.xml`.
-   - Cloudflare Notifications: alert on Worker errors (if not done already).
    - Lighthouse against the domain (mobile 90+ / 100 / 100 / 100 expected now that `noindex` is off).
    - If `LEAD_TO_EMAIL` is a Gmail address, the privacy policy already names Google as a provider.
 8. **Security gate:** run `security-protocol` against `https://DOMAIN`. Launch only on GO.

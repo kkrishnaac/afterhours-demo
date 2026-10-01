@@ -57,10 +57,12 @@ actions and HARA owes three confirmations (section 3).
    - Resend: **Settings (team), Security**, enable 2FA.
    - Gmail (the public contact inbox): Google Account, **Security, 2-Step Verification**.
    - Registrar: in its account security settings, once the domain is bought.
-2. **Cloudflare notification for Worker errors:** dashboard, account home, **Notifications**
-   (left menu), **Add**, filter by product **Workers**, pick the Workers error/exception alert
-   offered, scope it to `hara-website`, deliver to his email, save. Then **Workers & Pages,
-   hara-website, Observability** shows the logs it refers to.
+2. ~~Cloudflare notification for Worker errors~~ **done 2026-10-01**: alert policy "HARA website
+   Worker errors" (type Workers Observability "Real-time issue", account-wide, enabled, email to
+   the account address). The dashboard form for this alert type has no email section and its
+   Save stays disabled, so it was created through the dashboard's own API from Krishna's
+   signed-in session; it shows in Manage account, Alerts. Issues are listed under Observability,
+   Issues.
 3. **Analytics token (optional):** Analytics & Logs, Web Analytics, Add a site, hostname
    `hara-website.chaudharikrishna0415.workers.dev`, manual snippet, copy the 32-character
    `token`, put `CF_BEACON_TOKEN=<token>` in `.env.production-cf`, `npm run deploy`.

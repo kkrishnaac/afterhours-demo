@@ -12,7 +12,7 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
 - **Status (2026-10-01): launch-ready apart from the domain.** Phase 5 QA done (Lighthouse mobile
   92 to 96, desktop 100, axe 0 violations, three engines + phone emulation, load test), full
   security gate GO (`security/golive/2026-10-01-full-GO.md`), 67 tests pass, tree clean.
-  Left: Krishna's account actions and HARA's confirmations (`HANDOFF.md` section 3), then the
+  Worker-error alert is set in Cloudflare. Left: Krishna's 2FA confirmation and HARA's confirmations (`HANDOFF.md` section 3), then the
   domain (`docs/DEPLOY.md`). One page only: see Scope below.
 - **Reference only:** the original "Afterhours" design (commit `dea9337`) runs as a separate
   static Worker at https://afterhours-design.chaudharikrishna0415.workers.dev (`noindex`).

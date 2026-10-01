@@ -96,9 +96,14 @@ node scripts/qa/matrix.mjs <url> /tmp   # browser stress matrix (see scripts/qa/
 | `security/golive/` | Go-live reports; latest full gate `2026-09-28-full-GO.md` |
 | `docs/client/` (gitignored) | Client brief + priorities, company notes, SOW (docx + generator), security plan (PDF), logo kit, leads exports |
 
-Photo masters were generated with Higgsfield (GPT Image 2.5 via `marketing-studio/image/flare`,
-4K) by `~/higgsfield/sites/afterhours_stills.py`. 9 exist. Stills only: super-clean offices, no
-people, no before/after, no video.
+Photos (since 2026-10-01): Unsplash originals chosen by Krishna (Unsplash License: free for
+commercial use, no attribution required; photo ids and page slugs in `src/photos.js` comments
+and `/tmp`-free record below). Masters in `assets/raw` (gitignored, 2300 to 6240 px wide), ladders
+in `public/img` via `npm run images`, data (id, title, alt, intrinsic size) in `src/photos.js`.
+Ids 11 to 19; the old AI-generated Higgsfield stills (01 to 10) are gone. Unsplash photo ids:
+11 pYlBAu3de0w, 12 yWwob8kwOCk, 13 rm3PeMyY2GU, 14 8B0LHe9wpX4 (Toronto), 15 Kk9ZMyIDovI,
+17 Oo_KFwRGCsg, 18 pQ5hSOrkYgE, 19 tzhtRGvuA0I (Toronto, security band). Spare: W1 hgPtOHE82Ec.
+Stills only: no people, no before/after, no video.
 
 ## Brand (2026-09-28: the client's own logo, navy palette)
 
@@ -181,7 +186,10 @@ only for now, security conscious, free walkthrough before every quote.
   swooshes, sparkles or gradients" wish; it is his call. Four rounds of new designs were rejected.
 - 3D: only the one-time hero logo build, which ends on crisp vector (he had rejected 3D as "not
   crisp" before). Previously rejected: sky-blue + warm beige gradient palette.
-- The security section's practices are claims: the client must confirm them before launch.
+- Security section (Krishna, 2026-10-01, from the client): HARA's security role is alarming and
+  disarming, and responsibility for key fobs and access cards. The band now makes exactly those
+  two claims; the earlier six (same team, confidential by default, lock-up check, visit log) were
+  removed as unconfirmed. The "Why HARA" security card matches.
 
 ## Conventions
 

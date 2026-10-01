@@ -20,7 +20,7 @@ No secret ever goes in this repo. Local secrets live in `.dev.vars` and `.env.*`
 
 - [ ] **2FA confirmed** on Cloudflare, GitHub, registrar, Resend and the Gmail inbox (steps: `HANDOFF.md` section 3).
 - [x] **Cloudflare notification for Worker errors** (alert policy "HARA website Worker errors", 2026-10-01).
-- [ ] HARA confirms every security practice described on the page, and approves the photos.
+- [x] Security claims reduced to the two HARA confirmed (alarms; fobs and cards); photos replaced with licensed Unsplash originals (2026-10-01).
 - [ ] Lawyer review of the privacy policy and terms (recommended).
 - [x] Walkthrough requests go to harafacilitiescleaning@gmail.com (`LEAD_TO_EMAIL`, set 2026-10-01).
 - [x] Real phone number and email on every page. Legal pages reviewed 1 October 2026.

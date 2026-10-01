@@ -447,6 +447,7 @@ h3 { font-size: 1.12rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.
 .secure__grid h3 { margin-bottom: 6px; }
 .secure__grid p { color: var(--on-band-muted); font-size: 16px; max-width: 32ch; }
 @media (max-width: 900px) { .secure__grid { grid-template-columns: 1fr 1fr; } }
+.secure__grid--two { grid-template-columns: 1fr 1fr; max-width: 760px; }
 @media (max-width: 560px) {
   .secure__grid { grid-template-columns: 1fr; gap: 28px; }
   .secure__grid li { display: grid; grid-template-columns: 44px 1fr; column-gap: 16px; }

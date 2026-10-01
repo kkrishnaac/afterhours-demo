@@ -6,7 +6,7 @@ const main = js.find((p) => p.includes('index-'));
 const chunk = main ? ((await (await fetch(base + main)).text()).match(/hero-build-[\w-]+\.js/) || [])[0] : null;
 const paths = mode === 'static'
   ? ['/', '/privacy.html', '/terms.html', '/accessibility.html', '/brand/hara-logo.svg', '/brand/hara-lockup.svg',
-     '/favicon.svg', '/og.jpg', ...js, ...(chunk ? ['/assets/' + chunk] : []), '/img/10-dawn-open-office-1600.avif', '/nope-404']
+     '/favicon.svg', '/og.jpg', ...js, ...(chunk ? ['/assets/' + chunk] : []), '/img/11-open-office-1600.avif', '/nope-404']
   : ['/api/walkthrough'];
 const origin = base;
 const stats = { codes: {}, lat: [], bytes: 0 };

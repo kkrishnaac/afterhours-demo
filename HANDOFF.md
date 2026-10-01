@@ -72,10 +72,10 @@ actions and HARA owes three confirmations (section 3).
 
 ### HARA (through Krishna)
 
-- Confirm the six security practices on the page are true (keys and fobs, alarm codes, same
-  team, confidential by default, lock-up check, every visit logged). They appear once, on the
-  home page.
-- Approve the illustrative photos for launch, or supply real ones.
+- ~~Confirm the six security practices~~ settled 2026-10-01: Krishna relayed that HARA's role is
+  alarming/disarming and responsibility for fobs and access cards; the band now says only that.
+- ~~Approve the illustrative photos~~ settled 2026-10-01: AI stills replaced by Unsplash photos
+  Krishna picked (free commercial licence). Real photos of HARA's work can replace them later.
 - A lawyer's review of the privacy policy and terms (recommended).
 
 ### The domain (runbook: `docs/DEPLOY.md`, "Connect the domain")

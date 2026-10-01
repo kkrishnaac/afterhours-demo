@@ -9,6 +9,11 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
   (Cloudflare Worker `hara-website` in Krishna's account, version `3ea51993` as of 2026-10-01,
   D1 `hara-walkthroughs`, `noindex`). The old GitHub Pages URL
   (https://kkrishnaac.github.io/afterhours-demo/) redirects to production.
+- **Design lab (2026-10-01):** three alternate layouts for the client to choose from, live at
+  https://hara-design-lab.chaudharikrishna0415.workers.dev (Worker `hara-design-lab`, static, noindex).
+  Source in `design-lab/` (see the section below). The client's feedback on the live site: design OK,
+  **fonts too heavy**, wants "super professional, user friendly, good photos"; same logo, palette,
+  copy and photos, different template. Next session: implement the chosen one on the live site.
 - **Status (2026-10-01): launch-ready apart from the domain.** Phase 5 QA done (Lighthouse mobile
   92 to 96, desktop 100, axe 0 violations, three engines + phone emulation, load test), full
   security gate GO (`security/golive/2026-10-01-full-GO.md`), 67 tests pass, tree clean.
@@ -105,6 +110,22 @@ Ids 11 to 19; the old AI-generated Higgsfield stills (01 to 10) are gone. Unspla
 17 Oo_KFwRGCsg, 18 pQ5hSOrkYgE, 19 tzhtRGvuA0I (Toronto, security band). Spare: W1 hgPtOHE82Ec.
 Stills only: no people, no before/after, no video.
 
+## Design lab (`design-lab/`)
+
+Plain HTML + CSS alternates built from the live site's copy, logo, palette and photos, for review
+on a separate Worker. `node design-lab/build.mjs` expands `<i data-icon>` (Phosphor) and
+`<x-img id sizes alt>` (webp ladder from `design-lab/public/img`, copied from `public/img`) into
+`design-lab/dist/`; `cd design-lab && npx wrangler deploy` publishes it (assets-only Worker,
+`_headers` sets noindex + CSP). Pages: `/` (menu), `/a/` light and airy (Mona Sans 420-480),
+`/b/` navy band (Plus Jakarta Sans, self-hosted from `@fontsource-variable/plus-jakarta-sans`),
+`/c/` photo first (Mona Sans). Shared tokens in `src/shared.css`; `_form.html` is a visual demo
+of step 1 linking to the live form; `_footer.html` carries the A/B/C/Live switch. Local preview:
+`python3 -m http.server 4340 --directory design-lab/dist`. Screenshot script pattern in
+`/tmp/qa-live/lab-shots.mjs` (recreate from `scripts/qa/shot.mjs` if gone).
+**To implement a chosen variant on the live site:** port its layout/CSS into `index.html` +
+`src/style.css` keeping the real form (`src/quote.js`), the hero 3D build decision (Krishna's call
+whether to keep it), legal pages, the `x-photo` pipeline and tests; then full QA + gate as before.
+
 ## Brand (2026-09-28: the client's own logo, navy palette)
 
 After four rounds of new logo designs, Krishna chose the **client's original logo** (navy H with a
@@ -172,7 +193,9 @@ only for now, security conscious, free walkthrough before every quote.
   The same line is the tagline in the footer under the logo (`.footer__tag`). Earlier candidate "Ready before you
   are." was replaced because it repeated "ready" from the headline.
   One CTA label everywhere: "Book a free walkthrough" ("Free walkthrough" in the nav under 400px).
-- Type: Mona Sans only. Headings at `font-stretch: 112%`, weight 560, tight tracking. Hero lines
+- Type: Mona Sans only on the live site. Headings at `font-stretch: 112%`, weight 560, tight tracking.
+  **Client (2026-10-01): the fonts are too heavy.** The design-lab variants use 420-500 weights at
+  normal width (A, C) or Plus Jakarta Sans (B); whichever is chosen sets the new rule. Hero lines
   never wrap mid-sentence.
 - Shapes: interactive = pill; cards 24px; photos inside cards 16px; panels 32px. Nothing sharp.
 - Motion: professional and quiet. Hero rises on load, sections settle in once, cards lift 4px
@@ -190,6 +213,16 @@ only for now, security conscious, free walkthrough before every quote.
   disarming, and responsibility for key fobs and access cards. The band now makes exactly those
   two claims; the earlier six (same team, confidential by default, lock-up check, visit log) were
   removed as unconfirmed. The "Why HARA" security card matches.
+
+## Print collateral (separate project, later session)
+
+`~/hara-print` (local git, not pushed): business card + tri-fold brochure, `python3 build.py`, 102
+preflight checks passing on 2026-10-01, PDF/X-1a via a user-built Ghostscript. Its content
+(`haraprint/content.py`) is now **stale**: old headline "Every desk ready. Every door locked.",
+six security claims, one phone number, and `haracleaning.ca` as the printed URL and QR target (the
+domain Krishna was buying on 2026-10-01; confirm). Refresh it to match the site and the chosen
+design before anything goes to print. Krishna's rule there: only the website's details on the card
+(no personal name or title). Memory: `hara-print-collateral.md`.
 
 ## Conventions
 

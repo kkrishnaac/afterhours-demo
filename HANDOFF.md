@@ -3,11 +3,77 @@
 Updated 2026-10-01 (end of the Phase 5 session). Read in this order: this file, `CLAUDE.md`,
 `docs/DEPLOY.md`, `security/golive/2026-10-01-full-GO.md`, and the private SOW in `docs/client/`.
 
-**State: launch-ready apart from the domain.** The only engineering left is buying the domain and
-connecting it (`docs/DEPLOY.md`, "Connect the domain"). Before that, Krishna has two dashboard
-actions and HARA owes three confirmations (section 3).
+**State: launch-ready apart from the domain, with a redesign pending.** The live one-page site is
+done and gated. After seeing it, the client asked for a lighter, more professional template with the
+same logo, colours, copy and photos ("fonts too heavy"). Three alternates are live for review at
+https://hara-design-lab.chaudharikrishna0415.workers.dev (A, B, C). **Section 0 is the prompt for
+the next session:** implement the chosen variant on the live site, then refresh the print
+collateral (business card and brochure) in `~/hara-print`.
+
+## 0. Prompt for the next session
+
+Paste this into a new Claude Code session started in `~/afterhours`:
+
+```
+You are continuing the HARA Facilities Cleaning website in ~/afterhours (live, pre-domain, at
+https://hara-website.chaudharikrishna0415.workers.dev) and its print collateral in ~/hara-print.
+Read in full first: HANDOFF.md, CLAUDE.md (especially "Design lab", "Print collateral", "Brand",
+"Design decisions"), docs/DEPLOY.md, and security/golive/2026-10-01-full-GO.md. Run the
+engineering-team skill, then the session protocol in CLAUDE.md (design skills for UI work,
+web-design-guidelines and real-browser checks at desktop and phone widths before calling UI done,
+security-protocol before every deploy).
+
+Context: the client approved the content but found the fonts too heavy and wants a "super
+professional, super user friendly" look with good photos. Logo, navy/blue/white palette, copy,
+photos and phone numbers stay exactly as they are. Three alternate layouts are live at
+https://hara-design-lab.chaudharikrishna0415.workers.dev (source: design-lab/). I will tell you
+which one we chose (A, B or C) and any tweaks.
+
+Work in this order, checking in with me between steps and showing desktop and phone screenshots
+before any big visual change:
+
+1. Implement the chosen design-lab variant on the live site: port its layout and type into
+   index.html and src/style.css, keep the real four-step form (src/quote.js + Worker), the legal
+   pages, the x-photo pipeline, the city chips that preselect the form, the structured data, and
+   the tests. Ask me whether to keep the one-time 3D hero logo build or drop it for the new hero.
+   Lighter type is the point: no heading heavier than the variant uses.
+2. Re-run the Phase 5 QA on a production build: Lighthouse mobile 90+ / 100 / 100 / 100 (SEO on a
+   placeholder VITE_SITE_URL build), axe 0 violations, keyboard pass, Chromium + Firefox + WebKit
+   + phone emulation (scripts/qa/), form end to end on the local Worker, matrix, npm test. Fix
+   everything found.
+3. security-protocol re-run (scan + live probes), note in security/golive/, deploy, commit, push.
+   Then retire the design lab (npx wrangler delete hara-design-lab) once I confirm.
+4. Print collateral in ~/hara-print (read its README.md, docs/, haraprint/content.py and the
+   memory file hara-print-collateral.md first): bring the business card and tri-fold brochure in
+   line with the site: headline/tagline "Tomorrow starts clean.", both phone numbers, the two
+   security practices only (alarms armed and disarmed; responsibility for fobs and access cards),
+   the chosen design's type and layout language, the current photos, and the real domain for the
+   printed URL and QR once I confirm it (content.py has haracleaning.ca from 2026-10-01). Rebuild
+   with python3 build.py, keep all preflight checks passing, show me the PROOF PDFs as images
+   before anything is final. Only the website's details on the card: no personal name or title.
+5. Update HANDOFF.md, CLAUDE.md, docs/DEPLOY.md and memory.
+
+Ground rules: I direct the site; company facts only from docs/client or me. No em or en dashes in
+visible copy, sentence case, quiet motion. Ship to the live URL, never localhost links. Never
+write secrets or account security status into this public repo.
+```
+
 
 ---
+
+## 0b. Design lab (2026-10-01, awaiting the client's choice)
+
+- Live: https://hara-design-lab.chaudharikrishna0415.workers.dev (Worker `hara-design-lab`,
+  version 5ef69686). Source `design-lab/` (how it builds: `CLAUDE.md`, "Design lab").
+- A = light and airy (Mona Sans 420-480, photo beside the headline, photo strip, skyline panel).
+  B = navy band (Plus Jakarta Sans, navy hero and closing band, bento + photo grid, timeline).
+  C = photo first (full-screen office photo hero, editorial gallery, skyline behind security).
+  Claude's recommendation to Krishna: B, then A.
+- Research behind it: the best cleaning sites and templates (GorillaDesk, Colorlib, Jobber lists;
+  Cleaninger and Clenar templates; Cleanology, Gleem, MyClean, Jan-Pro) share one skeleton the
+  live site already has; what differs is type weight and photo-forwardness.
+- All three reuse the live site's copy, logo, palette, photos, both phone numbers; forms are
+  visual demos linking to the live form; pages are noindex.
 
 ## 1. What is live
 

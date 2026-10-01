@@ -138,8 +138,9 @@ and connecting it. The prompt to start that session is in section 9.
 
 ### C. Needs HARA (the client)
 
-- Real phone number and contact email (placeholders today: `(416) 555-0199`,
-  `hello@example.com`, plus the "Demo site" line in `partials/footer.html`).
+- ~~Real phone and contact email~~ done 2026-10-01: (416) 990-3995 and harafacilitiescleaning@gmail.com
+  are on every page; the "Demo site" footer line is removed. Still to confirm with HARA: that these
+  are the numbers they want public, and which inbox should receive requests (`LEAD_TO_EMAIL`).
 - Confirmation of every security practice described on the page, and anything for the About page
   (only what is true: founding, owner, team, insurance, WSIB, bonding).
 - A lawyer's review of the privacy policy and terms (recommended); confirmation of the photo licence.

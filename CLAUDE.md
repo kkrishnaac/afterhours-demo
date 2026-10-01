@@ -184,7 +184,9 @@ only for now, security conscious, free walkthrough before every quote.
 - Every animation honours `prefers-reduced-motion` (JS checks + CSS override at the end of style.css).
 - Contrast: every text pair >= 4.5:1 (`npm run contrast`). `translate="no"` on the brand.
   `[hidden]` is forced to `display: none`.
-- Placeholders still in the site: phone `(416) 555-0199`, `hello@example.com`; the footer says so.
+- Contact details on the site (real, from Krishna 2026-10-01): phone (416) 990-3995 (`tel:+14169903995`), email
+  harafacilitiescleaning@gmail.com. Still placeholders: `EMAIL_FROM` and `LEAD_TO_EMAIL` in `wrangler.jsonc`
+  (set at the domain step). The footer's demo note is gone.
 - Company facts come from the client's docs. Krishna directs the site; the client's layout
   instructions are not followed unless he says so.
 - Never record account security status (2FA etc.) or secrets in this public repo.

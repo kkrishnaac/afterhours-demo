@@ -19,9 +19,8 @@ No secret ever goes in this repo. Local secrets live in `.dev.vars` and `.env.*`
 ## Before the domain goes live (launch blockers)
 
 - [ ] **2FA confirmed** on Cloudflare, GitHub, registrar, Resend and the business email.
-- [ ] Real phone number and email: `partials/footer.html`, `index.html`, `privacy.html`,
-      `terms.html`, `accessibility.html`, `404.html` (search for `555-0199` and `example.com`).
-      Remove the "Demo site" line in `partials/footer.html`.
+- [x] Real phone number and email on every page (2026-10-01); "Demo site" footer line removed.
+      Still open: HARA's inbox for `LEAD_TO_EMAIL` (placeholder in `wrangler.jsonc`).
 - [ ] HARA confirms every security practice described on the page.
 - [ ] Lawyer review of the privacy policy and terms (recommended), photo licence confirmed.
 

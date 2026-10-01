@@ -1,7 +1,9 @@
 # HARA website: deployment
 
 **Production is live** on Cloudflare at
-https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`). Everything except the domain is in place:
+https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `765c3a63` as of 2026-10-01).
+Pre-domain work still open (SOW Phase 4 pages, company details, analytics, final QA and gate) is
+listed in `HANDOFF.md` section 6; the domain steps are below. Infrastructure state:
 
 | Piece | State |
 |---|---|
@@ -59,7 +61,7 @@ Replace `DOMAIN` with the real one, e.g. `harafacilities.ca`.
    ```
    This removes `noindex`, adds canonical links, absolute share-image URLs, `sitemap.xml`,
    `robots.txt` with the sitemap, and `/.well-known/security.txt`.
-6. **Deploy:** `npm run deploy` (runs the 52 tests, builds, deploys). On the next cron run
+6. **Deploy:** `npm run deploy` (runs the 60 tests, builds, deploys). On the next cron run
    (within 15 minutes) every request stored while email was on hold is emailed to HARA.
 7. **Check:**
    - https://DOMAIN and https://www.DOMAIN load; http redirects to https.
@@ -79,10 +81,34 @@ then follow the steps above. Existing requests: `npx wrangler d1 export hara-wal
 from the old account, `npx wrangler d1 execute DB --remote --env production --file leads.sql` in the new
 one (then delete `leads.sql`, it contains personal data). Retire the old Worker and database.
 
+## Backups and restore (rehearsed 2026-09-28)
+
+D1 keeps a point-in-time history of the last 30 days (Time Travel); nothing to switch on. Both
+recovery paths were rehearsed on a scratch database (`hara-restore-drill`, since deleted):
+a row was written, deleted, and brought back by restoring to a bookmark; and a full export of
+production was imported into an empty database and rebuilt the table and all three indexes.
+
+**Undo a mistake in the last 30 days** (overwrites the database: everything after the bookmark is lost):
+
+```bash
+npx wrangler d1 time-travel info hara-walkthroughs --env production                  # current bookmark
+npx wrangler d1 time-travel info hara-walkthroughs --env production --timestamp 2026-10-01T12:00:00Z  # bookmark at a time
+npx wrangler d1 time-travel restore hara-walkthroughs --env production --bookmark=<bookmark>
+```
+
+Before restoring, note the current bookmark so the restore itself can be undone.
+
+**Longer-term copy** (contains personal data: keep it off the repo and delete it when done):
+
+```bash
+npx wrangler d1 export hara-walkthroughs --remote --env production --output ~/Desktop/hara-backup.sql
+npx wrangler d1 execute <empty-database> --remote --file ~/Desktop/hara-backup.sql
+```
+
 ## Everyday commands
 
 ```bash
-npm test                     # 52 Worker tests inside workerd with a local D1
+npm test                     # 60 Worker tests inside workerd with a local D1
 npm run dev:worker           # local: build:cf + local migrations + wrangler dev on :8787
 npm run deploy               # tests, production build, deploy
 npm run db:migrate           # apply new migrations to production D1

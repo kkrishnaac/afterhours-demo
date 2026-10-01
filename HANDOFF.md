@@ -5,8 +5,8 @@ Updated 2026-10-01 (end of the Phase 5 session). Read in this order: this file, 
 
 **State: launch-ready apart from the domain, with a redesign pending.** The live one-page site is
 done and gated. After seeing it, the client asked for a lighter, more professional template with the
-same logo, colours, copy and photos ("fonts too heavy"). Three alternates are live for review at
-https://hara-design-lab.chaudharikrishna0415.workers.dev (A, B, C). **Section 0 is the prompt for
+same logo, colours, copy and photos ("fonts too heavy"). Six alternates are live for review at
+https://hara-design-lab.chaudharikrishna0415.workers.dev (A, B, C rejected 2026-10-01; D, E, F are the new directions, with `/print/` previews). **Section 0 is the prompt for
 the next session:** implement the chosen variant on the live site, then refresh the print
 collateral (business card and brochure) in `~/hara-print`.
 
@@ -61,19 +61,23 @@ write secrets or account security status into this public repo.
 
 ---
 
-## 0b. Design lab (2026-10-01, awaiting the client's choice)
+## 0b. Design lab (2026-10-01 evening: A, B, C rejected; D, E, F added)
 
-- Live: https://hara-design-lab.chaudharikrishna0415.workers.dev (Worker `hara-design-lab`,
-  version 5ef69686). Source `design-lab/` (how it builds: `CLAUDE.md`, "Design lab").
-- A = light and airy (Mona Sans 420-480, photo beside the headline, photo strip, skyline panel).
-  B = navy band (Plus Jakarta Sans, navy hero and closing band, bento + photo grid, timeline).
-  C = photo first (full-screen office photo hero, editorial gallery, skyline behind security).
-  Claude's recommendation to Krishna: B, then A.
-- Research behind it: the best cleaning sites and templates (GorillaDesk, Colorlib, Jobber lists;
-  Cleaninger and Clenar templates; Cleanology, Gleem, MyClean, Jan-Pro) share one skeleton the
-  live site already has; what differs is type weight and photo-forwardness.
-- All three reuse the live site's copy, logo, palette, photos, both phone numbers; forms are
-  visual demos linking to the live form; pages are noindex.
+- Live: https://hara-design-lab.chaudharikrishna0415.workers.dev (Worker `hara-design-lab`). Source
+  `design-lab/` (how it builds: `CLAUDE.md`, "Design lab").
+- Krishna rejected A, B and C (same template in three skins, not premium enough, type family
+  wrong). Photos were fine. Three new directions, each on one DESIGN.md token structure, each with
+  its own type, shapes and section skeleton (`base.css` + `d.css` / `e.css` / `f.css`):
+  D = Gallery (Apple structure: edge-to-edge photo tiles, centred copy, pills, Hanken Grotesk 520).
+  E = Ledger (IBM Carbon structure: utility bar, hairline tiles, 0px corners, numbered index, week
+  as a table, IBM Plex Sans 300 display).
+  F = Concierge (BMW corporate structure: navy hero band with the photo breaking out, 4-up photo
+  cards, spec cells, square buttons, uppercase tracked links, Manrope 500 display / 300 body).
+- `/print/` shows the business card and brochure cover in each direction at a quarter of print
+  size, so the system is chosen as a whole. The real print files follow in `~/hara-print`.
+- Fonts: self-hosted latin variable woff2 in `design-lab/public/fonts` (OFL, from
+  `@fontsource-variable/hanken-grotesk`, `ibm-plex-sans`, `manrope`, devDependencies).
+- Claude's recommendation: E for the trust-first brief, D if the client wants the photos to lead.
 
 ## 1. What is live
 

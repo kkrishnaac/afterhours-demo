@@ -88,7 +88,8 @@ button { font: inherit; }
 @media (max-width: 820px) { .footer__in { grid-template-columns: 1fr; } }
 
 /* Lab banner (review only) */
-.lab { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 50; display: flex; gap: 6px; align-items: center; padding: 6px 8px 6px 14px; border-radius: var(--r-pill); background: var(--ink); color: #fff; font-size: 13px; box-shadow: var(--shadow); }
+.lab { white-space: nowrap; position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 50; display: flex; gap: 6px; align-items: center; padding: 6px 8px 6px 14px; border-radius: var(--r-pill); background: var(--ink); color: #fff; font-size: 13px; box-shadow: var(--shadow); }
 .lab a { color: #fff; text-decoration: none; padding: 6px 10px; border-radius: var(--r-pill); background: rgba(255,255,255,0.12); }
 .lab a[aria-current] { background: #fff; color: var(--ink); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+@media (max-width: 420px) { .lab { padding-left: 10px; gap: 2px; font-size: 12px; } .lab a { padding: 7px 7px; } }

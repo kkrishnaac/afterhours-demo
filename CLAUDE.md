@@ -118,8 +118,12 @@ on a separate Worker. `node design-lab/build.mjs` expands `<i data-icon>` (Phosp
 `design-lab/dist/`; `cd design-lab && npx wrangler deploy` publishes it (assets-only Worker,
 `_headers` sets noindex + CSP). Pages: `/` (menu), `/a/` light and airy (Mona Sans 420-480),
 `/b/` navy band (Plus Jakarta Sans, self-hosted from `@fontsource-variable/plus-jakarta-sans`),
-`/c/` photo first (Mona Sans). Shared tokens in `src/shared.css`; `_form.html` is a visual demo
-of step 1 linking to the live form; `_footer.html` carries the A/B/C/Live switch. Local preview:
+`/c/` photo first (Mona Sans); A, B, C were rejected on 2026-10-01 (same template, not premium,
+wrong type family). `/d/` Gallery (Apple DESIGN.md structure, Hanken Grotesk), `/e/` Ledger (IBM
+Carbon structure, IBM Plex Sans 300), `/f/` Concierge (BMW corporate structure, Manrope) are
+different skeletons on `src/base.css` (palette only) plus their own CSS; `/print/` previews the
+card and brochure cover in each. A, B, C share `src/shared.css`; `_form.html` is a visual demo
+of step 1 linking to the live form; `_lab.html` carries the A to F / Live switch (included by `_footer.html` and the new pages). Local preview:
 `python3 -m http.server 4340 --directory design-lab/dist`. Screenshot script pattern in
 `/tmp/qa-live/lab-shots.mjs` (recreate from `scripts/qa/shot.mjs` if gone).
 **To implement a chosen variant on the live site:** port its layout/CSS into `index.html` +

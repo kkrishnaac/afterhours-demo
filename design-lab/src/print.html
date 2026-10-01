@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HARA design lab | Print collateral in each direction</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/base.css" />
+  <link rel="stylesheet" href="/print.css" />
+</head>
+<body>
+  <main class="page">
+    <h1>Business card and brochure cover, in each direction</h1>
+    <p class="intro">Screen previews at a quarter of print size, so the whole system can be judged at once. Same logo, colours, contacts and words on every piece; only the type and layout language changes with the website direction. The printed files are rebuilt in <code>~/hara-print</code> once a direction is chosen.</p>
+
+    <section class="dir dir--d" aria-labelledby="d-title">
+      <h2 id="d-title"><b>D</b> Gallery <span>Hanken Grotesk, centred, photography on the cover</span></h2>
+      <div class="pieces">
+        <figure><div class="card card--front"><img src="/brand/hara-logo.svg" alt="" width="162" height="120" /></div><figcaption>Card front</figcaption></figure>
+        <figure><div class="card card--back">
+          <div class="back__text"><p class="name">HARA Facilities Cleaning</p><p class="tag">Tomorrow starts clean.</p><p class="line">Office cleaning in Toronto and the GTA</p><p class="contact">(416) 990-3995<br />(437) 980-3464<br />harafacilitiescleaning@gmail.com</p><p class="url">haracleaning.ca</p></div>
+          <div class="qr"><img src="/img/qr.svg" alt="QR code to haracleaning.ca" width="96" height="96" /><span>Scan to book a free walkthrough</span></div>
+        </div><figcaption>Card back</figcaption></figure>
+        <figure><div class="cover">
+          <img class="cover__photo" src="/img/11-open-office-960.webp" alt="" />
+          <div class="cover__body"><img src="/brand/hara-logo.svg" alt="" width="162" height="120" /><p class="cover__head">Tomorrow starts clean.</p><p class="cover__sub">Office cleaning across Toronto and the GTA, on any day and at any time that suits you.</p><p class="cover__contact">(416) 990-3995<br />haracleaning.ca</p></div>
+        </div><figcaption>Brochure front cover</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="dir dir--e" aria-labelledby="e-title">
+      <h2 id="e-title"><b>E</b> Ledger <span>IBM Plex Sans light, left aligned, hairlines, square</span></h2>
+      <div class="pieces">
+        <figure><div class="card card--front"><img src="/brand/hara-logo.svg" alt="" width="162" height="120" /><p class="front__line">Office cleaning in Toronto and the GTA</p></div><figcaption>Card front</figcaption></figure>
+        <figure><div class="card card--back">
+          <div class="back__text"><p class="name">HARA Facilities Cleaning</p><p class="tag">Tomorrow starts clean.</p><p class="contact">(416) 990-3995<br />(437) 980-3464<br />harafacilitiescleaning@gmail.com</p><p class="url">haracleaning.ca</p></div>
+          <div class="qr"><img src="/img/qr.svg" alt="QR code to haracleaning.ca" width="96" height="96" /><span>Scan to book a free walkthrough</span></div>
+        </div><figcaption>Card back</figcaption></figure>
+        <figure><div class="cover">
+          <div class="cover__body"><img src="/brand/hara-lockup.svg" alt="" width="131" height="34" /><p class="cover__head">Tomorrow starts clean.</p><p class="cover__sub">Office cleaning across Toronto and the GTA, on any day and at any time that suits you.</p></div>
+          <img class="cover__photo" src="/img/13-meeting-room-960.webp" alt="" />
+          <p class="cover__contact">(416) 990-3995 <br />haracleaning.ca</p>
+        </div><figcaption>Brochure front cover</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="dir dir--f" aria-labelledby="f-title">
+      <h2 id="f-title"><b>F</b> Concierge <span>Manrope, navy field, tracked uppercase labels, square</span></h2>
+      <div class="pieces">
+        <figure><div class="card card--front"><img class="logo-white" src="/brand/hara-logo.svg" alt="" width="162" height="120" /></div><figcaption>Card front</figcaption></figure>
+        <figure><div class="card card--back">
+          <div class="back__text"><p class="name">HARA Facilities Cleaning</p><p class="tag">Tomorrow starts clean.</p><p class="label">Office cleaning in Toronto and the GTA</p><p class="contact">(416) 990-3995<br />(437) 980-3464<br />harafacilitiescleaning@gmail.com</p><p class="url">haracleaning.ca</p></div>
+          <div class="qr"><img src="/img/qr.svg" alt="QR code to haracleaning.ca" width="96" height="96" /><span>Scan to book a free walkthrough</span></div>
+        </div><figcaption>Card back</figcaption></figure>
+        <figure><div class="cover">
+          <div class="cover__band"><img class="logo-white" src="/brand/hara-lockup.svg" alt="" width="131" height="34" /><p class="cover__head">Tomorrow starts clean.</p><p class="cover__sub">Office cleaning across Toronto and the GTA, on any day and at any time that suits you.</p></div>
+          <img class="cover__photo" src="/img/17-lounge-skyline-960.webp" alt="" />
+          <p class="cover__contact"><span>Book a free walkthrough</span>(416) 990-3995<br />haracleaning.ca</p>
+        </div><figcaption>Brochure front cover</figcaption></figure>
+      </div>
+    </section>
+    <p class="note">Private review page. Not indexed. Trim sizes: card 3.5 x 2 in, brochure panel 3.67 x 8.5 in.</p>
+  </main>
+  <x-include src="_lab.html"></x-include>
+</body>
+</html>

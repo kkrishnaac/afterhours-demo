@@ -17,7 +17,7 @@ actions and HARA owes three confirmations (section 3).
 | Scope | **One page** plus privacy, terms, accessibility and 404. Krishna, 2026-10-01: "the client only wants a simple 1 page website." The multi-page build (Services, Security, FAQ, About, Contact, Service areas, six city pages) and the Google Business Profile pack are out of scope; archived in git tag `multi-page-archive`; the pack is parked in `docs/client/` |
 | Contact details | Real: (416) 990-3995, harafacilitiescleaning@gmail.com (from Krishna, 2026-10-01), on every page |
 | Hours | None shown: HARA has no set hours (every day, any time a contract needs). The page's "Any day. Any time." covers it |
-| Form | Live, stores to D1, `EMAIL_MODE=hold` until the domain can send email. 0 real requests at last check |
+| Form | Live, stores to D1, `EMAIL_MODE=hold` until the domain can send email. Requests will go to harafacilitiescleaning@gmail.com (`LEAD_TO_EMAIL` set 2026-10-01; `EMAIL_FROM` waits for the domain). 0 real requests at last check |
 | Secrets in the Worker | `TURNSTILE_SECRET_KEY` only |
 | Indexing | `noindex` everywhere until `VITE_SITE_URL` is set at the domain step |
 | Analytics | Cloudflare Web Analytics wired, **off until `CF_BEACON_TOKEN`** is set (`docs/DEPLOY.md`, "Analytics"). Optional; the SOW lists it |
@@ -76,14 +76,12 @@ actions and HARA owes three confirmations (section 3).
   team, confidential by default, lock-up check, every visit logged). They appear once, on the
   home page.
 - Approve the illustrative photos for launch, or supply real ones.
-- Which inbox receives walkthrough requests (`LEAD_TO_EMAIL`, set at the domain step).
 - A lawyer's review of the privacy policy and terms (recommended).
 
 ### The domain (runbook: `docs/DEPLOY.md`, "Connect the domain")
 
 Buy it in HARA's name; DNS on Cloudflare (registrar lock, DNSSEC); business email with SPF, DKIM,
-DMARC; Resend domain and `RESEND_API_KEY`; `EMAIL_MODE=resend`, real `EMAIL_FROM` and
-`LEAD_TO_EMAIL`; `ALLOWED_ORIGINS`, `TURNSTILE_HOSTNAMES`, the Turnstile widget's hostnames;
+DMARC; Resend domain and `RESEND_API_KEY`; `EMAIL_MODE=resend`, real `EMAIL_FROM`; `ALLOWED_ORIGINS`, `TURNSTILE_HOSTNAMES`, the Turnstile widget's hostnames;
 `VITE_SITE_URL` (drops `noindex`, adds canonical, JSON-LD, sitemap, security.txt); Search Console
 and Bing; then the gate again against the domain.
 

@@ -54,7 +54,7 @@
         // domain can send email; switch to "resend" then (cron delivers the backlog).
         "EMAIL_MODE": "hold",
         "EMAIL_FROM": "HARA Facilities Cleaning <walkthroughs@example.com>",
-        "LEAD_TO_EMAIL": "leads@example.com",
+        "LEAD_TO_EMAIL": "harafacilitiescleaning@gmail.com",
         "RETENTION_DAYS": "730"
       }
     }

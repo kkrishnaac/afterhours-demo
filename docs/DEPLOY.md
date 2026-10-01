@@ -22,7 +22,7 @@ No secret ever goes in this repo. Local secrets live in `.dev.vars` and `.env.*`
 - [x] **Cloudflare notification for Worker errors** (alert policy "HARA website Worker errors", 2026-10-01).
 - [ ] HARA confirms every security practice described on the page, and approves the photos.
 - [ ] Lawyer review of the privacy policy and terms (recommended).
-- [ ] HARA's inbox for `LEAD_TO_EMAIL` decided (placeholder in `wrangler.jsonc`, set in step 4 below).
+- [x] Walkthrough requests go to harafacilitiescleaning@gmail.com (`LEAD_TO_EMAIL`, set 2026-10-01).
 - [x] Real phone number and email on every page. Legal pages reviewed 1 October 2026.
 - [x] Phase 5 QA and the full security gate (GO), see `security/golive/2026-10-01-full-GO.md`.
 
@@ -66,7 +66,7 @@ Replace `DOMAIN` with the real one, e.g. `harafacilities.ca`.
      "TURNSTILE_HOSTNAMES": "DOMAIN,www.DOMAIN",
      "EMAIL_MODE": "resend",
      "EMAIL_FROM": "HARA Facilities Cleaning <walkthroughs@DOMAIN>",
-     "LEAD_TO_EMAIL": "<HARA's inbox>",
+     "LEAD_TO_EMAIL": "harafacilitiescleaning@gmail.com",   // already set (2026-10-01)
      "RETENTION_DAYS": "730"
    }
    ```

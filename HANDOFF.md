@@ -81,6 +81,14 @@ and connecting it. The prompt to start that session is in section 9.
 - **Backups:** D1 Time Travel point-in-time restore and export/import both rehearsed on a scratch
   database (deleted afterwards); commands in `docs/DEPLOY.md`.
 
+## 4b. Added 2026-10-01 (live as `b45fe0b7`)
+
+- Real phone and email on every page (section 6C). Service areas hub + six city pages, tappable
+  home city chips that preselect the form, a "Service areas" footer link. Design unchanged.
+  Krishna's scope call: major cities first, more can be added later (one entry in
+  `src/service-areas.js`); the other Phase 4 pages (Services, Security, FAQ, About, Contact) wait
+  for his go-ahead. 66 tests pass. City copy still needs a skim by HARA for local accuracy.
+
 ## 5. Test and audit evidence (latest)
 
 - `npm test`: 60 pass, including `test/stress.test.js`: 150 simultaneous visitors (150 rows),

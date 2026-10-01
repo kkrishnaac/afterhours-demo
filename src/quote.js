@@ -41,6 +41,26 @@ export function initQuote() {
 
   for (const name of CITY_NAMES) city.add(new Option(name, name));
 
+  // A city picked elsewhere (a chip in the Areas list, or ?city= from a city page)
+  // arrives already chosen, so step 3 is done before the visitor gets there.
+  const picked = document.querySelector('[data-picked]');
+  function pickCity(name) {
+    if (!CITY_NAMES.includes(name)) return;
+    city.value = name;
+    city.setAttribute('aria-invalid', 'false');
+    form.querySelector('#city-error').hidden = true;
+    if (picked) picked.textContent = `${name} is chosen for your walkthrough. You can change it in step 3.`;
+  }
+  document.addEventListener('click', (e) => {
+    const chip = e.target.closest('a[data-city]');
+    if (chip) pickCity(chip.dataset.city);
+  });
+  const fromLink = new URLSearchParams(location.search).get('city');
+  if (fromLink) {
+    pickCity(fromLink);
+    history.replaceState(null, '', location.pathname + location.hash);
+  }
+
   let i = 0;
   const valueOf = (n) => (form.elements[n] instanceof RadioNodeList ? form.elements[n].value : form.elements[n]?.value?.trim());
 

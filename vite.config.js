@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig, loadEnv } from 'vite';
 import { srcset, smallest, dimensions } from './src/photos.js';
+import { ALL_PAGES, ALL_PATHS, structuredData, ldScript } from './src/area-pages.js';
 
 // Content Security Policy. The demo build (GitHub Pages) allows nothing but the
 // site itself. The live build (Cloudflare) also allows Turnstile, the spam check
@@ -113,8 +114,8 @@ const fontPreload = {
 // launch: pages become indexable (404 stays noindex), links become canonical,
 // share images absolute, and robots.txt + sitemap.xml are generated.
 // VITE_SECURITY_CONTACT (e.g. mailto:security@domain) adds /.well-known/security.txt.
-const PAGES = ['index.html', 'privacy.html', 'terms.html', 'accessibility.html', '404.html'];
-const PATHS = { 'index.html': '/', 'privacy.html': '/privacy', 'terms.html': '/terms', 'accessibility.html': '/accessibility' };
+const PAGES = ['index.html', 'privacy.html', 'terms.html', 'accessibility.html', '404.html', ...ALL_PAGES()];
+const PATHS = { 'index.html': '/', 'privacy.html': '/privacy', 'terms.html': '/terms', 'accessibility.html': '/accessibility', ...ALL_PATHS() };
 
 const siteUrl = (site, contact) => ({
   name: 'site-url',
@@ -123,9 +124,10 @@ const siteUrl = (site, contact) => ({
     const file = p.replace(/^\//, '');
     if (!site || file === '404.html') return html;
     const url = site + (PATHS[file] || '/');
+    const ld = structuredData(file, site);
     return html
       .replace(/\s*<meta name="robots" content="noindex" \/>/, '')
-      .replace('</head>', `  <link rel="canonical" href="${url}" />\n  <meta property="og:url" content="${url}" />\n</head>`)
+      .replace('</head>', `  <link rel="canonical" href="${url}" />\n  <meta property="og:url" content="${url}" />\n${ld ? ldScript(ld) + '\n' : ''}</head>`)
       .replace('<meta property="og:image" content="og.jpg" />', `<meta property="og:image" content="${site}/og.jpg" />`);
   },
   generateBundle() {
@@ -146,6 +148,18 @@ const siteUrl = (site, contact) => ({
   },
 });
 
+// Live build only: links between pages are written as page.html so they also work
+// from the dev server and a plain file preview. On the live site they would cost a
+// redirect (the host serves /privacy, not /privacy.html), so they become clean URLs.
+const cleanLinks = {
+  name: 'clean-links',
+  apply: 'build',
+  transformIndexHtml: {
+    order: 'post',
+    handler: (html) => html.replace(/href="([a-z0-9-]+)\.html(#[^"]*)?"/g, 'href="$1$2"'),
+  },
+};
+
 // Two builds from one codebase:
 //   npm run build     -> GitHub Pages demo (form is a demo, CSP in <meta>)
 //   npm run build:cf  -> Cloudflare (form posts to the Worker, CSP as real headers)
@@ -156,7 +170,7 @@ export default defineConfig(({ mode }) => {
   const policy = csp(liveForm);
   return {
     base: liveForm ? '/' : './',  // relative for the GitHub Pages project path
-    plugins: [staticMarkup, liveForm ? cloudflareHeaders(policy) : securityMeta(policy), fontPreload, siteUrl(env.VITE_SITE_URL?.replace(/\/$/, ''), env.VITE_SECURITY_CONTACT)],
+    plugins: [staticMarkup, liveForm ? cloudflareHeaders(policy) : securityMeta(policy), ...(liveForm ? [cleanLinks] : []), fontPreload, siteUrl(env.VITE_SITE_URL?.replace(/\/$/, ''), env.VITE_SECURITY_CONTACT)],
     build: {
       target: 'es2020', assetsInlineLimit: 0, sourcemap: false,
       rolldownOptions: { input: Object.fromEntries(PAGES.map((f) => [f.replace('.html', ''), resolve(import.meta.dirname, f)])) },

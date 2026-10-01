@@ -90,6 +90,10 @@ write secrets or account security status into this public repo.
   Lausanne, Record Disc) are commercial: Hanken Grotesk and Archivo (wdth 112, wght 850) stand in.
   Research in the scratchpad was throwaway; the extracted tokens are described in `g.css` comments.
   This reverses the earlier "light theme only, no gradients" rule, on Krishna's instruction.
+- **Krishna liked G a lot** ("this is crazy") and asked for H: the same template in the live
+  site's own colours (white canvas, navy, sky blue), with the glare as a smooth navy-to-white
+  sweep instead of the spectrum. `h.html` is `g.html` with `h.css`, which imports `g.css` and
+  overrides the colours. He has not yet said whether G (dark) or H (HARA colours) goes live.
 
 ## 1. What is live
 

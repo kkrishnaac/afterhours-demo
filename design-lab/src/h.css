@@ -1,0 +1,56 @@
+/* H: the G template (coreastudios.com's system) in the live site's own colours: white canvas,
+   navy #0B3A80 and sky #0A95EF from the logo. The glare beam is a smooth navy to white sweep. */
+@import url('/g.css');
+:root {
+  --bg: #FAFBFD; --paper: #0E1A33; --accent: #0A95EF; --navy: #0B3A80; --sky: #0A95EF; --deep: #03275A; --white: #FFFFFF;
+  --paper-20: rgba(11, 58, 128, 0.12); --paper-40: rgba(14, 26, 51, 0.4); --paper-08: rgba(11, 58, 128, 0.06);
+}
+body { background: var(--bg); color: var(--paper); }
+
+/* Loader: light tint, like their light-bg pages */
+#loader-blur { background-color: rgba(250, 251, 253, 0.5); }
+
+/* Glare: navy to white, smooth, no spectrum */
+.glare-beam--spectrum { background: linear-gradient(#0000 0%, rgba(3, 39, 90, 0.35) 14%, rgba(11, 58, 128, 0.85) 30%, rgba(10, 149, 239, 0.75) 46%, rgba(191, 227, 255, 0.85) 60%, rgba(255, 255, 255, 0.95) 74%, rgba(255, 255, 255, 0.5) 86%, #0000 100%); }
+
+/* Gradient blobs in the brand blues */
+.gradient-blob { background: radial-gradient(90% 75% at 100% 0, #03275A 0%, #0B3A80 25%, #0000 60%), radial-gradient(circle at 15% 80%, #0A95EF 0%, #0000 38%), radial-gradient(circle at 45% 75%, #7FD3FF 0%, #0000 35%), radial-gradient(circle at 85% 85%, #E4ECFA 0%, #0000 36%), radial-gradient(circle at 15% 15%, #1C57B0 0%, #0000 45%), radial-gradient(circle at 60% 30%, #03275A 0%, #0000 40%), linear-gradient(135deg, #03275A, #0B3A80 45%, #0A95EF); }
+.gradient-blob--nav, .gradient-blob--panels { background: radial-gradient(100% 85% at 0 0, #FFFFFF 0%, #F4F7FC 30%, #0000 65%), radial-gradient(circle at 18% 60%, #BFE3FF 0%, #0000 40%), radial-gradient(circle at 15% 85%, #0A95EF 0%, #0000 34%), radial-gradient(circle at 45% 75%, #7FD3FF 0%, #0000 36%), radial-gradient(circle at 85% 85%, #0B3A80 0%, #0000 40%), radial-gradient(circle at 85% 18%, #E4ECFA 0%, #0000 45%), radial-gradient(circle at 60% 40%, #FFFFFF 0%, #0000 40%), linear-gradient(135deg, #FFFFFF, #E4ECFA 50%, #BFE3FF); }
+
+/* Buttons and chips: navy tints on white; hero buttons stay white on the blob */
+.button { background-color: var(--paper-20); color: var(--paper); }
+.button:hover { background-color: rgba(11, 58, 128, 0.2); }
+.button--ghost { box-shadow: inset 0 0 0 1px var(--paper-20); }
+.site-header .button:not(.square-button) { background-color: var(--navy); color: var(--white); }
+.site-header .button:not(.square-button):hover { background-color: var(--deep); }
+.project--hero { color: var(--white); }
+.project--hero .button { background-color: rgba(255, 255, 255, 0.92); color: var(--navy); }
+.project--hero .button:hover { background-color: var(--white); }
+.project--hero .button--ghost { background-color: rgba(255, 255, 255, 0.14); color: var(--white); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35); }
+.project--hero .button--ghost:hover { background-color: rgba(255, 255, 255, 0.24); }
+.hero-card__sub { opacity: 0.85; }
+
+/* Chrome: navy logo, ink links, dial highlight */
+.main-menu .logo-white, #nav-overlay .logo-white { filter: none; }
+.menu-item.is-active a { background-color: var(--paper-20); }
+.site-footer { opacity: 0.55; }
+#nav-overlay { background: var(--bg); }
+
+/* Reel cards keep white type over the photos */
+.project__overlay { color: var(--white); }
+.project { background: #E4ECFA; }
+
+/* Panels: white glass over the light blob */
+.panel { background: rgba(255, 255, 255, 0.72); border-color: rgba(14, 26, 51, 0.08); }
+.cards li, .steps li, .now, .form { background: var(--paper-08); }
+.week li { background: var(--paper-20); }
+.lists li, .facts li { border-left-color: rgba(11, 58, 128, 0.25); }
+.chips label { background: var(--paper-20); }
+.chips input:checked + label { background: var(--navy); color: var(--white); }
+.form .btn { background: var(--navy); color: var(--white); }
+.panel__label, .form__step, .form__note { opacity: 0.55; }
+.project-client, .project-year { opacity: 0.7; }
+
+/* Footer wordmark in navy */
+.wordmark { color: var(--navy); opacity: 0.5; }
+.page-footer__row { opacity: 0.7; }

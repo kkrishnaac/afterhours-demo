@@ -124,7 +124,8 @@ Carbon structure, IBM Plex Sans 300), `/f/` Concierge (BMW corporate structure, 
 different skeletons on `src/base.css` (palette only) plus their own CSS (rejected too); `/g/` Studio
 is coreastudios.com's system rebuilt for HARA on Krishna's instruction (dark canvas, blur-in
 loader, spectrum glare on navigation, dial menu, horizontal reel, gradient blob, live clock;
-`g.js` is the only scripted page, copied by `build.mjs`); `/print/` previews the card and brochure
+`g.js` is the only script, copied by `build.mjs`); `/h/` is G in the live site's colours
+(`h.css` imports `g.css` and overrides tokens and gradients; Krishna liked G, H was his next ask); `/print/` previews the card and brochure
 cover in D, E, F. A, B, C share `src/shared.css`; `_form.html` is a visual demo
 of step 1 linking to the live form; `_lab.html` carries the A to F / Live switch (included by `_footer.html` and the new pages). Local preview:
 `python3 -m http.server 4340 --directory design-lab/dist`. Screenshot script pattern in

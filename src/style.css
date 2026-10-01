@@ -189,7 +189,6 @@ h3 { font-size: 1.12rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: clamp(32px, 5vw, 64px); align-items: center;
 }
 /* Two lines, one sentence each: sized so neither sentence breaks on desktop. */
-.hero__tag { margin: 0 0 14px; font-weight: 600; font-size: 15px; letter-spacing: 0.01em; color: var(--accent); }
 .hero__title { font-size: clamp(2.3rem, 4.1vw, 3.8rem); line-height: 1.04; }
 .hero__title .line { display: block; white-space: nowrap; }
 .hero__title .line--accent { color: var(--accent); }
@@ -225,7 +224,6 @@ h3 { font-size: 1.12rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.
   .hero__sub { animation-delay: 0.08s; }
   .hero__actions { animation-delay: 0.16s; }
   .hero__stage { animation: fade 0.9s var(--ease-out) both; }
-  .hero__tag { animation: rise 1.1s var(--ease-out) both; }
   /* The logo is painted from the first frame (so it counts as the page's main content at once)
      but sits under a plain white cover, so nobody sees the finished logo before its 3D build.
      Failsafe: if no script ever runs, the cover lifts after a moment. */

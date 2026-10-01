@@ -1,262 +1,128 @@
 # Handoff: HARA website
 
-Updated 2026-10-01. Read in this order: this file, `CLAUDE.md`, `docs/DEPLOY.md`,
-`security/golive/2026-09-28-full-GO.md`, and the private SOW in `docs/client/`.
+Updated 2026-10-01 (end of the Phase 5 session). Read in this order: this file, `CLAUDE.md`,
+`docs/DEPLOY.md`, `security/golive/2026-10-01-full-GO.md`, and the private SOW in `docs/client/`.
 
-**Goal of the next session:** finish everything so that the only thing left is buying the domain
-and connecting it. The prompt to start that session is in section 9.
+**State: launch-ready apart from the domain.** The only engineering left is buying the domain and
+connecting it (`docs/DEPLOY.md`, "Connect the domain"). Before that, Krishna has two dashboard
+actions and HARA owes three confirmations (section 3).
 
 ---
 
-## 1. Summary
-
-- The site is **live before the domain**, at https://hara-website.chaudharikrishna0415.workers.dev
-  (`noindex`, link not shared publicly). It carries the client's own logo, a navy palette
-  sampled from it, a one-time 3D build of the logo in the hero, and a working walkthrough request
-  form backed by a Cloudflare Worker and D1.
-- Security gate: **GO** for the pre-domain deployment, then a round of fixes and stress tests
-  (all deployed). 60 tests pass. `npm audit`: 0 vulnerabilities.
-- **The working tree is not clean** (section 3): already-deployed work is uncommitted, and one
-  CSS change is neither deployed nor verified. Sort that out first.
-- Scope is ONE page (section 4b). Still to do before the domain: the analytics token, the
-  security-practice confirmation from HARA, final QA to SOW standards and a final gate (section 6).
-
-## 2. What is live
+## 1. What is live
 
 | Thing | State |
 |---|---|
-| Production URL | https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`) |
-| Live version | `765c3a63` (deployed 2026-09-29 03:28 UTC from the working tree, see section 3) |
-| Database | D1 `hara-walkthroughs`, table `walkthrough_requests`; 0 real requests at last check |
-| Email | `EMAIL_MODE=hold`: requests are stored, HARA's notifications wait for the domain. `EMAIL_FROM` and `LEAD_TO_EMAIL` are `example.com` placeholders. No Resend key set |
+| Production URL | https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `3ea51993`, deployed 2026-10-01 from commit `main`) |
+| Scope | **One page** plus privacy, terms, accessibility and 404. Krishna, 2026-10-01: "the client only wants a simple 1 page website." The multi-page build (Services, Security, FAQ, About, Contact, Service areas, six city pages) and the Google Business Profile pack are out of scope; archived in git tag `multi-page-archive`; the pack is parked in `docs/client/` |
+| Contact details | Real: (416) 990-3995, harafacilitiescleaning@gmail.com (from Krishna, 2026-10-01), on every page |
+| Hours | None shown: HARA has no set hours (every day, any time a contract needs). The page's "Any day. Any time." covers it |
+| Form | Live, stores to D1, `EMAIL_MODE=hold` until the domain can send email. 0 real requests at last check |
 | Secrets in the Worker | `TURNSTILE_SECRET_KEY` only |
-| Indexing | `noindex` on every page until `VITE_SITE_URL` is set at the domain step |
-| Old GitHub Pages URL | https://kkrishnaac.github.io/afterhours-demo/ redirects to production |
-| Original "Afterhours" design | https://afterhours-design.chaudharikrishna0415.workers.dev: a separate static Worker built from commit `dea9337` (the pre-HARA demo), `noindex`, form sends nothing. Krishna asked for it as a reference; keep or delete (`npx wrangler delete afterhours-design`) on his say |
+| Indexing | `noindex` everywhere until `VITE_SITE_URL` is set at the domain step |
+| Analytics | Cloudflare Web Analytics wired, **off until `CF_BEACON_TOKEN`** is set (`docs/DEPLOY.md`, "Analytics"). Optional; the SOW lists it |
+| Reference Worker | https://afterhours-design.chaudharikrishna0415.workers.dev (the original Afterhours design, commit `dea9337`). Keep or `npx wrangler delete afterhours-design` on Krishna's say |
+| Repo | `kkrishnaac/afterhours-demo`, public, `main` clean and pushed, 67 tests pass |
 
-## 3. Repository state (exact, 2026-10-01)
+## 2. Evidence this is done (SOW Phase 5)
 
-- `main` at `82cb555` = `origin/main` (public repo `kkrishnaac/afterhours-demo`).
-- **Uncommitted but already live in `765c3a63`:**
-  - `worker/walkthrough.js`: rate limit runs before the body is read; the double-submit check
-    and the insert are one `INSERT ... SELECT ... WHERE NOT EXISTS` statement (stress test showed
-    20 simultaneous submits stored 20 rows; now 1).
-  - `worker/http.js`: `readLimited` reads the stream with a running count and cancels past 8 KB
-    (a chunked 4 MB body used to be buffered whole).
-  - `src/quote.js`: a chip click's 260 ms auto-advance only advances from the step it started on
-    (chip + quick "Next" used to skip the timing question).
-  - `package.json` / lock: `overrides.undici ^7.29.1` (GHSA-3wwx-pv8p-q78v in dev tooling),
-    vite 8.3.1, sharp 0.35.5.
-  - `test/walkthrough.test.js` (+2 tests), new `test/stress.test.js` (6 stress/fuzz tests).
-  - `docs/DEPLOY.md`: "Backups and restore" runbook (rehearsed).
-  - `security/golive/2026-09-28-full-GO.md`: the "Fixes and stress tests" addendum.
-- **Uncommitted, NOT deployed, NOT verified:** `src/style.css`, the hero "white cover". The
-  logo `<img>` is now painted from the first frame under a white `::after` cover (the 3D canvas
-  plays above the cover), so the logo counts as the page's main content at once. On the live
-  site LCP is ~3.6 s on the animated path because the logo stays hidden until the build ends. On
-  the dev server the cover gave LCP ~0.3 s, but dev injects CSS through JS, so its CLS and JS-off
-  numbers are meaningless. Verify on a production build (section 6, step 1) and deploy or revert
-  (`git checkout src/style.css`).
-- **New, uncommitted:** `scripts/qa/` (browser matrix, fake-clock frames, form end to end, load
-  test; see its README).
-- A stale git worktree registration for the Afterhours build (in a deleted scratch folder):
-  run `git worktree prune`. Local branches `backend-walkthrough`, `hara-redesign`, `navy-brand`
-  are fully merged into `main` and can be deleted.
+- **Security gate (all 50): GO**, `security/golive/2026-10-01-full-GO.md`, with live probes and
+  the build-security Part B legal review inside it.
+- **Lighthouse**, placeholder-domain production build (so `noindex` is not counted): mobile 96,
+  95, 94, 92 performance across runs, 100 / 100 / 100 for accessibility, best practices, SEO;
+  desktop 100 / 100 / 100 / 100. Live URL: mobile 92, desktop 100 (SEO 66 only from `noindex`).
+- **Accessibility:** axe-core 0 violations on every page, the viewer and every form step with
+  errors; keyboard-only pass (22 stops, all with visible focus; form and viewer by keys; skip link);
+  accessibility tree reviewed (VoiceOver itself not driven).
+- **Browsers:** Chromium, Firefox, WebKit desktop; WebKit iPhone 14 / SE; Chromium Pixel 7 /
+  Galaxy S9+; Firefox 390 px. All pass.
+- **Matrix:** 320 to 2560 px, CLS 0, LCP 64 to 208 ms; slow phone, no WebGL, JS off and reduced
+  motion all fall back cleanly.
+- **Form end to end** on the local Worker at 320, 390, 1440 px: stored (201), success shown.
+- **Load (live):** 1,500 requests at 50 concurrent: 769 req/s, p95 109 ms, 0 errors; API burst
+  300: 276 x 429, 24 x 400, 0 x 5xx.
+- **Fixes made during QA:** hero decides 3D-or-static two frames after `load` (fixes a WebKit
+  stylesheet race that sent big iPhones to the static logo at random, and takes the three.js
+  chunk out of the LCP path: Lighthouse mobile went from 87-90 to 92-96); `is-late` stops a
+  second rise of the logo on very slow connections; minor dependency updates.
 
-## 4. What is done
+## 3. What is left, by who
 
-- **Front end:** one-page site (hero, why HARA, any day any time, what we clean with photo viewer,
-  security band, how it works, areas with map, 4-step walkthrough form), legal pages (privacy,
-  terms, accessibility), 404, share image. Mona Sans, rounded shapes, quiet motion, light theme.
-- **Brand:** the client's original logo traced to 16 vector parts; `public/brand/` lockups;
-  favicon, touch icon and share image; palette sampled from the logo (`CLAUDE.md` > Brand).
-- **Hero:** the logo builds itself once in 3D (three.js, lazy chunk), then hands over to crisp
-  vector; static for reduced motion, no WebGL, off-screen loads, or three.js slower than 2.5 s.
-- **Backend:** `POST /api/walkthrough` with origin allowlist, JSON only, 8 KB cap, rate limit
-  (5 a minute per IP, approximate by Cloudflare's design), schema allowlist, honeypot, Turnstile
-  checked server-side, parameterised D1 writes, CASL consent fields, email hold, retries and
-  24-month retention on a 15-minute cron, PII-free logs, `npm run leads` and PIPEDA scripts.
-- **Security:** full 50-threat gate GO; fixes since then listed above. Headers live: CSP without
-  `unsafe-inline`, HSTS, frame denial, nosniff, referrer and permissions policies, COOP/CORP.
-- **Backups:** D1 Time Travel point-in-time restore and export/import both rehearsed on a scratch
-  database (deleted afterwards); commands in `docs/DEPLOY.md`.
+### Krishna (dashboard only; nothing in this repo records the result)
 
-## 4b. Scope change, 2026-10-01: ONE page only
+1. **Confirm 2FA** on every account that can reach the leads or the site:
+   - Cloudflare: top-right profile, **My Profile, Authentication, Two-Factor Authentication**:
+     authenticator app or a security key; download the backup codes.
+   - GitHub: **Settings, Password and authentication, Two-factor authentication**.
+   - Resend: **Settings (team), Security**, enable 2FA.
+   - Gmail (the public contact inbox): Google Account, **Security, 2-Step Verification**.
+   - Registrar: in its account security settings, once the domain is bought.
+2. **Cloudflare notification for Worker errors:** dashboard, account home, **Notifications**
+   (left menu), **Add**, filter by product **Workers**, pick the Workers error/exception alert
+   offered, scope it to `hara-website`, deliver to his email, save. Then **Workers & Pages,
+   hara-website, Observability** shows the logs it refers to.
+3. **Analytics token (optional):** Analytics & Logs, Web Analytics, Add a site, hostname
+   `hara-website.chaudharikrishna0415.workers.dev`, manual snippet, copy the 32-character
+   `token`, put `CF_BEACON_TOKEN=<token>` in `.env.production-cf`, `npm run deploy`.
+4. **Decisions:** keep or delete the Afterhours reference Worker; whether the repo goes private
+   (the GitHub Pages redirect needs it public on a free plan); revise and re-price the SOW
+   document in `docs/client/` for the one-page scope (Phase 4 is out).
 
-- Krishna: the client wants a simple one-page website, "that is all". The multi-page work
-  (Services, Security, FAQ, About, Contact, Service areas hub, six city pages) and the Google
-  Business Profile pack were built, then removed from the site. They live in the git tag
-  `multi-page-archive`; `docs/client/GBP-and-directories-pack.md` is marked parked. The SOW
-  document in `docs/client/` still lists Phase 4 and should be revised and re-priced by Krishna.
-- Kept from that work: real phone (416) 990-3995 and email on every page; tappable city chips
-  that preselect the form (`?city=` allowlisted); tab icon rebuilt (logo mark on a white tile,
-  ICO and PNG sizes, `?v=2`); the home page's LocalBusiness JSON-LD; cookie-free analytics wiring
-  (off until `CF_BEACON_TOKEN` is set, see `docs/DEPLOY.md`); the client guide
-  (`docs/client/HARA-Handoff-Guide.html` / `.pdf`, one-page scope).
-- Hours: HARA has no set hours (every day, any time a contract needs). Nothing to add.
-- 67 tests pass.
+### HARA (through Krishna)
 
-## 5. Test and audit evidence (latest)
+- Confirm the six security practices on the page are true (keys and fobs, alarm codes, same
+  team, confidential by default, lock-up check, every visit logged). They appear once, on the
+  home page.
+- Approve the illustrative photos for launch, or supply real ones.
+- Which inbox receives walkthrough requests (`LEAD_TO_EMAIL`, set at the domain step).
+- A lawyer's review of the privacy policy and terms (recommended).
 
-- `npm test`: 60 pass, including `test/stress.test.js`: 150 simultaneous visitors (150 rows),
-  20 simultaneous duplicates (1 row), 40-request burst from one address (at most 5 accepted),
-  34 hostile payloads + 400 random JSON documents (never a 5xx, nothing invalid stored), 5,000
-  random validator inputs (anything accepted meets every rule).
-- Production load (2026-09-29): 1,500 page/asset requests at concurrency 50: 214 req/s, p50
-  172 ms, p95 387 ms, p99 741 ms, 0 errors. 300-request API burst: 283 x 429, 17 x 400, 0 x 5xx
-  (17 got past the approximate limiter and were stopped by validation; Turnstile also guards).
-- Browser matrix on production `765c3a63`: 320 to 2560 px wide, the 3D build settles in ~3.5 s,
-  no horizontal overflow, CLS 0, WebGL context disposed, CTA above the fold, no console errors.
-  LCP ~3.6 s (the open item above). Slow phone (6x CPU, 3G) and no-WebGL fall back to the
-  static logo; JS off shows the logo through the CSS failsafe; reduced motion is static.
-- Form end to end in a real browser against the local Worker at 1440, 1024, 390 and 320 px:
-  empty steps blocked, bad email flagged, request stored with every answer, success panel shown,
-  scheduled job clean.
-- Not yet done: Safari/WebKit and Firefox engines, Lighthouse, axe/keyboard/screen-reader audit.
+### The domain (runbook: `docs/DEPLOY.md`, "Connect the domain")
 
-## 6. What is left, by who
+Buy it in HARA's name; DNS on Cloudflare (registrar lock, DNSSEC); business email with SPF, DKIM,
+DMARC; Resend domain and `RESEND_API_KEY`; `EMAIL_MODE=resend`, real `EMAIL_FROM` and
+`LEAD_TO_EMAIL`; `ALLOWED_ORIGINS`, `TURNSTILE_HOSTNAMES`, the Turnstile widget's hostnames;
+`VITE_SITE_URL` (drops `noindex`, adds canonical, JSON-LD, sitemap, security.txt); Search Console
+and Bing; then the gate again against the domain.
 
-### A. The next session can do these now (no domain needed)
+## 4. Client documents (private, `docs/client/`)
 
-1. **Settle the working tree.** Measure the `src/style.css` cover on a production build
-   (`npm run build:prod`, launch config `afterhours-dist` on :4332,
-   `node scripts/qa/matrix.mjs http://localhost:4332/ /tmp`): CLS must stay 0 everywhere, JS-off
-   must show the logo with no horizontal overflow, LCP should fall below 1 s. Keep and deploy it
-   if it passes, otherwise revert. Commit in logical pieces, deploy, push, prune the worktree.
-2. ~~SOW Phase 4 pages and Google Business Profile~~ out of scope (section 4b).
-3. **Cookie-free analytics** (Cloudflare Web Analytics), with the CSP opened only for what it needs.
-4. ~~Favicon~~ done (logo mark on a white tile).
-5. ~~Docs for HARA~~ done: handoff guide in `docs/client/` (the Google profile pack is parked).
-6. **SOW Phase 5 QA:** Chromium, WebKit and Firefox plus iPhone/Android emulation; WCAG 2.1 AA
-   (axe scan, keyboard-only pass, VoiceOver spot check); Lighthouse mobile targets (performance
-   90+, accessibility 95+, best practices 95+, SEO 95+; measure SEO on a build with a placeholder
-   `VITE_SITE_URL` so `noindex` isn't counted); `scripts/qa` matrix, e2e and a modest load test.
-7. **Final gate:** `security-protocol` (all 50) and `build-security` Part B (privacy policy still
-   matches what is collected, CASL, AODA, licences for fonts and photos). Report in
-   `security/golive/`, then deploy, commit, push, and update this file, `CLAUDE.md`,
-   `docs/DEPLOY.md` and memory.
+- `HARA-Handoff-Guide.html` / `.pdf`: the short written guide the SOW promises (one-page scope;
+  yellow placeholders: domain, request inbox, Dispatch contact). Fill them at the domain step.
+- `GBP-and-directories-pack.md` + `gbp-logo-1024.png`: parked (out of scope).
+- `HARA-Website-Scope-of-Work.*`: needs Krishna's revision for one page.
+- `company-notes.md`: client priorities and the drafted service list.
 
-### B. Needs Krishna
+## 5. How to work here (quirks that cost time)
 
-- The company facts in C, passed on from HARA.
-- Decisions: keep or delete the
-  Afterhours demo Worker, whether the repo should become private (the GitHub Pages redirect needs
-  it public on a free plan).
-- Account actions only he can take: confirm 2FA on Cloudflare, GitHub, the registrar and Resend
-  (status deliberately not recorded in this repo); add a Cloudflare notification for Worker errors
-  (dashboard; wrangler's login can't create notification rules).
-
-### C. Needs HARA (the client)
-
-- ~~Real phone and contact email~~ done 2026-10-01: (416) 990-3995 and harafacilitiescleaning@gmail.com
-  are on every page; the "Demo site" footer line is removed. Still to confirm with HARA: that these
-  are the numbers they want public, and which inbox should receive requests (`LEAD_TO_EMAIL`).
-- Confirmation of every security practice described on the page, and anything for the About page
-  (only what is true: founding, owner, team, insurance, WSIB, bonding).
-- A lawyer's review of the privacy policy and terms (recommended); confirmation of the photo licence.
-- Their Google account for the Business Profile.
-
-### D. Needs the domain (leave for last; runbook in `docs/DEPLOY.md`)
-
-Buy the domain in HARA's name; DNS on Cloudflare (registrar lock, DNSSEC); business email with
-SPF, DKIM and DMARC; Resend domain verification, `RESEND_API_KEY`, `EMAIL_MODE=resend`, real
-`EMAIL_FROM` and `LEAD_TO_EMAIL`; `ALLOWED_ORIGINS`, `TURNSTILE_HOSTNAMES` and the Turnstile
-widget's hostnames; `VITE_SITE_URL` (drops `noindex`, adds canonical, sitemap, security.txt);
-Search Console and Bing; Google Business Profile website link; final gate against the domain.
-
-## 7. How to work here (quirks that cost time)
-
-- Both Playwright MCP servers can be locked by another Claude session ("Browser is already in
-  use"). Use `scripts/qa/` instead: it drives Chrome for Testing through `playwright-core`.
+- Lighthouse: run it alone, nothing else using the CPU; SEO on a placeholder `VITE_SITE_URL`
+  build. `scripts/qa/README.md` has the commands and where the cached tools live.
+- Both Playwright MCP servers can be locked by another Claude session; `scripts/qa/` drives
+  Chrome for Testing, Firefox and WebKit through `playwright-core` instead.
 - Measure LCP, CLS and JS-off on a production build, never the Vite dev server.
-- The Cloudflare rate limiter is approximate (per location, synced with a delay): a burst lets a
-  few more than 5 through. Tests in workerd are exact.
-- `wrangler tail hara-website` (no `--env production`: that appends `-production` to the name).
-- `wrangler d1 time-travel restore` has no `-y`; it auto-confirms in a non-interactive shell.
-- A brand-new `workers.dev` subdomain can answer 404 for about a minute after the first deploy.
-- The Vite warning that `hero-build` is over 500 kB is expected (three.js, lazy loaded).
-- Logo pipeline venv (scratch venvs don't survive sessions): `python3 -m venv /tmp/hara-venv &&
-  /tmp/hara-venv/bin/pip install fonttools brotli skia-pathops pillow numpy scipy potracer`.
-  `export_brand.py` itself runs on plain `python3`.
-- The security scan's three standing false positives: `.wrangler/tmp` source map (T17),
-  preview scripts in `docs/client/logo/navy/` (T19), the words "webhook"/"claude" in our docs.
+- The Cloudflare rate limiter is approximate: a burst lets a few more than 5 through.
+- `wrangler tail hara-website` (no `--env production`). A new `workers.dev` name can 404 for a minute.
+- The Vite "chunk over 500 kB" warning (three.js, lazy) is expected.
+- WebKit logs one CSP `style-src-attr` violation per load: its own `<select>` styling. Ignore.
+- The security scan's standing false positives: preview scripts in `docs/client/logo/navy/`
+  (T19) and the word "webhook" in our docs (T31). Anything else is new.
+- `.wrangler/tmp` source maps can trip the SQL check when the local Worker has run; they are ignored files.
 
-## 8. Krishna's preferences (apply throughout)
+## 6. Krishna's preferences (apply throughout)
 
 - He directs the site; company facts come only from `docs/client/` or him. Never invent them.
-- Check in between steps, one question at a time; show desktop and phone screenshots before big
-  visual changes. Ship to the live URL and send the link; never hand over localhost links.
-- Professional and quiet: no em or en dashes in visible copy, sentence case, one CTA label
-  ("Book a free walkthrough"), white/light theme, rounded shapes, Mona Sans, motion only where it
-  explains something (the one-time 3D logo build is the exception he asked for).
-- He rejected many logo and font directions before choosing the client's own logo. Don't reopen
-  the brand unless he asks.
+- One page. Don't add pages or a Google profile unless he asks.
+- Check in between steps, one question at a time; desktop and phone screenshots before big
+  visual changes; ship to the live URL and send the link, never localhost.
+- Quiet and professional: no em or en dashes in visible copy, sentence case, one CTA label
+  ("Book a free walkthrough"), light theme, rounded shapes, Mona Sans, motion only where it
+  explains something (the one-time 3D hero logo build is the exception he asked for).
+- Don't reopen the brand: he chose the client's own logo after rejecting many directions.
 
-## 9. Prompt for the next session
+## 7. Short history
 
-Paste this into a new Claude Code session started in `~/afterhours`:
-
-```
-You are continuing the HARA Facilities Cleaning website in ~/afterhours: a static Vite site
-served by a Cloudflare Worker with a D1-backed walkthrough form, live before the domain at
-https://hara-website.chaudharikrishna0415.workers.dev. Goal: finish everything so that the ONLY
-remaining work is buying the domain and connecting it (docs/DEPLOY.md, "Connect the domain").
-
-First read, in full: HANDOFF.md, CLAUDE.md, docs/DEPLOY.md, security/golive/2026-09-28-full-GO.md,
-and the private SOW at docs/client/HARA-Website-Scope-of-Work.txt (Phases 4 and 5 define
-"finished"). Run the engineering-team skill, then follow the session protocol in CLAUDE.md:
-design skills for UI work, context7 for library docs, web-design-guidelines plus real-browser
-checks at desktop and phone widths before calling UI done, security-protocol before every deploy.
-
-Work in this order. Check in with me between numbered steps, and show desktop and phone
-screenshots before any big visual change:
-
-1. Settle the working tree (HANDOFF.md section 3). Verify the uncommitted hero "white cover" in
-   src/style.css on a production build (npm run build:prod, launch config afterhours-dist on
-   :4332, node scripts/qa/matrix.mjs): CLS 0 at every viewport, JS-off shows the logo with no
-   horizontal overflow, LCP under 1 s. Deploy it if it passes, revert it if not. Then commit in
-   logical pieces, run npm test, deploy, push, and git worktree prune.
-2. Ask me, in one short list, for the facts only HARA can give, and wait: real phone and contact
-   email, the six cities for city pages, business hours, true About-page facts, and whether the
-   security practices on the page are confirmed. Never invent company facts; anything missing
-   stays a clearly marked placeholder on the launch checklist.
-3. SOW Phase 4 in the existing design system: Services, Security, FAQ, About, Contact, a Service
-   Areas hub and up to six city pages with genuinely unique content; titles, descriptions,
-   headings, internal links; JSON-LD (service-area LocalBusiness, Service, FAQPage) and sitemap
-   entries that switch on with VITE_SITE_URL. Use the local SEO skills (local-landing-pages,
-   local-schema, service-area-seo). Show me the page plan before writing, then the pages.
-4. Other pre-domain items: cookie-free Cloudflare Web Analytics (open the CSP only as far as it
-   needs); a favicon that reads at 16 px (ask me first); and, in docs/client/, a Google Business
-   Profile and directory listing content pack plus the client handoff guide (how requests
-   arrive, exporting leads, who to call, what to update).
-5. SOW Phase 5 QA on a production build and the live URL: Chromium, WebKit and Firefox plus
-   iPhone and Android emulation; WCAG 2.1 AA (axe scan, keyboard-only pass, VoiceOver spot check
-   if possible); Lighthouse mobile at performance 90+, accessibility 95+, best practices 95+, SEO
-   95+ (measure SEO on a build with a placeholder VITE_SITE_URL so noindex isn't counted); the
-   scripts/qa matrix, form end to end on the local Worker, a modest load test; npm test. Fix
-   everything found.
-6. Full security-protocol gate (all 50) and build-security Part B (privacy policy still matches
-   what is collected, CASL, AODA, font and photo licences). Report in security/golive/, then
-   deploy, commit and push.
-7. Update HANDOFF.md, CLAUDE.md, docs/DEPLOY.md and memory so they show everything done and a
-   domain-only checklist, and send me the live link with desktop and phone screenshots.
-
-Ground rules: I direct the site; company facts only from docs/client or me. No em or en dashes in
-visible copy, sentence case, professional quiet motion (the one-time 3D hero logo build is the
-only exception). Ship to the live URL, never localhost links. Never write secrets or account
-security status (2FA and the like) into this public repo. For things only I can do (2FA on
-Cloudflare, GitHub, the registrar and Resend; a Cloudflare notification for Worker errors), give
-me the exact dashboard steps instead of skipping them.
-```
-
-## 10. Short history
-
-- 09-23/24: "Afterhours" demo (night story, squeegee wordmark, GitHub Pages).
-- 09-28: renamed HARA; professional redesign around the client's priorities; SOW; backend on
-  Cloudflare Workers + D1; legal pages; first security gate.
-- 09-28 (evening): four rounds of logo and lettering exploration (tower tile, custom lettering,
-  font rounds, structural directions) all set aside; Krishna chose the client's original logo.
-  Traced to vector, palette sampled from it, 3D hero build, full security gate GO.
-- 09-29: fixes from the gate and stress tests deployed (`765c3a63`); restore rehearsed; the
-  Afterhours design republished as a reference Worker.
-- 10-01: this handoff.
+- 09-23/24: "Afterhours" demo. 09-28: renamed HARA, redesign, SOW, Cloudflare backend, legal
+  pages, first gate; client's original logo traced, navy palette, 3D hero build; full gate GO.
+- 09-29: stress-test fixes, restore rehearsed. 10-01: hero LCP cover verified and shipped; real
+  contact details; multi-page build (then removed on the one-page decision); tab icon; analytics
+  wiring; client guide; Phase 5 QA with fixes; final gate GO. Launch-ready apart from the domain.

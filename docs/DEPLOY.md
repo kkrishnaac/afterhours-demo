@@ -1,9 +1,9 @@
 # HARA website: deployment
 
 **Production is live** on Cloudflare at
-https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `765c3a63` as of 2026-10-01).
-Pre-domain work still open (analytics token, HARA's security confirmation, final QA and gate) is
-listed in `HANDOFF.md` section 6; the domain steps are below. Infrastructure state:
+https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `3ea51993` as of 2026-10-01).
+**Launch-ready apart from the domain** (final gate GO: `security/golive/2026-10-01-full-GO.md`). What is
+still open is in `HANDOFF.md` section 3; the domain steps are below. Infrastructure state:
 
 | Piece | State |
 |---|---|
@@ -18,11 +18,13 @@ No secret ever goes in this repo. Local secrets live in `.dev.vars` and `.env.*`
 
 ## Before the domain goes live (launch blockers)
 
-- [ ] **2FA confirmed** on Cloudflare, GitHub, registrar, Resend and the business email.
-- [x] Real phone number and email on every page (2026-10-01); "Demo site" footer line removed.
-      Still open: HARA's inbox for `LEAD_TO_EMAIL` (placeholder in `wrangler.jsonc`).
-- [ ] HARA confirms every security practice described on the page.
-- [ ] Lawyer review of the privacy policy and terms (recommended), photo licence confirmed.
+- [ ] **2FA confirmed** on Cloudflare, GitHub, registrar, Resend and the Gmail inbox (steps: `HANDOFF.md` section 3).
+- [ ] **Cloudflare notification for Worker errors** added (steps: `HANDOFF.md` section 3).
+- [ ] HARA confirms every security practice described on the page, and approves the photos.
+- [ ] Lawyer review of the privacy policy and terms (recommended).
+- [ ] HARA's inbox for `LEAD_TO_EMAIL` decided (placeholder in `wrangler.jsonc`, set in step 4 below).
+- [x] Real phone number and email on every page. Legal pages reviewed 1 October 2026.
+- [x] Phase 5 QA and the full security gate (GO), see `security/golive/2026-10-01-full-GO.md`.
 
 ## Analytics (Cloudflare Web Analytics, cookie-free)
 
@@ -77,7 +79,7 @@ Replace `DOMAIN` with the real one, e.g. `harafacilities.ca`.
    This removes `noindex`, adds canonical links, absolute share-image URLs, JSON-LD (LocalBusiness as a
    service-area business on the home page), `sitemap.xml`,
    `robots.txt` with the sitemap, and `/.well-known/security.txt`.
-6. **Deploy:** `npm run deploy` (runs the 60 tests, builds, deploys). On the next cron run
+6. **Deploy:** `npm run deploy` (runs the 67 tests, builds, deploys). On the next cron run
    (within 15 minutes) every request stored while email was on hold is emailed to HARA.
 7. **Check:**
    - https://DOMAIN and https://www.DOMAIN load; http redirects to https.
@@ -85,7 +87,9 @@ Replace `DOMAIN` with the real one, e.g. `harafacilities.ca`.
    - Submit a real request from a phone: HARA's inbox gets it within a minute, the
      confirmation arrives, and `npm run leads` shows it.
    - Search Console and Bing Webmaster Tools: add the site, submit `https://DOMAIN/sitemap.xml`.
-   - Cloudflare Notifications: alert on Worker errors.
+   - Cloudflare Notifications: alert on Worker errors (if not done already).
+   - Lighthouse against the domain (mobile 90+ / 100 / 100 / 100 expected now that `noindex` is off).
+   - If `LEAD_TO_EMAIL` is a Gmail address, the privacy policy already names Google as a provider.
 8. **Security gate:** run `security-protocol` against `https://DOMAIN`. Launch only on GO.
 
 ### Moving to HARA's own Cloudflare account instead
@@ -124,7 +128,7 @@ npx wrangler d1 execute <empty-database> --remote --file ~/Desktop/hara-backup.s
 ## Everyday commands
 
 ```bash
-npm test                     # 60 Worker tests inside workerd with a local D1
+npm test                     # 67 tests inside workerd with a local D1
 npm run dev:worker           # local: build:cf + local migrations + wrangler dev on :8787
 npm run deploy               # tests, production build, deploy
 npm run db:migrate           # apply new migrations to production D1

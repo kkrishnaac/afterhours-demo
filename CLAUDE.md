@@ -6,13 +6,14 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
 `docs/client/` (gitignored: the repo is public). Read `HANDOFF.md` for where things stand.
 
 - **Production (live, pre-domain):** https://hara-website.chaudharikrishna0415.workers.dev
-  (Cloudflare Worker `hara-website` in Krishna's account, version `765c3a63` as of 2026-10-01,
+  (Cloudflare Worker `hara-website` in Krishna's account, version `3ea51993` as of 2026-10-01,
   D1 `hara-walkthroughs`, `noindex`). The old GitHub Pages URL
   (https://kkrishnaac.github.io/afterhours-demo/) redirects to production.
-- **Status (2026-10-01):** security gate GO, fixes and stress tests deployed, 60 tests pass.
-  Before the domain: analytics token, Phase 5 QA, final gate (one page; see Scope below).
-  The working tree holds uncommitted work (some live, one CSS change not yet verified).
-  **Read `HANDOFF.md` sections 3 and 6 before changing anything.**
+- **Status (2026-10-01): launch-ready apart from the domain.** Phase 5 QA done (Lighthouse mobile
+  92 to 96, desktop 100, axe 0 violations, three engines + phone emulation, load test), full
+  security gate GO (`security/golive/2026-10-01-full-GO.md`), 67 tests pass, tree clean.
+  Left: Krishna's account actions and HARA's confirmations (`HANDOFF.md` section 3), then the
+  domain (`docs/DEPLOY.md`). One page only: see Scope below.
 - **Reference only:** the original "Afterhours" design (commit `dea9337`) runs as a separate
   static Worker at https://afterhours-design.chaudharikrishna0415.workers.dev (`noindex`).
 - **Krishna wants changes shipped to the live URL**, never handed over as a localhost link.
@@ -88,7 +89,7 @@ node scripts/qa/matrix.mjs <url> /tmp   # browser stress matrix (see scripts/qa/
 | `worker/` | `index.js` (router, https redirect, cron), `walkthrough.js` (the endpoint), `validate.js`, `turnstile.js`, `email.js` (escaped templates, Resend, hold, dry-run), `maintenance.js` (retries, 24-month retention), `http.js` (API headers, PII-free logs) |
 | `migrations/`, `test/`, `vitest.config.js` | D1 schema (no IPs, CASL consent fields); Worker tests via `@cloudflare/vitest-plugin`; `test/stress.test.js` = concurrency + fuzz |
 | `wrangler.jsonc` | Worker config: local defaults at top level, `env.production` for the live Worker |
-| `scripts/` | `contrast.mjs` (palette WCAG check), `leads.mjs` (leads/PIPEDA CLI), `optimize-images.mjs` (4K masters -> AVIF/WebP), `qa/` (browser matrix, fake-clock frames, form end to end, load test) |
+| `scripts/` | `contrast.mjs` (palette WCAG check), `leads.mjs` (leads/PIPEDA CLI), `optimize-images.mjs` (4K masters -> AVIF/WebP), `favicons.mjs`, `qa/` (viewport matrix, fake-clock frames, cross-browser + device pass, axe scan, keyboard pass, accessibility tree, form end to end, load test; see its README) |
 | `public/` | `brand/` (logo SVGs), `favicon.svg`, `apple-touch-icon.png`, `og.jpg` (branded share image), `img/` photo ladders |
 | `src/analytics.js`, `src/structured-data.js`, `src/business.js`, `scripts/favicons.mjs` | `analytics.js`: Cloudflare Web Analytics beacon, off until `CF_BEACON_TOKEN` is set (opens the CSP and adds a privacy sentence only then). `structured-data.js`: the home page's LocalBusiness JSON-LD (service-area business, no address, no hours, no ratings), emitted only when `VITE_SITE_URL` is set. `business.js`: name, phone, email. `favicons.mjs` builds the tab icons (logo mark on a white tile: favicon.svg/.ico, 48 and 192 px PNGs) from `public/brand/hara-mark.svg`; re-run it if `export_brand.py` rewrites `favicon.svg`. Icon links carry `?v=2` to beat browser caches |
 | `docs/DEPLOY.md` | Production state, launch blockers, connect-the-domain runbook, backups and restore (rehearsed), everyday commands |
@@ -225,6 +226,16 @@ scopes include D1, Workers and Turnstile widgets). Connecting the domain: `docs/
   reads the home-level `~/.claude/launch.json`, not the project's.
 - Measure LCP, CLS and JS-off behaviour on a production build (`afterhours-dist`, :4332) or the
   live URL, never the Vite dev server: dev injects CSS through JavaScript.
+- Lighthouse: run it ALONE (parallel browser runs cost 40 points of CPU contention in one
+  measurement) and, for the SEO score, on a build with a placeholder `VITE_SITE_URL` so the
+  pre-domain `noindex` is not counted. Mobile sits at 92 to 96; the remaining cost is the
+  simulated LCP of the nav logo over slow 4G.
+- The hero decides 3D-or-static two frames after `load` (`src/hero-logo.js`): WebKit can run the
+  module before the stylesheet applies (random static fallbacks on big iPhones), and the three.js
+  chunk must not sit in the LCP's dependency graph. If the decision comes after the 3.6 s CSS
+  failsafe, `is-late` stops the logo rising a second time.
+- WebKit logs a `style-src-attr` CSP violation on every load. It is WebKit's own `<select>`
+  styling (fires with JS off); the select works. Don't add `unsafe-inline` for it.
 - The Cloudflare rate limiter is approximate (per location, synced with a delay): a burst lets a
   few more than 5 through; Turnstile still stops them. The workerd tests are exact.
 - `wrangler tail hara-website` without `--env production` (that appends `-production`).

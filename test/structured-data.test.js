@@ -12,7 +12,7 @@ describe('home page structured data', () => {
   it('describes a service-area business: no street address, hours or ratings', () => {
     const [biz] = structuredData('index.html', SITE);
     expect(biz['@type']).toBe('LocalBusiness');
-    expect(biz.telephone).toBe('+14169903995');
+    expect(biz.telephone).toEqual(['+14169903995', '+14379803464']);
     expect(biz).not.toHaveProperty('address');
     expect(biz).not.toHaveProperty('openingHoursSpecification');
     expect(biz).not.toHaveProperty('aggregateRating');

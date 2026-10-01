@@ -13,7 +13,7 @@ export function structuredData(file, site) {
     name: BUSINESS.name,
     url: `${site}/`,
     image: `${site}/og.jpg`,
-    telephone: BUSINESS.phoneE164,
+    telephone: [BUSINESS.phoneE164, BUSINESS.phone2E164],
     email: BUSINESS.email,
     description: 'Office cleaning across Toronto and the GTA, on any day and at any time, with a free walkthrough before every quote.',
     areaServed: CITY_NAMES.map((c) => ({ '@type': 'City', name: c })),

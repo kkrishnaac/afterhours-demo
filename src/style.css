@@ -507,6 +507,8 @@ h3 { font-size: 1.12rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.
 @media (hover: hover) { .areas__list li:hover { box-shadow: inset 0 0 0 1px var(--accent); } .areas__list a:hover { color: var(--accent); } }
 .areas__help { margin-top: 16px; font-size: 15px; color: var(--ink-muted); max-width: 52ch; }
 .areas__help a { color: var(--accent); text-underline-offset: 3px; }
+.quote__call { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.quote__send-error .call + .call { margin-left: 16px; }
 .quote__picked { margin-top: 14px; font-size: 15px; color: var(--accent); font-weight: 500; }
 .quote__picked:empty { margin: 0; }
 .map {

@@ -192,7 +192,7 @@ only for now, security conscious, free walkthrough before every quote.
 - **Scope (Krishna, 2026-10-01): the client wants a simple ONE-PAGE website, nothing more.** No Services/Security/FAQ/About/Contact pages, no city pages, no Service areas hub, no Google Business Profile or directory listings (the SOW's Phase 4 is out for now). They were built and live briefly, then removed; they are in git under the tag `multi-page-archive` (`git checkout multi-page-archive -- <files>` restores them). Don't rebuild them unless he asks. The legal pages (privacy, terms, accessibility) stay: the SOW requires them.
 - Hours: HARA has no set hours; they are available every day of the week, at any time a contract needs. The site shows no hours table and the structured data carries none.
 - Home Areas chips (all 16 cities) are links: a tap scrolls to the form with the city already chosen (`quote.js` `pickCity`; `?city=` is matched against the allowlist).
-- Contact details on the site (real, from Krishna 2026-10-01): phone (416) 990-3995 (`tel:+14169903995`), email
+- Contact details on the site (real, from Krishna 2026-10-01): phone (416) 990-3995 (`tel:+14169903995`) everywhere, a second number (437) 980-3464 in the footer, the booking section and the form's fallback (added 2026-10-01), email
   harafacilitiescleaning@gmail.com. Still placeholders: `EMAIL_FROM` and `LEAD_TO_EMAIL` in `wrangler.jsonc`
   (set at the domain step). The footer's demo note is gone.
 - Company facts come from the client's docs. Krishna directs the site; the client's layout

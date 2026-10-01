@@ -2,7 +2,7 @@
 
 **Production is live** on Cloudflare at
 https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `765c3a63` as of 2026-10-01).
-Pre-domain work still open (SOW Phase 4 pages, company details, analytics, final QA and gate) is
+Pre-domain work still open (analytics token, HARA's security confirmation, final QA and gate) is
 listed in `HANDOFF.md` section 6; the domain steps are below. Infrastructure state:
 
 | Piece | State |
@@ -31,7 +31,7 @@ Wired but **off until a token exists** (`src/analytics.js`). To switch it on:
    address now (later the real domain: add it as a second site and use its token). Choose the
    manual JavaScript snippet and copy the 32-character `token` from `data-cf-beacon`. It is public
    by design (it sits in the page), not a secret.
-2. Put it in `.env.production-cf` (gitignored): `VITE_CF_BEACON_TOKEN=<token>`
+2. Put it in `.env.production-cf` (gitignored): `CF_BEACON_TOKEN=<token>`
 3. `npm run deploy`. The build then adds the beacon to every page, opens the CSP for exactly two
    origins (`static.cloudflareinsights.com` in `script-src`, `cloudflareinsights.com` in
    `connect-src`) and adds one sentence to the privacy policy. With no token none of that happens.
@@ -75,7 +75,7 @@ Replace `DOMAIN` with the real one, e.g. `harafacilities.ca`.
    VITE_SECURITY_CONTACT=mailto:security@DOMAIN
    ```
    This removes `noindex`, adds canonical links, absolute share-image URLs, JSON-LD (LocalBusiness as a
-   service-area business, Service, FAQPage, breadcrumbs), `sitemap.xml` with every page,
+   service-area business on the home page), `sitemap.xml`,
    `robots.txt` with the sitemap, and `/.well-known/security.txt`.
 6. **Deploy:** `npm run deploy` (runs the 60 tests, builds, deploys). On the next cron run
    (within 15 minutes) every request stored while email was on hold is emailed to HARA.

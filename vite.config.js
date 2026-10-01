@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig, loadEnv } from 'vite';
 import { srcset, smallest, dimensions } from './src/photos.js';
-import { ALL_PAGES, ALL_PATHS, structuredData, ldScript } from './src/site-pages.js';
+import { structuredData, ldScript } from './src/structured-data.js';
 import { validToken, beaconTag, PRIVACY_NOTE, BEACON_SCRIPT_SRC, BEACON_CONNECT_SRC } from './src/analytics.js';
 
 // Content Security Policy. The demo build (GitHub Pages) allows nothing but the
@@ -117,8 +117,8 @@ const fontPreload = {
 // launch: pages become indexable (404 stays noindex), links become canonical,
 // share images absolute, and robots.txt + sitemap.xml are generated.
 // VITE_SECURITY_CONTACT (e.g. mailto:security@domain) adds /.well-known/security.txt.
-const PAGES = ['index.html', 'privacy.html', 'terms.html', 'accessibility.html', '404.html', ...ALL_PAGES()];
-const PATHS = { 'index.html': '/', 'privacy.html': '/privacy', 'terms.html': '/terms', 'accessibility.html': '/accessibility', ...ALL_PATHS() };
+const PAGES = ['index.html', 'privacy.html', 'terms.html', 'accessibility.html', '404.html'];
+const PATHS = { 'index.html': '/', 'privacy.html': '/privacy', 'terms.html': '/terms', 'accessibility.html': '/accessibility' };
 
 const siteUrl = (site, contact) => ({
   name: 'site-url',
@@ -175,10 +175,10 @@ const analyticsBeacon = (token) => ({
 //   npm run build:cf  -> Cloudflare (form posts to the Worker, CSP as real headers)
 // The live build is switched on by VITE_WALKTHROUGH_API in .env.cloudflare.
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), 'VITE_');
+  const env = loadEnv(mode, process.cwd(), ['VITE_', 'CF_']);
   const liveForm = Boolean(env.VITE_WALKTHROUGH_API);
-  const token = liveForm && validToken(env.VITE_CF_BEACON_TOKEN) ? env.VITE_CF_BEACON_TOKEN : '';
-  if (liveForm && env.VITE_CF_BEACON_TOKEN && !token) console.warn('VITE_CF_BEACON_TOKEN is not a 32-character hex token: analytics left off');
+  const token = liveForm && validToken(env.CF_BEACON_TOKEN) ? env.CF_BEACON_TOKEN : '';
+  if (liveForm && env.CF_BEACON_TOKEN && !token) console.warn('CF_BEACON_TOKEN is not a 32-character hex token: analytics left off');
   const policy = csp(liveForm, Boolean(token));
   return {
     base: liveForm ? '/' : './',  // relative for the GitHub Pages project path

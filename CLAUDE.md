@@ -10,7 +10,7 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
   D1 `hara-walkthroughs`, `noindex`). The old GitHub Pages URL
   (https://kkrishnaac.github.io/afterhours-demo/) redirects to production.
 - **Status (2026-10-01):** security gate GO, fixes and stress tests deployed, 60 tests pass.
-  Before the domain: SOW Phase 4 pages, real company details, analytics, Phase 5 QA, final gate.
+  Before the domain: analytics token, Phase 5 QA, final gate (one page; see Scope below).
   The working tree holds uncommitted work (some live, one CSS change not yet verified).
   **Read `HANDOFF.md` sections 3 and 6 before changing anything.**
 - **Reference only:** the original "Afterhours" design (commit `dea9337`) runs as a separate
@@ -90,8 +90,7 @@ node scripts/qa/matrix.mjs <url> /tmp   # browser stress matrix (see scripts/qa/
 | `wrangler.jsonc` | Worker config: local defaults at top level, `env.production` for the live Worker |
 | `scripts/` | `contrast.mjs` (palette WCAG check), `leads.mjs` (leads/PIPEDA CLI), `optimize-images.mjs` (4K masters -> AVIF/WebP), `qa/` (browser matrix, fake-clock frames, form end to end, load test) |
 | `public/` | `brand/` (logo SVGs), `favicon.svg`, `apple-touch-icon.png`, `og.jpg` (branded share image), `img/` photo ladders |
-| `src/service-areas.js`, `src/area-pages.js`, `src/business.js`, `scripts/areas.mjs` | The Service areas hub and six city pages (Toronto, Mississauga, Vaughan, Markham, Brampton, Oakville). **Edit `src/service-areas.js`** (unique copy per city; regions list) then `npm run areas`: it writes `service-areas.html` and `office-cleaning-<city>.html` into the root (generated and committed; the build scripts run it first, `test/areas.test.js` fails if they are stale). `area-pages.js` also builds the JSON-LD (LocalBusiness service-area business on `/`, Service + BreadcrumbList + FAQPage per city) that is injected only when `VITE_SITE_URL` is set. To add a city page: add an entry (needs a city already in `src/cities.js`), run `npm run areas`, and the hub, sitemap and schema follow |
-| `src/core-pages.js`, `src/site-pages.js`, `src/analytics.js`, `scripts/favicons.mjs` | `core-pages.js` generates Services, Security, FAQ, About, Contact (home page wording only; `test/areas.test.js` fails if they disagree with `index.html`); `site-pages.js` is the index of every generated page and its JSON-LD. `analytics.js`: Cloudflare Web Analytics beacon, off until `VITE_CF_BEACON_TOKEN` is set (opens the CSP and adds a privacy sentence only then). `favicons.mjs` builds the tab icons (logo mark on a white tile: favicon.svg/.ico, 48 and 192 px PNGs) from `public/brand/hara-mark.svg`; re-run it if `export_brand.py` rewrites `favicon.svg`. Icon links carry `?v=2` to beat browser caches |
+| `src/analytics.js`, `src/structured-data.js`, `src/business.js`, `scripts/favicons.mjs` | `analytics.js`: Cloudflare Web Analytics beacon, off until `CF_BEACON_TOKEN` is set (opens the CSP and adds a privacy sentence only then). `structured-data.js`: the home page's LocalBusiness JSON-LD (service-area business, no address, no hours, no ratings), emitted only when `VITE_SITE_URL` is set. `business.js`: name, phone, email. `favicons.mjs` builds the tab icons (logo mark on a white tile: favicon.svg/.ico, 48 and 192 px PNGs) from `public/brand/hara-mark.svg`; re-run it if `export_brand.py` rewrites `favicon.svg`. Icon links carry `?v=2` to beat browser caches |
 | `docs/DEPLOY.md` | Production state, launch blockers, connect-the-domain runbook, backups and restore (rehearsed), everyday commands |
 | `security/golive/` | Go-live reports; latest full gate `2026-09-28-full-GO.md` |
 | `docs/client/` (gitignored) | Client brief + priorities, company notes, SOW (docx + generator), security plan (PDF), logo kit, leads exports |
@@ -186,7 +185,9 @@ only for now, security conscious, free walkthrough before every quote.
 - Every animation honours `prefers-reduced-motion` (JS checks + CSS override at the end of style.css).
 - Contrast: every text pair >= 4.5:1 (`npm run contrast`). `translate="no"` on the brand.
   `[hidden]` is forced to `display: none`.
-- Home Areas chips (all 16 cities) are links: a tap scrolls to the form with the city already chosen (`quote.js` `pickCity`; `?city=` from the city pages is matched against the allowlist). City page copy is drafted from public facts about each place and needs HARA's OK; nothing about HARA beyond the stated process (free walkthrough, offices only, any day and time) is claimed.
+- **Scope (Krishna, 2026-10-01): the client wants a simple ONE-PAGE website, nothing more.** No Services/Security/FAQ/About/Contact pages, no city pages, no Service areas hub, no Google Business Profile or directory listings (the SOW's Phase 4 is out for now). They were built and live briefly, then removed; they are in git under the tag `multi-page-archive` (`git checkout multi-page-archive -- <files>` restores them). Don't rebuild them unless he asks. The legal pages (privacy, terms, accessibility) stay: the SOW requires them.
+- Hours: HARA has no set hours; they are available every day of the week, at any time a contract needs. The site shows no hours table and the structured data carries none.
+- Home Areas chips (all 16 cities) are links: a tap scrolls to the form with the city already chosen (`quote.js` `pickCity`; `?city=` is matched against the allowlist).
 - Contact details on the site (real, from Krishna 2026-10-01): phone (416) 990-3995 (`tel:+14169903995`), email
   harafacilitiescleaning@gmail.com. Still placeholders: `EMAIL_FROM` and `LEAD_TO_EMAIL` in `wrangler.jsonc`
   (set at the domain step). The footer's demo note is gone.

@@ -18,8 +18,8 @@ and connecting it. The prompt to start that session is in section 9.
   (all deployed). 60 tests pass. `npm audit`: 0 vulnerabilities.
 - **The working tree is not clean** (section 3): already-deployed work is uncommitted, and one
   CSS change is neither deployed nor verified. Sort that out first.
-- Still to do before the domain: the SOW's supporting and city pages, real company details,
-  analytics, final QA to SOW standards, a final gate, and the client guide (section 6).
+- Scope is ONE page (section 4b). Still to do before the domain: the analytics token, the
+  security-practice confirmation from HARA, final QA to SOW standards and a final gate (section 6).
 
 ## 2. What is live
 
@@ -81,23 +81,20 @@ and connecting it. The prompt to start that session is in section 9.
 - **Backups:** D1 Time Travel point-in-time restore and export/import both rehearsed on a scratch
   database (deleted afterwards); commands in `docs/DEPLOY.md`.
 
-## 4b. Added 2026-10-01 (live as `b45fe0b7`)
+## 4b. Scope change, 2026-10-01: ONE page only
 
-- Real phone and email on every page (section 6C). Service areas hub + six city pages, tappable
-  home city chips that preselect the form, a "Service areas" footer link. Design unchanged.
-  Krishna's scope call: major cities first, more can be added later (one entry in
-  `src/service-areas.js`); the other Phase 4 pages (Services, Security, FAQ, About, Contact) wait
-  for his go-ahead. 66 tests pass. City copy still needs a skim by HARA for local accuracy.
-
-## 4c. Added later on 2026-10-01 (live as `5d298be1`, plus committed code not yet deployed)
-
-- Services, Security, FAQ, About, Contact pages (generated, home page wording only), footer links,
-  three "see more" links on the home page. Tab icon rebuilt (logo mark on a white tile; ICO and
-  PNG sizes; `?v=2`). 71 tests pass.
-- Analytics wired, **waiting for a token** (`docs/DEPLOY.md`, "Analytics").
-- Private docs written: `docs/client/GBP-and-directories-pack.md` (Google profile + 8 directories,
-  `gbp-logo-1024.png`) and `docs/client/HARA-Handoff-Guide.html` / `.pdf` (placeholders in
-  yellow: DOMAIN, request inbox, Dispatch contact).
+- Krishna: the client wants a simple one-page website, "that is all". The multi-page work
+  (Services, Security, FAQ, About, Contact, Service areas hub, six city pages) and the Google
+  Business Profile pack were built, then removed from the site. They live in the git tag
+  `multi-page-archive`; `docs/client/GBP-and-directories-pack.md` is marked parked. The SOW
+  document in `docs/client/` still lists Phase 4 and should be revised and re-priced by Krishna.
+- Kept from that work: real phone (416) 990-3995 and email on every page; tappable city chips
+  that preselect the form (`?city=` allowlisted); tab icon rebuilt (logo mark on a white tile,
+  ICO and PNG sizes, `?v=2`); the home page's LocalBusiness JSON-LD; cookie-free analytics wiring
+  (off until `CF_BEACON_TOKEN` is set, see `docs/DEPLOY.md`); the client guide
+  (`docs/client/HARA-Handoff-Guide.html` / `.pdf`, one-page scope).
+- Hours: HARA has no set hours (every day, any time a contract needs). Nothing to add.
+- 67 tests pass.
 
 ## 5. Test and audit evidence (latest)
 
@@ -126,15 +123,10 @@ and connecting it. The prompt to start that session is in section 9.
    `node scripts/qa/matrix.mjs http://localhost:4332/ /tmp`): CLS must stay 0 everywhere, JS-off
    must show the logo with no horizontal overflow, LCP should fall below 1 s. Keep and deploy it
    if it passes, otherwise revert. Commit in logical pieces, deploy, push, prune the worktree.
-2. **SOW Phase 4:** Services, Security, FAQ, About, Contact and a Service Areas hub; up to six
-   city pages with genuinely unique content; titles, descriptions, headings, internal links;
-   JSON-LD (LocalBusiness as a service-area business, Service, FAQPage) and sitemap entries
-   that switch on with `VITE_SITE_URL`. Needs the facts in B first.
+2. ~~SOW Phase 4 pages and Google Business Profile~~ out of scope (section 4b).
 3. **Cookie-free analytics** (Cloudflare Web Analytics), with the CSP opened only for what it needs.
-4. **Favicon** that reads at 16 px (the full mark is wide); ask Krishna before changing brand assets.
-5. **Docs for HARA** in `docs/client/`: Google Business Profile content pack and directory listing
-   copy (SOW Phase 4), and the handoff guide (how requests arrive, exporting leads, who to call,
-   what to update; SOW Phase 5).
+4. ~~Favicon~~ done (logo mark on a white tile).
+5. ~~Docs for HARA~~ done: handoff guide in `docs/client/` (the Google profile pack is parked).
 6. **SOW Phase 5 QA:** Chromium, WebKit and Firefox plus iPhone/Android emulation; WCAG 2.1 AA
    (axe scan, keyboard-only pass, VoiceOver spot check); Lighthouse mobile targets (performance
    90+, accessibility 95+, best practices 95+, SEO 95+; measure SEO on a build with a placeholder
@@ -147,7 +139,7 @@ and connecting it. The prompt to start that session is in section 9.
 ### B. Needs Krishna
 
 - The company facts in C, passed on from HARA.
-- Decisions: the city list, the page plan for Phase 4, the favicon, keep or delete the
+- Decisions: keep or delete the
   Afterhours demo Worker, whether the repo should become private (the GitHub Pages redirect needs
   it public on a free plan).
 - Account actions only he can take: confirm 2FA on Cloudflare, GitHub, the registrar and Resend

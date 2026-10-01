@@ -1,5 +1,6 @@
 // Cloudflare Web Analytics: page views and load performance, no cookies, no tracking of
-// individuals. Off until VITE_CF_BEACON_TOKEN is set (the token comes from the Cloudflare
+// individuals. Off until CF_BEACON_TOKEN is set (deliberately not VITE_-prefixed: Vite exposes only VITE_ variables
+// to browser code, and this one is read by the build config alone) (the token comes from the Cloudflare
 // dashboard, Analytics, Web Analytics, and is public by design: it sits in the page).
 // The Content Security Policy opens only as far as the beacon needs, and only when it is on:
 //   script-src  static.cloudflareinsights.com   (the beacon script)

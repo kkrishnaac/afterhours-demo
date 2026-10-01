@@ -120,6 +120,26 @@ describe('POST /api/walkthrough: refusals', () => {
     expect((await post({ ...valid, name: 'A'.repeat(9000) })).status).toBe(413);
   });
 
+  it('stops reading a body sent without a Content-Length once it passes 8 KB (413)', async () => {
+    network();
+    let pulled = 0;
+    const chunk = new TextEncoder().encode('x'.repeat(4096));
+    const body = new ReadableStream({ pull(c) { if (pulled++ < 1000) c.enqueue(chunk); else c.close(); } }); // up to 4 MB
+    const res = await worker.fetch(new Request('https://hara.test/api/walkthrough', {
+      method: 'POST', body,
+      headers: { Origin: 'https://hara.test', 'CF-Connecting-IP': nextIp(), 'Content-Type': 'application/json' },
+    }), env);
+    expect(res.status).toBe(413);
+    expect(pulled).toBeLessThan(10); // a few 4 KB chunks, never the whole 4 MB
+  });
+
+  it('applies the rate limit before reading the body', async () => {
+    network();
+    const ip = '198.51.100.9';
+    for (let i = 0; i < 5; i++) await post({ ...valid, email: `q${i}@northwind.ca` }, { ip });
+    expect((await post({ ...valid, name: 'A'.repeat(9000) }, { ip })).status).toBe(429);
+  });
+
   it('refuses malformed JSON (400)', async () => {
     network();
     expect((await post('{"size":')).status).toBe(400);

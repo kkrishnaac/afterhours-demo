@@ -14,13 +14,33 @@ export function json(body, status = 200, extra = {}) {
   return new Response(JSON.stringify(body), { status, headers: { ...SECURITY_HEADERS, ...extra } });
 }
 
-/** Reads the body as text, refusing anything over `limit` bytes. Returns null if too large. */
+/** Reads the body as text, refusing anything over `limit` bytes. Returns null if too large.
+ *  Reads the stream with a running count and stops just past the limit, so a body sent
+ *  without a Content-Length (chunked) is never buffered whole. */
 export async function readLimited(request, limit) {
   const declared = Number(request.headers.get('Content-Length'));
   if (Number.isFinite(declared) && declared > limit) return null;
-  const buf = await request.arrayBuffer();
-  if (buf.byteLength > limit) return null;
-  return new TextDecoder().decode(buf);
+  if (!request.body) return '';
+  const reader = request.body.getReader();
+  const chunks = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > limit) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(size);
+  let offset = 0;
+  for (const c of chunks) {
+    bytes.set(c, offset);
+    offset += c.byteLength;
+  }
+  return new TextDecoder().decode(bytes);
 }
 
 /** Structured log line. Never pass names, emails, phone numbers or tokens here. */

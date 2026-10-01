@@ -1,8 +1,8 @@
 // POST /api/walkthrough: one free-walkthrough request from the website form.
-// Order matters: cheap checks first (method, origin, size), then the rate
-// limit, then validation and Turnstile, then storage. The request is stored
-// BEFORE any email is sent, so an email outage never loses a lead; the
-// scheduled job (maintenance.js) retries failed notifications.
+// Order matters: cheap checks first (method, origin, content type), then the rate
+// limit, then the size-capped body read, validation and Turnstile, then storage.
+// The request is stored BEFORE any email is sent, so an email outage never loses
+// a lead; the scheduled job (maintenance.js) retries failed notifications.
 import { json, readLimited, log, logError } from './http.js';
 import { validateWalkthrough } from './validate.js';
 import { verifyTurnstile } from './turnstile.js';
@@ -27,14 +27,15 @@ export async function handleWalkthrough(request, env) {
     return json({ ok: false, error: 'content_type' }, 415);
   }
 
-  const raw = await readLimited(request, MAX_BODY);
-  if (raw === null) return json({ ok: false, error: 'too_large' }, 413);
-
+  // Rate limit before reading the body: a limited visitor costs one header check, nothing more.
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (env.WALKTHROUGH_LIMITER) {
     const { success } = await env.WALKTHROUGH_LIMITER.limit({ key: ip });
     if (!success) return json({ ok: false, error: 'rate_limited' }, 429, { 'Retry-After': '60' });
   }
+
+  const raw = await readLimited(request, MAX_BODY);
+  if (raw === null) return json({ ok: false, error: 'too_large' }, 413);
 
   let input;
   try { input = JSON.parse(raw); } catch { return json({ ok: false, error: 'invalid' }, 400); }
@@ -63,29 +64,29 @@ export async function handleWalkthrough(request, env) {
   const d = checked.data;
   const now = Date.now();
 
-  // Same person pressing send twice (or twice in ten minutes): one request, one set of emails.
-  const recent = await env.DB.prepare(
-    'SELECT id FROM walkthrough_requests WHERE email = ?1 COLLATE NOCASE AND created_at > ?2 LIMIT 1',
-  ).bind(d.email, new Date(now - DUPLICATE_WINDOW_MS).toISOString()).first();
-  if (recent) {
-    log('walkthrough.duplicate', { id: recent.id });
-    return json({ ok: true }, 201);
-  }
-
   const { sent } = await env.DB.prepare(
     "SELECT COUNT(*) AS sent FROM walkthrough_requests WHERE email = ?1 COLLATE NOCASE AND created_at > ?2 AND confirm_status = 'sent'",
   ).bind(d.email, new Date(now - 86_400_000).toISOString()).first();
   const confirmAllowed = sent < CONFIRMATIONS_PER_DAY;
 
+  // Same person pressing send twice (or twice in ten minutes): one request, one set of emails.
+  // The duplicate check and the insert are ONE statement, so requests arriving at the same
+  // instant can't both pass the check (a separate SELECT then INSERT let them race).
   const record = { id: crypto.randomUUID(), created_at: new Date(now).toISOString(), ...d };
-  await env.DB.prepare(
+  const inserted = await env.DB.prepare(
     `INSERT INTO walkthrough_requests
       (id, created_at, office_size, timing, city, name, email, phone, marketing_consent, marketing_consent_at, consent_version, source)
-     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, 'website:walkthrough-form')`,
+     SELECT ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, 'website:walkthrough-form'
+      WHERE NOT EXISTS (SELECT 1 FROM walkthrough_requests WHERE email = ?7 COLLATE NOCASE AND created_at > ?12)`,
   ).bind(
     record.id, record.created_at, d.size, d.timing, d.city, d.name, d.email, d.phone,
     d.marketing ? 1 : 0, d.marketing ? record.created_at : null, CONSENT_VERSION,
+    new Date(now - DUPLICATE_WINDOW_MS).toISOString(),
   ).run();
+  if (!inserted.meta.changes) {
+    log('walkthrough.duplicate');
+    return json({ ok: true }, 201);
+  }
 
   // Email not connected yet (no verified domain): keep the HARA notification
   // pending for the cron to deliver later; a days-late confirmation would only

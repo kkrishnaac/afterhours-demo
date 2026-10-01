@@ -200,7 +200,7 @@ h3 { font-size: 1.12rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.
   box-shadow: inset 0 0 0 1px var(--hairline), var(--shadow-rest);
 }
 /* Same proportions as the logo's viewBox, so the 3D build and the vector line up exactly. */
-.hero__logo { position: relative; z-index: 1; width: min(84%, 560px); aspect-ratio: 1174.5 / 871.5; }
+.hero__logo { position: relative; width: min(84%, 560px); aspect-ratio: 1174.5 / 871.5; }
 .hero__logo img { display: block; width: 100%; height: 100%; transition: opacity 0.5s var(--ease-out); }
 .hero__stage canvas {
   position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%;
@@ -224,18 +224,23 @@ h3 { font-size: 1.12rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.
   .hero__sub { animation-delay: 0.08s; }
   .hero__actions { animation-delay: 0.16s; }
   .hero__stage { animation: fade 0.9s var(--ease-out) both; }
-  /* The logo waits for its 3D build from the first paint (no flash of the finished logo).
-     Failsafe: if no script ever runs, it still appears after a moment. */
-  .hero__logo img { opacity: 0; animation: logo-failsafe 0.6s var(--ease-out) 3.6s forwards; }
-  .hero__stage.is-building .hero__logo img { animation: none; }
-  /* The vector appears at once underneath the (pixel-aligned) canvas, which then fades away: no dip in colour. */
-  .hero__stage.is-built .hero__logo img { opacity: 1; animation: none; transition: none; }
-  /* No 3D (no WebGL, off screen at load, or three.js too slow): a quiet rise instead. */
-  .hero__stage.is-static .hero__logo img { opacity: 1; animation: rise 1.1s var(--ease-out) 0.15s both; }
+  /* The logo is painted from the first frame (so it counts as the page's main content at once)
+     but sits under a plain white cover, so nobody sees the finished logo before its 3D build.
+     Failsafe: if no script ever runs, the cover lifts after a moment. */
+  .hero__stage::after {
+    content: ''; position: absolute; inset: 1px; z-index: 1; pointer-events: none; border-radius: inherit; /* 1px: keep the stage's hairline */
+    background: var(--surface); animation: cover-failsafe 0.6s var(--ease-out) 3.6s forwards;
+  }
+  .hero__stage.is-building::after { animation: none; }
+  /* Built: the canvas (above the cover) fades away over the pixel-aligned vector. */
+  .hero__stage.is-built::after { content: none; }
+  /* No 3D (no WebGL, off screen at load, or three.js too slow): the cover lifts, the logo rises. */
+  .hero__stage.is-static::after { content: none; }
+  .hero__stage.is-static .hero__logo img { animation: rise 1.1s var(--ease-out) 0.15s both; }
 }
 @keyframes rise { from { opacity: 0; transform: translateY(20px); } }
 @keyframes fade { from { opacity: 0; } }
-@keyframes logo-failsafe { to { opacity: 1; } }
+@keyframes cover-failsafe { to { opacity: 0; visibility: hidden; } }
 
 
 /* SCROLL REVEALS: set up only when JS confirms motion is welcome, so nothing

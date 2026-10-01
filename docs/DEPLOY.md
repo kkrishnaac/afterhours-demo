@@ -24,6 +24,22 @@ No secret ever goes in this repo. Local secrets live in `.dev.vars` and `.env.*`
 - [ ] HARA confirms every security practice described on the page.
 - [ ] Lawyer review of the privacy policy and terms (recommended), photo licence confirmed.
 
+## Analytics (Cloudflare Web Analytics, cookie-free)
+
+Wired but **off until a token exists** (`src/analytics.js`). To switch it on:
+1. Cloudflare dashboard, **Analytics & Logs, Web Analytics, Add a site**. Hostname: the workers.dev
+   address now (later the real domain: add it as a second site and use its token). Choose the
+   manual JavaScript snippet and copy the 32-character `token` from `data-cf-beacon`. It is public
+   by design (it sits in the page), not a secret.
+2. Put it in `.env.production-cf` (gitignored): `VITE_CF_BEACON_TOKEN=<token>`
+3. `npm run deploy`. The build then adds the beacon to every page, opens the CSP for exactly two
+   origins (`static.cloudflareinsights.com` in `script-src`, `cloudflareinsights.com` in
+   `connect-src`) and adds one sentence to the privacy policy. With no token none of that happens.
+   A malformed token is ignored with a warning.
+4. After the domain is connected: Cloudflare reports to the site's own address (already allowed by
+   `'self'`), so `cloudflareinsights.com` can be removed from `connect-src` in `src/analytics.js`.
+   Re-run the security gate after any change to the CSP.
+
 ## Connect the domain (the remaining step)
 
 Replace `DOMAIN` with the real one, e.g. `harafacilities.ca`.
@@ -53,12 +69,13 @@ Replace `DOMAIN` with the real one, e.g. `harafacilities.ca`.
    }
    ```
    Once the domain works, set `"workers_dev": false` so the workers.dev address stops serving.
-5. **`.env.production-cf`** (gitignored), add:
+5. **`.env.production-cf`** (gitignored), add (and the analytics token, see above):
    ```
    VITE_SITE_URL=https://DOMAIN
    VITE_SECURITY_CONTACT=mailto:security@DOMAIN
    ```
-   This removes `noindex`, adds canonical links, absolute share-image URLs, `sitemap.xml`,
+   This removes `noindex`, adds canonical links, absolute share-image URLs, JSON-LD (LocalBusiness as a
+   service-area business, Service, FAQPage, breadcrumbs), `sitemap.xml` with every page,
    `robots.txt` with the sitemap, and `/.well-known/security.txt`.
 6. **Deploy:** `npm run deploy` (runs the 60 tests, builds, deploys). On the next cron run
    (within 15 minutes) every request stored while email was on hold is emailed to HARA.

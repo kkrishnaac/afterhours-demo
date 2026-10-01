@@ -3,19 +3,22 @@ import { resolve } from 'node:path';
 import { defineConfig, loadEnv } from 'vite';
 import { srcset, smallest, dimensions } from './src/photos.js';
 import { ALL_PAGES, ALL_PATHS, structuredData, ldScript } from './src/site-pages.js';
+import { validToken, beaconTag, PRIVACY_NOTE, BEACON_SCRIPT_SRC, BEACON_CONNECT_SRC } from './src/analytics.js';
 
 // Content Security Policy. The demo build (GitHub Pages) allows nothing but the
 // site itself. The live build (Cloudflare) also allows Turnstile, the spam check
 // on the walkthrough form, and nothing else.
-function csp(liveForm) {
+function csp(liveForm, analytics = false) {
   const turnstile = liveForm ? ' https://challenges.cloudflare.com' : '';
+  const beaconScript = analytics ? ` ${BEACON_SCRIPT_SRC}` : '';
+  const beaconConnect = analytics ? ` ${BEACON_CONNECT_SRC}` : '';
   return [
     "default-src 'self'",
-    `script-src 'self'${turnstile}`,
+    `script-src 'self'${turnstile}${beaconScript}`,
     "style-src 'self'",
     "img-src 'self' data:",
     "font-src 'self'",
-    `connect-src 'self'${turnstile}`,
+    `connect-src 'self'${turnstile}${beaconConnect}`,
     liveForm ? 'frame-src https://challenges.cloudflare.com' : "frame-src 'none'",
     "object-src 'none'",
     "base-uri 'self'",
@@ -160,6 +163,13 @@ const cleanLinks = {
   },
 };
 
+// Cloudflare Web Analytics beacon, live build only and only with a valid token.
+const analyticsBeacon = (token) => ({
+  name: 'analytics-beacon',
+  apply: 'build',
+  transformIndexHtml: { order: 'post', handler: (html) => html.replace('<!--analytics-note-->', PRIVACY_NOTE).replace('</body>', `  ${beaconTag(token)}\n</body>`) },
+});
+
 // Two builds from one codebase:
 //   npm run build     -> GitHub Pages demo (form is a demo, CSP in <meta>)
 //   npm run build:cf  -> Cloudflare (form posts to the Worker, CSP as real headers)
@@ -167,10 +177,12 @@ const cleanLinks = {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_');
   const liveForm = Boolean(env.VITE_WALKTHROUGH_API);
-  const policy = csp(liveForm);
+  const token = liveForm && validToken(env.VITE_CF_BEACON_TOKEN) ? env.VITE_CF_BEACON_TOKEN : '';
+  if (liveForm && env.VITE_CF_BEACON_TOKEN && !token) console.warn('VITE_CF_BEACON_TOKEN is not a 32-character hex token: analytics left off');
+  const policy = csp(liveForm, Boolean(token));
   return {
     base: liveForm ? '/' : './',  // relative for the GitHub Pages project path
-    plugins: [staticMarkup, liveForm ? cloudflareHeaders(policy) : securityMeta(policy), ...(liveForm ? [cleanLinks] : []), fontPreload, siteUrl(env.VITE_SITE_URL?.replace(/\/$/, ''), env.VITE_SECURITY_CONTACT)],
+    plugins: [staticMarkup, liveForm ? cloudflareHeaders(policy) : securityMeta(policy), ...(liveForm ? [cleanLinks] : []), ...(token ? [analyticsBeacon(token)] : []), fontPreload, siteUrl(env.VITE_SITE_URL?.replace(/\/$/, ''), env.VITE_SECURITY_CONTACT)],
     build: {
       target: 'es2020', assetsInlineLimit: 0, sourcemap: false,
       rolldownOptions: { input: Object.fromEntries(PAGES.map((f) => [f.replace('.html', ''), resolve(import.meta.dirname, f)])) },

@@ -89,6 +89,16 @@ and connecting it. The prompt to start that session is in section 9.
   `src/service-areas.js`); the other Phase 4 pages (Services, Security, FAQ, About, Contact) wait
   for his go-ahead. 66 tests pass. City copy still needs a skim by HARA for local accuracy.
 
+## 4c. Added later on 2026-10-01 (live as `5d298be1`, plus committed code not yet deployed)
+
+- Services, Security, FAQ, About, Contact pages (generated, home page wording only), footer links,
+  three "see more" links on the home page. Tab icon rebuilt (logo mark on a white tile; ICO and
+  PNG sizes; `?v=2`). 71 tests pass.
+- Analytics wired, **waiting for a token** (`docs/DEPLOY.md`, "Analytics").
+- Private docs written: `docs/client/GBP-and-directories-pack.md` (Google profile + 8 directories,
+  `gbp-logo-1024.png`) and `docs/client/HARA-Handoff-Guide.html` / `.pdf` (placeholders in
+  yellow: DOMAIN, request inbox, Dispatch contact).
+
 ## 5. Test and audit evidence (latest)
 
 - `npm test`: 60 pass, including `test/stress.test.js`: 150 simultaneous visitors (150 rows),

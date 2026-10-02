@@ -57,3 +57,19 @@ body { background: var(--bg); color: var(--paper); }
 /* Footer wordmark in navy */
 .wordmark { color: var(--navy); opacity: 0.5; }
 .page-footer__row { opacity: 0.7; }
+
+/* Krishna, 2026-10-01 late: white hero with navy type (no blue box), the real logo in the
+   footer instead of the wordmark, no Toronto clock bar, and a solid header bar so the page
+   never shows through the company name while scrolling. */
+.project--hero { background: var(--white); box-shadow: inset 0 0 0 1px rgba(11, 58, 128, 0.12); color: var(--ink); }
+.project--hero .hero-clip { display: none; }
+.project--hero .hero-card .project-name { color: var(--navy); text-shadow: none; }
+.hero-card__sub { color: var(--ink); opacity: 0.8; }
+.project--hero .button { background-color: var(--navy); color: var(--white); }
+.project--hero .button:hover { background-color: var(--deep); }
+.project--hero .button--ghost { background-color: transparent; color: var(--navy); box-shadow: inset 0 0 0 1px rgba(11, 58, 128, 0.35); }
+.project--hero .button--ghost:hover { background-color: var(--paper-20); }
+.site-header { background: var(--bg); pointer-events: auto; }
+.site-footer { display: none; }
+.page-footer__logo { width: clamp(150px, 22vw, 260px); height: auto; }
+.page-footer__row { margin-top: 2rem; }

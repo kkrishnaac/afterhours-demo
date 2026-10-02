@@ -65,6 +65,8 @@
     let scrollTimer = 0;
     const dial = menu.closest('.main-menu');
     addEventListener('scroll', () => {
+      const wrap = document.querySelector('.reel-wrap');
+      dial.classList.toggle('on-dark', wrap && scrollY > wrap.offsetTop + wrap.offsetHeight * 0.72);
       if (!scrollTimer) dial.classList.add('scrolling');
       clearTimeout(scrollTimer);
       scrollTimer = setTimeout(() => { dial.classList.remove('scrolling'); scrollTimer = 0; }, 260);

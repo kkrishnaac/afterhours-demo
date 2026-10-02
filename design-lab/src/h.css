@@ -117,3 +117,27 @@ body { background: var(--bg); color: var(--paper); }
 /* Hero logo: larger, so the white around the headline is used (Krishna, 2026-10-01). */
 .hero-card__logo { width: 16cqi; min-width: 140px; margin-bottom: 1cqi; }
 @media (max-width: 1199px) { .hero-card__logo { width: min(62vw, 240px); margin-bottom: 1rem; } .project--hero { min-height: 0; } .hero-card { padding: 1.5rem 0.25rem 1rem; } }
+
+/* Krishna, 2026-10-01 late: a full run from white to dark navy that starts in the photo section
+   and is done by the time the text sections begin. Fixed gradients, nothing animated. */
+.gradient-blob--panels { display: none; }
+.reel-wrap { background: linear-gradient(180deg, var(--bg) 0%, var(--bg) 14%, #BFE3FF 36%, var(--sky) 58%, var(--navy) 82%, var(--deep) 100%); }
+body.is-grid .reel-wrap { background: linear-gradient(180deg, var(--bg) 0%, var(--bg) 22%, #BFE3FF 44%, var(--sky) 66%, var(--navy) 88%, var(--deep) 100%); }
+.panels { background: var(--deep); color: var(--white); }
+.panels .panel__label, .panels .panel__lead, .panels .cards p, .panels .steps p, .panels .lists ul, .panels .facts, .panels .now__note, .panels .form__note, .panels .form .call { color: var(--white); opacity: 0.82; }
+.panels .panel__title, .panels .cards h3, .panels .lists h3, .panels .steps h3, .panels .steps span, .panels .now__time, .panels .now__label, .panels .form legend, .panels .form__step { color: var(--white); opacity: 1; }
+.panels .lists li, .panels .facts li { border-left-color: rgba(255, 255, 255, 0.4); }
+.panels .lists .opacity-40 { opacity: 0.7; }
+.panels .week li { background: rgba(255, 255, 255, 0.16); color: var(--white); }
+.panels .buttons-wrap .button { background: rgba(255, 255, 255, 0.14); color: var(--white); }
+.panels .chips label { background: rgba(255, 255, 255, 0.16); color: var(--white); }
+.panels .chips input:checked + label { background: var(--white); color: var(--navy); }
+.panels .form .btn { background: var(--white); color: var(--navy); }
+.panels .phones a { color: var(--white); }
+.panels .form .call .icon { color: var(--white); }
+.panels .now .dot { background: #FF5A7A; }
+.page-footer { background: linear-gradient(180deg, var(--deep) 0, var(--bg) 160px); padding-top: 220px; }
+/* The dial turns white once the page behind it has gone dark. */
+.main-menu.on-dark .logo-white { filter: brightness(0) invert(1); }
+.main-menu.on-dark .menu-item a { color: var(--white); }
+.main-menu.on-dark .menu-item.is-active a { background: rgba(255, 255, 255, 0.18); }

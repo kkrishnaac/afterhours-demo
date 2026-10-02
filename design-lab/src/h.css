@@ -113,3 +113,7 @@ body { background: var(--bg); color: var(--paper); }
   html { scroll-padding-top: 7.25rem; }
   .reel { padding-top: 7.5rem; }
 }
+
+/* Hero logo: larger, so the white around the headline is used (Krishna, 2026-10-01). */
+.hero-card__logo { width: 16cqi; min-width: 140px; margin-bottom: 1cqi; }
+@media (max-width: 1199px) { .hero-card__logo { width: min(62vw, 240px); margin-bottom: 1rem; } .project--hero { min-height: 0; } .hero-card { padding: 1.5rem 0.25rem 1rem; } }

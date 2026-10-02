@@ -6,11 +6,12 @@ Updated 2026-10-01, end of the redesign session. Read in this order: this file, 
 
 **State in one paragraph (updated 2026-10-01, late night).** The **Studio** design (the
 coreastudios.com system rebuilt in HARA's colours) is now **live on production**,
-https://hara-website.chaudharikrishna0415.workers.dev (version `2d884e46`), with the real form,
+https://hara-website.chaudharikrishna0415.workers.dev (version `4411dbf9`), with the real form,
 the legal pages and the same CSP; gate GO at the end of `security/golive/2026-10-01-full-GO.md`.
 Krishna polished the logo intro and the menus in the design lab first (sections 1 and 2), then
-asked for it on the live site. The design lab (https://hara-design-lab.chaudharikrishna0415.workers.dev)
-stays up until he says to retire it. **Next: the business card and tri-fold brochure in
+asked for it on the live site. Lighthouse: phone 97, desktop 100 (accessibility and best practices
+100; SEO 100 once the domain lifts `noindex`). The design lab is offline (Krishna, "temporarily"):
+`workers_dev: false` in `design-lab/wrangler.jsonc`; flip it and deploy to bring it back. **Next: the business card and tri-fold brochure in
 `~/hara-print` in the Studio language, then the domain.**
 
 ## 0. Prompt for the next session
@@ -125,20 +126,20 @@ PROOF PDFs as images before anything is final; the client signs the approval for
 
 | Thing | State |
 |---|---|
-| Production URL | https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `2d884e46`, 2026-10-01 late) |
+| Production URL | https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `4411dbf9`, 2026-10-01 late) |
 | Design | The Studio design (section 2), ported from the design lab with the real form; details in CLAUDE.md "Studio on production" |
 | Scope | One page plus privacy, terms, accessibility and 404 (Krishna, 2026-10-01). The multi-page build is in git tag `multi-page-archive` |
 | Contact | (437) 980-3464 only (page, legal pages, structured data), harafacilitiescleaning@gmail.com |
 | Form | Live, stores to D1, `EMAIL_MODE=hold` until the domain can send email; requests will go to harafacilitiescleaning@gmail.com |
-| Gate | GO for the Studio deploy (end of `security/golive/2026-10-01-full-GO.md`): 67 tests, form end to end, axe 0 violations, three engines. Lighthouse and the stress matrix were last run on the old design (commit 65ab494); re-run them before the domain |
+| Gate | GO for the Studio deploy (end of `security/golive/2026-10-01-full-GO.md`): 67 tests, form end to end, axe 0 violations, three engines, Lighthouse phone 97 and desktop 100. The stress matrix was last run on the old design (commit 65ab494) |
 | Indexing | `noindex` until `VITE_SITE_URL` is set at the domain step |
 | Repo | `kkrishnaac/afterhours-demo`, public, `main` pushed |
 
 ## 5. After the print work
 
 1. Done 2026-10-01 late: the Studio design is on production (Motion bundled from npm, 25 KB gzip of page JS; grid fallback where scroll timelines are missing; 437 only).
-2. Still to re-run on the live Studio site: Lighthouse (run alone), `scripts/qa/matrix.mjs`, `keyboard.mjs`. Several `scripts/qa/` scripts still look for the old page's selectors (`.hero__stage`, `.svc__photo`, the viewer); `axe.mjs` and `e2e.mjs` are updated and pass.
-3. Retire the design lab (`npx wrangler delete hara-design-lab`) when Krishna confirms; until then a design change goes into `src/studio/` (and the lab only if he is still reviewing there).
+2. Lighthouse re-run on the live Studio site (phone 97, desktop 100). Still to re-run: `scripts/qa/matrix.mjs`, `keyboard.mjs`. Several `scripts/qa/` scripts still look for the old page's selectors (`.hero__stage`, `.svc__photo`, the viewer); `axe.mjs` and `e2e.mjs` are updated and pass.
+3. The design lab is offline (not deleted). Delete it for good (`npx wrangler delete hara-design-lab`) only when Krishna says so; design changes go into `src/studio/`.
 4. The domain (runbook in `docs/DEPLOY.md`): buy it in HARA's name, DNS on Cloudflare, business email with SPF, DKIM, DMARC, Resend, `VITE_SITE_URL`, Turnstile hostnames, Search Console, then the gate against the domain.
 
 ### Still open with Krishna (dashboard only; nothing in this repo records the result)

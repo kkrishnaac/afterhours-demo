@@ -57,6 +57,8 @@ const cloudflareHeaders = (policy) => ({
       '  Cache-Control: public, max-age=31536000, immutable',
       '/img/*',
       '  Cache-Control: public, max-age=2592000',
+      '/brand/*',
+      '  Cache-Control: public, max-age=86400',
       '',
     ];
     this.emitFile({ type: 'asset', fileName: '_headers', source: lines.join('\n') });
@@ -105,7 +107,7 @@ const fontPreload = {
   transformIndexHtml: {
     order: 'post',
     handler: (html, { bundle }) => {
-      const files = Object.keys(bundle ?? {}).filter((f) => /(archivo-latin-wdth|hanken-grotesk-latin-wght)-normal-.*\.woff2$/.test(f));
+      const files = Object.keys(bundle ?? {}).filter((f) => /(archivo-latin-850-112|hanken-grotesk-latin-wght-normal)-.*\.woff2$/.test(f));
       return files.map((file) => ({ tag: 'link', attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: `./${file}`, crossorigin: true }, injectTo: 'head' }));
     },
   },

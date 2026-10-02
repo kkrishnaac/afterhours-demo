@@ -1,7 +1,7 @@
 # HARA website: deployment
 
 **Production is live** on Cloudflare at
-https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `2d884e46` as of 2026-10-01, late: the Studio design).
+https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `4411dbf9` as of 2026-10-01, late: the Studio design).
 **Launch-ready apart from the domain** (final gate GO: `security/golive/2026-10-01-full-GO.md`). What is
 still open is in `HANDOFF.md` section 5; the domain steps are below. Infrastructure state:
 

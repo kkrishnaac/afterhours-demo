@@ -5,6 +5,8 @@
   "name": "hara-design-lab",
   "compatibility_date": "2026-09-12",
   "assets": { "directory": "./dist", "not_found_handling": "404-page" },
-  "workers_dev": true,
+  // Offline since 2026-10-01 at Krishna's request (the Studio design is on production now).
+  // To bring it back: set "workers_dev" to true and run `npx wrangler deploy` from design-lab/.
+  "workers_dev": false,
   "preview_urls": false
 }

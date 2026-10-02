@@ -6,14 +6,15 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
 `docs/client/` (gitignored: the repo is public). Read `HANDOFF.md` for where things stand.
 
 - **Production (live, pre-domain):** https://hara-website.chaudharikrishna0415.workers.dev
-  (Cloudflare Worker `hara-website` in Krishna's account, version `2d884e46` as of 2026-10-01,
+  (Cloudflare Worker `hara-website` in Krishna's account, version `4411dbf9` as of 2026-10-01,
   D1 `hara-walkthroughs`, `noindex`). The old GitHub Pages URL
   (https://kkrishnaac.github.io/afterhours-demo/) redirects to production.
 - **The Studio design is live on production (2026-10-01, late):** Krishna chose it in the design
   lab (https://hara-design-lab.chaudharikrishna0415.workers.dev, source `design-lab/`, see "Design
   lab" and "Hero logo intro" below) and asked for it on the live site the same night. The port
   kept the real four-step form, the legal pages, the CSP and the tests (section "Studio on
-  production" below). The design lab stays up until Krishna says to retire it.
+  production" below). The design lab is offline since that night (`workers_dev: false` in
+  `design-lab/wrangler.jsonc`; set it back to true and deploy to bring it back).
   **Next session:** the print collateral in `~/hara-print` in the Studio language
   (`HANDOFF.md` section 0), then the domain.
 - **Status (2026-10-01): launch-ready apart from the domain.** Phase 5 QA done (Lighthouse mobile
@@ -45,10 +46,10 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
 ## Stack
 
 - **Front end:** Vite 8 (vanilla JS modules, plain CSS), the Studio design in `src/studio/`:
-  Archivo (display) and Hanken Grotesk (body), both OFL and self-hosted in `src/studio/fonts`,
+  Archivo (display, one static instance) and Hanken Grotesk (body), both OFL and self-hosted in `src/studio/fonts`,
   Motion 13 (`animate`, bundled) for the hero logo intro, Phosphor icons inlined at build time.
   Native scrolling; the desktop photo reel is a CSS scroll timeline with a grid fallback. Page JS
-  25 KB gzip, CSS 8.6 KB. No framework, no Tailwind. (Lenis, three.js and Mona Sans went with
+  25 KB gzip, CSS 8.6 KB, fonts 49 KB (Archivo as one static instance, 850 / 112%). No framework, no Tailwind. (Lenis, three.js and Mona Sans went with
   the old design; git history has them.)
 - **Pages:** `index.html`, `privacy.html`, `terms.html`, `accessibility.html`, `404.html`. The
   simple pages share `partials/nav-page.html` and all pages share `partials/footer.html` through
@@ -238,7 +239,10 @@ this new design onto our live website"). What changed from the design lab, and w
   GTA map, the photo viewer and `src/style.css` (git history has them).
 Verified before the deploy: 67 tests, the form end to end at 1440 and 390 px, axe 0 violations on
 every page and form step, Chromium, WebKit and Firefox on desktop and phone, the same hero sizes
-and menu behaviour as the lab. Lighthouse and the matrix were not re-run for this deploy.
+and menu behaviour as the lab. Lighthouse on the live site afterwards: phone 97 (it was 87 until
+Archivo became one static instance and the skyline photo lazy), desktop 100; accessibility and
+best practices 100; SEO 100 with a domain set (66 before the domain only because of `noindex`).
+The stress matrix was not re-run.
 
 ## Design decisions (Krishna's calls; don't re-litigate without him)
 

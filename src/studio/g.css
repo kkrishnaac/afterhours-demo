@@ -5,7 +5,9 @@
    Hanken Grotesk and Archivo (wide, black) stand in. Values below follow their stylesheet.
    Kept as in the design lab Krishna approved; the loader, glare, drifting blob, overlay menu,
    clock bar and wordmark rules match no element on the live page (h.css switched them off). */
-@font-face { font-family: 'Archivo'; src: url('./fonts/archivo-latin-wdth-normal.woff2') format('woff2'); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+/* Archivo is only ever used at weight 850 and width 112%, so the live site ships that one static
+   instance (fontTools instancer, 2026-10-01) instead of the 90 KB variable file. */
+@font-face { font-family: 'Archivo'; src: url('./fonts/archivo-latin-850-112.woff2') format('woff2'); font-weight: 850; font-stretch: 112%; font-display: swap; }
 :root {
   --bg: #161515; --paper: #f3f1e2; --accent: #00e8ff; --red: #ff1b50; --border: #23282f;
   --paper-20: rgba(243, 241, 226, 0.2); --paper-40: rgba(243, 241, 226, 0.4); --paper-08: rgba(243, 241, 226, 0.08);

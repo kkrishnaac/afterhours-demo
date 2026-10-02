@@ -5,8 +5,8 @@ Updated 2026-10-01 (end of the Phase 5 session). Read in this order: this file, 
 
 **State: launch-ready apart from the domain, with a redesign pending.** The live one-page site is
 done and gated. After seeing it, the client asked for a lighter, more professional template with the
-same logo, colours, copy and photos ("fonts too heavy"). Six alternates are live for review at
-https://hara-design-lab.chaudharikrishna0415.workers.dev (A, B, C rejected 2026-10-01; D, E, F are the new directions, with `/print/` previews). **Section 0 is the prompt for
+same logo, colours, copy and photos ("fonts too heavy"). The proposed redesign (H) is live for the client at
+https://hara-design-lab.chaudharikrishna0415.workers.dev (A to G removed 2026-10-01; git history has them). **Section 0 is the prompt for
 the next session:** implement the chosen variant on the live site, then refresh the print
 collateral (business card and brochure) in `~/hara-print`.
 
@@ -93,7 +93,13 @@ write secrets or account security status into this public repo.
 - **Krishna liked G a lot** ("this is crazy") and asked for H: the same template in the live
   site's own colours (white canvas, navy, sky blue), with the glare as a smooth navy-to-white
   sweep instead of the spectrum. `h.html` is `g.html` with `h.css`, which imports `g.css` and
-  overrides the colours. He has not yet said whether G (dark) or H (HARA colours) goes live.
+  overrides the colours.
+- **2026-10-01, late:** Krishna chose H and asked for a client link. A to G, the lab menu, the
+  switcher and `/print/` were removed from `design-lab/src` (commit history keeps them: see
+  `git log -- design-lab/src/g.html`); `h.html` became `index.html`, so the client link is the
+  lab root. `/h/` and `/g/` 301 to `/` via `dist/_redirects`. Still noindex. Next: his and the
+  client's polish notes, then port H onto the live site (real form, legal pages, tests, QA, gate)
+  and redo the print pieces in this language.
 
 ## 1. What is live
 

@@ -112,27 +112,26 @@ Stills only: no people, no before/after, no video.
 
 ## Design lab (`design-lab/`)
 
-Plain HTML + CSS alternates built from the live site's copy, logo, palette and photos, for review
-on a separate Worker. `node design-lab/build.mjs` expands `<i data-icon>` (Phosphor) and
-`<x-img id sizes alt>` (webp ladder from `design-lab/public/img`, copied from `public/img`) into
-`design-lab/dist/`; `cd design-lab && npx wrangler deploy` publishes it (assets-only Worker,
-`_headers` sets noindex + CSP). Pages: `/` (menu), `/a/` light and airy (Mona Sans 420-480),
-`/b/` navy band (Plus Jakarta Sans, self-hosted from `@fontsource-variable/plus-jakarta-sans`),
-`/c/` photo first (Mona Sans); A, B, C were rejected on 2026-10-01 (same template, not premium,
-wrong type family). `/d/` Gallery (Apple DESIGN.md structure, Hanken Grotesk), `/e/` Ledger (IBM
-Carbon structure, IBM Plex Sans 300), `/f/` Concierge (BMW corporate structure, Manrope) are
-different skeletons on `src/base.css` (palette only) plus their own CSS (rejected too); `/g/` Studio
-is coreastudios.com's system rebuilt for HARA on Krishna's instruction (dark canvas, blur-in
-loader, spectrum glare on navigation, dial menu, horizontal reel, gradient blob, live clock;
-`g.js` is the only script, copied by `build.mjs`); `/h/` is G in the live site's colours
-(`h.css` imports `g.css` and overrides tokens and gradients; Krishna liked G, H was his next ask); `/print/` previews the card and brochure
-cover in D, E, F. A, B, C share `src/shared.css`; `_form.html` is a visual demo
-of step 1 linking to the live form; `_lab.html` carries the A to F / Live switch (included by `_footer.html` and the new pages). Local preview:
-`python3 -m http.server 4340 --directory design-lab/dist`. Screenshot script pattern in
-`/tmp/qa-live/lab-shots.mjs` (recreate from `scripts/qa/shot.mjs` if gone).
-**To implement a chosen variant on the live site:** port its layout/CSS into `index.html` +
-`src/style.css` keeping the real form (`src/quote.js`), the hero 3D build decision (Krishna's call
-whether to keep it), legal pages, the `x-photo` pipeline and tests; then full QA + gate as before.
+The proposed redesign for client review, on a separate assets-only Worker (`hara-design-lab`,
+noindex): https://hara-design-lab.chaudharikrishna0415.workers.dev. `node design-lab/build.mjs`
+expands `<x-include>`, `<i data-icon>` (Phosphor) and `<x-img id sizes alt>` (webp ladder from
+`design-lab/public/img`) into `design-lab/dist/`, writes `_headers` (noindex + CSP, `script-src
+'self'`) and `_redirects`; `cd design-lab && npx wrangler deploy` publishes it. Local preview:
+`python3 -m http.server 4340 --directory design-lab/dist`.
+
+History (2026-10-01): A, B, C (lighter re-skins) and D, E, F (Apple / IBM / BMW structures) were
+rejected; G rebuilt coreastudios.com's system for HARA at Krishna's request and he loved it; H is G
+in the live site's colours and is what the client sees. A to G were removed from `src/` the same
+day (git history has them). Files now: `index.html` (H), `base.css` (palette + Hanken Grotesk),
+`g.css` (the Studio system: blur-in loader, spectrum glare, dial menu, reel, gradient blob, panels,
+clock, wordmark; Archivo display), `h.css` (imports g.css, HARA colours, navy-to-white glare),
+`g.js` (loader, glare, dial scroll-spy, grid toggle, image fade, Toronto clock, phone menu),
+`_form.html` (step-1 preview linking to the live form). Fonts: Hanken Grotesk and Archivo (OFL)
+stand in for Corea's TWK Lausanne and Record Disc.
+**To put H on the live site:** port `index.html` + `g.css`/`h.css`/`g.js` into `index.html`,
+`src/style.css` and `src/main.js`, keeping the real form (`src/quote.js`), the legal pages, the
+`x-photo` pipeline, the tests and the CSP (no inline scripts); decide the hero 3D logo build with
+Krishna (H has no logo build; the loader blur replaces it); then full QA + gate as before.
 
 ## Brand (2026-09-28: the client's own logo, navy palette)
 

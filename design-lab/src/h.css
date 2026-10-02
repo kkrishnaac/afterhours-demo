@@ -1,5 +1,6 @@
-/* H: the G template (coreastudios.com's system) in the live site's own colours: white canvas,
-   navy #0B3A80 and sky #0A95EF from the logo. The glare beam is a smooth navy to white sweep. */
+/* H, the client review page: the G template (coreastudios.com's system, see g.css) in the live
+   site's own colours: white canvas, navy #0B3A80 and sky #0A95EF from the logo. The glare beam
+   is a smooth navy to white sweep. A to G were removed on 2026-10-01 (git history has them). */
 @import url('/g.css');
 :root {
   --bg: #FAFBFD; --paper: #0E1A33; --accent: #0A95EF; --navy: #0B3A80; --sky: #0A95EF; --deep: #03275A; --white: #FFFFFF;

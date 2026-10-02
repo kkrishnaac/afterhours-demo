@@ -1,5 +1,5 @@
-// Design lab: alternate layouts for the HARA site, built from the same copy, logo, palette
-// and photos as the live site, for review on a separate URL. Plain HTML + CSS per variant;
+// Design lab: the proposed HARA redesign (H), built from the same copy, logo, palette and
+// photos as the live site, for client review on a separate URL. A to G were removed 2026-10-01. Plain HTML + CSS per variant;
 // this script only expands two shorthands and copies the shared assets into dist/.
 //   <i data-icon="broom"></i>           -> inline Phosphor "regular" SVG
 //   <x-img id="11-open-office" sizes=".." alt=".." class=".."></x-img> -> <picture> with the webp ladder
@@ -36,5 +36,6 @@ for (const f of pages) {
   writeFileSync(resolve(dest, 'index.html'), html);
 }
 for (const f of readdirSync(resolve(here, 'src')).filter((f) => f.endsWith('.css') || f.endsWith('.js'))) cpSync(resolve(here, 'src', f), resolve(out, f));
+writeFileSync(resolve(out, '_redirects'), '/h/ / 301\n/h / 301\n/g/ / 301\n/g / 301\n');
 writeFileSync(resolve(out, '_headers'), `/*\n  X-Robots-Tag: noindex, nofollow\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: DENY\n  Referrer-Policy: strict-origin-when-cross-origin\n  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'\n/img/*\n  Cache-Control: public, max-age=86400\n/fonts/*\n  Cache-Control: public, max-age=86400\n`);
 console.log('design-lab: built', pages.map((p) => p.replace('.html', '')).join(', '));

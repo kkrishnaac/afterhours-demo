@@ -156,3 +156,30 @@ body.is-grid .reel-wrap { background: linear-gradient(180deg, var(--bg) 0%, var(
 .hero-card .buttons-wrap { justify-content: center; }
 .hero-card__logo { margin-inline: auto; }
 @media (max-width: 1199px) { .hero-card { padding: 1.5rem 0.25rem 1rem; } }
+
+/* The ring cuts the H (Krishna, 2026-10-01 late). The logo is five vector layers on top of each
+   other: everything else, the three real H pieces, a complete H, and the ring. On load the
+   complete H sits there alone; the ring sweeps in through it in a short 3D arc and the complete
+   H is wiped away along the same diagonal, leaving the real pieces. 1.2 s, nothing else moves. */
+.logo-cut { position: relative; aspect-ratio: 1174.5 / 871.5; perspective: 900px; }
+.logo-cut img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.logo-cut__ring { opacity: 0; transform-origin: 48% 52%; }
+.logo-cut__solid { opacity: 1; -webkit-mask-image: linear-gradient(292deg, #000 0%, #000 44%, transparent 56%, transparent 100%); mask-image: linear-gradient(292deg, #000 0%, #000 44%, transparent 56%, transparent 100%); -webkit-mask-size: 300% 100%; mask-size: 300% 100%; -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+.logo-cut.is-cut .logo-cut__ring { animation: ring-in 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.logo-cut.is-cut .logo-cut__solid { animation: h-cut 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.18s forwards; }
+.logo-cut.is-cut .logo-cut__a { animation: piece-a 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.55s both; }
+.logo-cut.is-cut .logo-cut__b { animation: piece-c 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.68s both; }
+@keyframes ring-in {
+  0% { opacity: 0; transform: translate3d(-18%, 10%, 0) rotateX(62deg) rotateY(-28deg) rotateZ(-14deg) scale(0.55); }
+  30% { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes h-cut { from { -webkit-mask-position: 100% 0; mask-position: 100% 0; } to { -webkit-mask-position: 0% 0; mask-position: 0% 0; } }
+@keyframes piece-a { 0% { transform: translate(0, 0); } 35% { transform: translate(-0.6%, 1.6%) rotate(-1.2deg); } 100% { transform: none; } }
+@keyframes piece-c { 0% { transform: translate(0, 0); } 35% { transform: translate(0.6%, 1.4%) rotate(1deg); } 100% { transform: none; } }
+.logo-cut.is-done .logo-cut__solid { opacity: 0; -webkit-mask-image: none; mask-image: none; }
+.logo-cut.is-done .logo-cut__ring { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .logo-cut__solid { display: none; } .logo-cut__ring { opacity: 1; animation: none !important; } .logo-cut__piece { animation: none !important; } }
+
+/* No blur-in on load (Krishna, 2026-10-01 late): the page is simply there. */
+#loader-blur { display: none; }

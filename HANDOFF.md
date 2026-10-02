@@ -112,6 +112,15 @@ write secrets or account security status into this public repo.
   EB Garamond (small caps) and Outfit stand in for their commercial Doves Type and Good Direction
   Sans. The former H was renamed A (`a.html`); the root is a two-option menu; `/h` and `/g` 301
   to `/a/`.
+- **Polish round on the Studio page, same night (all in `h.css` / `index.html`, deployed):** only
+  (437) 980-3464 on the site; no colour sweep on navigation; no blur-in loader; white hero with
+  no box, centred, bigger original-colour logo; solid white header bar; phone header carries the
+  section links as a scrollable row (no hamburger); no boxes below the photos; a fixed gradient
+  that stays white until the Reception and lounges card, then runs sky to dark navy; the lower
+  sections and footer sit on navy with white type and the white logo; the hero logo plays a
+  1.2 s "ring cuts the H" sequence from vector layers (`public/brand/logo-rest.svg`,
+  `logo-h-{a,b,c}.svg`, `logo-h-solid.svg`, `logo-ring.svg`, generated from `src/logo-parts.js`;
+  CSS in `h.css`, trigger in `g.js`). Nothing else in the logo moves.
 - **Then he deleted B** ("nah, delete B"). The Studio page is back at the lab root as the only
   design and the client link; `/a`, `/b`, `/g`, `/h` all 301 to `/`. B's files are in git history
   (commit ab362f1) if ever wanted.

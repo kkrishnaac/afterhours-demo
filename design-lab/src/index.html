@@ -13,7 +13,6 @@
   <script src="/g.js" defer></script>
 </head>
 <body>
-  <div id="loader-blur" aria-hidden="true"></div>
   <div id="glare-overlay" aria-hidden="true"><div class="glare-wipe"><div class="glare-beam glare-beam--spectrum"></div></div></div>
   <a class="sr-only" href="#main">Skip to content</a>
 
@@ -67,7 +66,14 @@
           <article class="project project--hero">
             <div class="hero-clip" aria-hidden="true"><div class="gradient-blob"></div></div>
             <div class="hero-card">
-              <img class="hero-card__logo" src="/brand/hara-logo.svg" alt="HARA Facilities Cleaning" width="162" height="120" />
+              <div class="hero-card__logo logo-cut" role="img" aria-label="HARA Facilities Cleaning">
+                <img class="logo-cut__rest" src="/brand/logo-rest.svg" alt="" width="1175" height="872" />
+                <img class="logo-cut__piece logo-cut__a" src="/brand/logo-h-a.svg" alt="" width="1175" height="872" />
+                <img class="logo-cut__piece logo-cut__b" src="/brand/logo-h-b.svg" alt="" width="1175" height="872" />
+                <img class="logo-cut__piece logo-cut__c" src="/brand/logo-h-c.svg" alt="" width="1175" height="872" />
+                <img class="logo-cut__solid" src="/brand/logo-h-solid.svg" alt="" width="1175" height="872" />
+                <img class="logo-cut__ring" src="/brand/logo-ring.svg" alt="" width="1175" height="872" />
+              </div>
               <h1 class="project-name">Tomorrow starts clean.</h1>
               <p class="hero-card__sub">Office cleaning across Toronto and the GTA, on any day and at any time that suits you.</p>
               <div class="buttons-wrap"><a class="button" href="#walkthrough" data-glare>Book a free walkthrough</a><a class="button button--ghost" href="tel:+14379803464"><i data-icon="phone"></i>(437) 980-3464</a></div>

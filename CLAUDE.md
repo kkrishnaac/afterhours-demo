@@ -15,13 +15,13 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
   kept the real four-step form, the legal pages, the CSP and the tests (section "Studio on
   production" below). The design lab is offline since that night (`workers_dev: false` in
   `design-lab/wrangler.jsonc`; set it back to true and deploy to bring it back).
-  **Next session:** the print collateral in `~/hara-print` in the Studio language
-  (`HANDOFF.md` section 0), then the domain.
-- **Status (2026-10-01): launch-ready apart from the domain.** Phase 5 QA done (Lighthouse mobile
-  92 to 96, desktop 100, axe 0 violations, three engines + phone emulation, load test), full
-  security gate GO (`security/golive/2026-10-01-full-GO.md`), 67 tests pass, tree clean.
-  Worker-error alert is set in Cloudflare. Left: Krishna's 2FA confirmation (`HANDOFF.md` section 5), then the
-  domain (`docs/DEPLOY.md`). One page only: see Scope below.
+- **Status (2026-10-02): launch-ready apart from the domain.** Studio deploy: 67 tests, form end
+  to end, axe 0 violations, three engines, Lighthouse phone 97 / desktop 100, security gate GO
+  (`security/golive/2026-10-01-full-GO.md`). The domain is **not bought** (`haracleaning.ca` was
+  free on 2026-10-02; `HANDOFF.md` section 3). Left: Krishna's 2FA confirmation, then the domain
+  (`docs/DEPLOY.md`). One page only: see Scope below.
+- **Next session:** the business card's colours in `~/hara-print` (Krishna likes the Studio
+  template, wants new card colours); the paste-ready prompt is `HANDOFF.md` section 0.
 - **Reference only:** the original "Afterhours" design (commit `dea9337`) runs as a separate
   static Worker at https://afterhours-design.chaudharikrishna0415.workers.dev (`noindex`).
 - **Krishna wants changes shipped to the live URL**, never handed over as a localhost link.
@@ -117,8 +117,9 @@ Stills only: no people, no before/after, no video.
 
 ## Design lab (`design-lab/`)
 
-The Studio design, for client review, on a separate assets-only Worker (`hara-design-lab`,
-noindex): https://hara-design-lab.chaudharikrishna0415.workers.dev. It is a single page,
+**Offline since 2026-10-01 late** (`workers_dev: false`; the Studio design lives on production
+now, in `src/studio/`). It was the client-review page on a separate assets-only Worker
+(`hara-design-lab`, noindex): https://hara-design-lab.chaudharikrishna0415.workers.dev. It is a single page,
 `design-lab/src/index.html`, which is also the client link. Build: `node design-lab/build.mjs`
 expands `<x-include>`, `<i data-icon>` (Phosphor) and `<x-img id sizes alt>` (webp ladder from
 `design-lab/public/img`) into `design-lab/dist/`, copies `src/*.css` and `src/*.js`, writes
@@ -143,9 +144,10 @@ History (2026-10-01): directions A to F were rejected; G rebuilt coreastudios.co
 and Krishna loved it; H (G in HARA's colours) became the Studio design; a Collection-style B was
 built and deleted. All of them are in git history only (B: commit ab362f1; G: `git log --
 design-lab/src/g.html`).
-**To put the Studio design on production:** see `HANDOFF.md` section 5.
+The port to production is done (section "Studio on production"); `design-lab/logo-layers.mjs`
+still generates the logo intro's layers for both.
 
-## Hero logo intro (design lab, 2026-10-01)
+## Hero logo intro (2026-10-01; live on production since that night)
 
 A one-time intro on the Studio page's hero logo, built to Krishna's corrections over three
 versions. It opens on a normal H (the logo H's own uprights, a straight crossbar). A small star
@@ -156,9 +158,12 @@ Then it winks out and the three sparkles twinkle on in place. About 1.7 s from t
 The H's uprights are clean rectangles with level tops (Krishna, 2026-10-01 late: the traced right
 upright looked crooked); the header mark, footer logo and print still carry the traced H.
 
-- `design-lab/logo-layers.mjs` generates every layer from `src/logo-parts.js` and writes
-  `design-lab/src/_logo.html`. Edit `CENTRE` (the star's path), `CROSSBAR`, or the uprights
-  (`LEFT`, `RIGHT`, `TOP`, `FOOT`) there, never the generated files. Run it, then `node design-lab/build.mjs`.
+- `design-lab/logo-layers.mjs` generates every layer from `src/logo-parts.js` and writes them for
+  the lab (`design-lab/public/brand`, `design-lab/src/_logo.html`) and the live site
+  (`public/brand/logo-*.svg`, `partials/hero-logo.html`). Edit `CENTRE` (the star's path),
+  `CROSSBAR`, or the uprights (`LEFT`, `RIGHT`, `TOP`, `FOOT`) there, never the generated files.
+- On production the choreography is `src/studio/logo-intro.js` (Motion `animate` from npm) and the
+  states are in `src/studio/h.css`; the lab's copies below are the originals.
 - `design-lab/src/h-logo.js` is the choreography, on Motion 13.5's vanilla `animate()`
   (`design-lab/public/motion.js` = `node_modules/motion/dist/motion.js`, `window.Motion`). The
   ring is revealed by a stroke along the centre line in an SVG mask (`pathLength="1"`, dashoffset
@@ -288,19 +293,20 @@ only for now, security conscious, free walkthrough before every quote.
   two claims; the earlier six (same team, confidential by default, lock-up check, visit log) were
   removed as unconfirmed. The "Why HARA" security card matches.
 
-## Print collateral (next session, after the logo intro)
+## Print collateral (`~/hara-print`)
 
-`~/hara-print` (its own local git, not pushed): business card + letter tri-fold brochure,
-`python3 build.py`, ReportLab in DeviceCMYK, PDF/X-1a via a user-built Ghostscript, 100+
-preflight checks (last run: 103 pass, 1 expected fail, the URL check, until the domain resolves).
-Content (`haraprint/content.py`) is current: "Tomorrow starts clean.", (437) 980-3464 only, the two
-confirmed security practices. Still old: the layout and type (Mona Sans, rounded cards), the
-photos (AI stills; replace with the Unsplash masters in `assets/raw`), and the wording calling the
-photos generated (`build.py`, `haraprint/docs.py`). Redraw both pieces in the Studio language
-(Archivo display, Hanken Grotesk body, navy and white, no boxes, photos first, navy end). Confirm
-`haracleaning.ca` with Krishna for the printed URL and QR. Krishna's rules: only the website's
+Its own local git (not pushed): business card + letter tri-fold brochure, `python3 build.py`,
+ReportLab in DeviceCMYK, PDF/X-1a via a user-built Ghostscript (`~/.local/bin/gs`), 110 preflight
+checks. **Redrawn in the Studio language on 2026-10-01 late (commit `e3a2629`):** Archivo
+capitals and Hanken Grotesk (OFL, instanced in `haraprint/fonts.py`), the website's Unsplash photos
+as photo cards with white titles over a scrim baked into the pixels, deep navy card front with the
+white logo, white card back with "TOMORROW / STARTS CLEAN.", contact and QR; brochure with a white
+hero cover over a full-bleed photo, a navy back cover and inside right flap, no boxes. Last build:
+110 PASS, 1 expected FAIL (the URL check, until `haracleaning.ca` is live).
+**Next:** Krishna wants new colours on the business card, same template (`HANDOFF.md` sections 0
+and 1: prompt, colour recipe, print rules, proof rendering). Krishna's rules: only the website's
 details on the card (no personal name or title); show PROOF PDFs as images before anything is
-final. Details: `HANDOFF.md` section 3. Memory: `hara-print-collateral.md`.
+final; the client signs the approval form before press. Memory: `hara-print-collateral.md`.
 
 ## Conventions
 

@@ -6,14 +6,6 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const EASE = 'cubic-bezier(0.65, 0, 0.35, 1)';
 
-  // The ring cuts the H once the page is in (after the loader has mostly cleared).
-  const cut = document.querySelector('.logo-cut');
-  if (cut) {
-    const go = () => { if (reduce) { cut.classList.add('is-done'); return; } cut.classList.add('is-cut'); setTimeout(() => cut.classList.add('is-done'), 1400); };
-    const arm = () => setTimeout(go, 250);
-    if (document.readyState === 'complete') arm(); else addEventListener('load', arm, { once: true });
-  }
-
   // Loader blur: fade over 2s after load (the CSS animation is the no-JS fallback).
   const loader = document.getElementById('loader-blur');
   const clearLoader = () => {

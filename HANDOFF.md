@@ -118,9 +118,15 @@ write secrets or account security status into this public repo.
   section links as a scrollable row (no hamburger); no boxes below the photos; a fixed gradient
   that stays white until the Reception and lounges card, then runs sky to dark navy; the lower
   sections and footer sit on navy with white type and the white logo; the hero logo plays a
-  1.2 s "ring cuts the H" sequence from vector layers (`public/brand/logo-rest.svg`,
-  `logo-h-{a,b,c}.svg`, `logo-h-solid.svg`, `logo-ring.svg`, generated from `src/logo-parts.js`;
-  CSS in `h.css`, trigger in `g.js`). Nothing else in the logo moves.
+  ~1.6 s intro: the H starts complete (no ring, no sparkles), a small glowing star travels in
+  from behind it along the ring's sampled centre line, the H opens in its wake and the star's
+  trail becomes the ring, then the star bursts, the three sparkles twinkle into place with a
+  glow, a soft shine crosses the H and two tiny glints flash. Vector layers in
+  `public/brand/` (`logo-rest.svg`, `logo-h-{a,b,c}.svg`, `logo-h-solid.svg`, `logo-h.svg` (shine
+  mask), `logo-ring.svg`, `logo-spark{1,2,3}.svg`, `logo-star.svg`, generated from
+  `src/logo-parts.js`); choreography in `src/h-logo.js` using Motion 13.5 (`public/motion.js`,
+  the UMD bundle from the `motion` package); states and a 2.4 s no-script failsafe in `h.css`.
+  Nothing else in the logo moves.
 - **Then he deleted B** ("nah, delete B"). The Studio page is back at the lab root as the only
   design and the client link; `/a`, `/b`, `/g`, `/h` all 301 to `/`. B's files are in git history
   (commit ab362f1) if ever wanted.

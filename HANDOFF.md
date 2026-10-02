@@ -5,9 +5,8 @@ Updated 2026-10-01 (end of the Phase 5 session). Read in this order: this file, 
 
 **State: launch-ready apart from the domain, with a redesign pending.** The live one-page site is
 done and gated. After seeing it, the client asked for a lighter, more professional template with the
-same logo, colours, copy and photos ("fonts too heavy"). Two proposed redesigns are live for the client at
-https://hara-design-lab.chaudharikrishna0415.workers.dev: A = Studio (the former H), B = Editorial
-(after collection.industries). The earlier A to G are in git history only. **Section 0 is the prompt for
+same logo, colours, copy and photos ("fonts too heavy"). The proposed redesign (Studio, the former H) is live for the client at
+https://hara-design-lab.chaudharikrishna0415.workers.dev. Everything else tried that day is in git history only. **Section 0 is the prompt for
 the next session:** implement the chosen variant on the live site, then refresh the print
 collateral (business card and brochure) in `~/hara-print`.
 
@@ -112,7 +111,10 @@ write secrets or account security status into this public repo.
   3D business card that flies in and flips (their keyframes), Lenis smooth scroll (lerp 0.1).
   EB Garamond (small caps) and Outfit stand in for their commercial Doves Type and Good Direction
   Sans. The former H was renamed A (`a.html`); the root is a two-option menu; `/h` and `/g` 301
-  to `/a/`. Krishna has not chosen between A and B yet.
+  to `/a/`.
+- **Then he deleted B** ("nah, delete B"). The Studio page is back at the lab root as the only
+  design and the client link; `/a`, `/b`, `/g`, `/h` all 301 to `/`. B's files are in git history
+  (commit ab362f1) if ever wanted.
 
 ## 1. What is live
 

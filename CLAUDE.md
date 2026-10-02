@@ -121,14 +121,18 @@ expands `<x-include>`, `<i data-icon>` (Phosphor) and `<x-img id sizes alt>` (we
 
 History (2026-10-01): A, B, C (lighter re-skins) and D, E, F (Apple / IBM / BMW structures) were
 rejected; G rebuilt coreastudios.com's system for HARA at Krishna's request and he loved it; H is G
-in the live site's colours and is what the client sees. A to G were removed from `src/` the same
-day (git history has them). Files now: `index.html` (H), `base.css` (palette + Hanken Grotesk),
+in the live site's colours. The old A to G were removed from `src/` the same day (git history has
+them) and H was renamed **A** (`a.html`). **B** (`b.html`, `b.css`, `b.js`) rebuilds
+collection.industries for HARA (bars, rising headline, scroll-driven zoom stories, hover tiles,
+flipping business card, Lenis from `public/lenis.mjs`; EB Garamond + Outfit stand in for their
+fonts). `index.html` is the two-option menu, `_lab.html` the A / B switcher. Files: `base.css`
+(palette + Hanken Grotesk + switcher),
 `g.css` (the Studio system: blur-in loader, spectrum glare, dial menu, reel, gradient blob, panels,
 clock, wordmark; Archivo display), `h.css` (imports g.css, HARA colours, navy-to-white glare),
 `g.js` (loader, glare, dial scroll-spy, grid toggle, image fade, Toronto clock, phone menu),
 `_form.html` (step-1 preview linking to the live form). Fonts: Hanken Grotesk and Archivo (OFL)
 stand in for Corea's TWK Lausanne and Record Disc.
-**To put H on the live site:** port `index.html` + `g.css`/`h.css`/`g.js` into `index.html`,
+**To put A (or B) on the live site:** port `index.html` + `g.css`/`h.css`/`g.js` into `index.html`,
 `src/style.css` and `src/main.js`, keeping the real form (`src/quote.js`), the legal pages, the
 `x-photo` pipeline, the tests and the CSP (no inline scripts); decide the hero 3D logo build with
 Krishna (H has no logo build; the loader blur replaces it); then full QA + gate as before.

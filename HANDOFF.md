@@ -5,8 +5,9 @@ Updated 2026-10-01 (end of the Phase 5 session). Read in this order: this file, 
 
 **State: launch-ready apart from the domain, with a redesign pending.** The live one-page site is
 done and gated. After seeing it, the client asked for a lighter, more professional template with the
-same logo, colours, copy and photos ("fonts too heavy"). The proposed redesign (H) is live for the client at
-https://hara-design-lab.chaudharikrishna0415.workers.dev (A to G removed 2026-10-01; git history has them). **Section 0 is the prompt for
+same logo, colours, copy and photos ("fonts too heavy"). Two proposed redesigns are live for the client at
+https://hara-design-lab.chaudharikrishna0415.workers.dev: A = Studio (the former H), B = Editorial
+(after collection.industries). The earlier A to G are in git history only. **Section 0 is the prompt for
 the next session:** implement the chosen variant on the live site, then refresh the print
 collateral (business card and brochure) in `~/hara-print`.
 
@@ -100,6 +101,18 @@ write secrets or account security status into this public repo.
   lab root. `/h/` and `/g/` 301 to `/` via `dist/_redirects`. Still noindex. Next: his and the
   client's polish notes, then port H onto the live site (real form, legal pages, tests, QA, gate)
   and redo the print pieces in this language.
+- **2026-10-01, later still:** Krishna sent a second inspiration, https://www.collection.industries,
+  and asked for its 3D details copied but with a plain zoom instead of their star transition, in
+  the live site's colours. Built as B (`b.html`, `b.css`, `b.js`): fixed top and bottom bars that
+  slide in on first load and fade the page under them, small-caps serif labels with an underline
+  growing from the left, emblem over a headline rising from the fold, four scroll-driven stories
+  (photo settles 1.2 to 1, words zoom from nothing over a round white bloom, frame whites out
+  into the next; CSS view timelines, stacked cards below 1000px and in browsers without them),
+  photo tiles whose text zooms in on hover, the big two-column city list, "Let's talk" opens a
+  3D business card that flies in and flips (their keyframes), Lenis smooth scroll (lerp 0.1).
+  EB Garamond (small caps) and Outfit stand in for their commercial Doves Type and Good Direction
+  Sans. The former H was renamed A (`a.html`); the root is a two-option menu; `/h` and `/g` 301
+  to `/a/`. Krishna has not chosen between A and B yet.
 
 ## 1. What is live
 

@@ -111,13 +111,11 @@ printer spec sheet, client approval form, colour report, how to print, zip with 
 
 | Item | State |
 |---|---|
-| Content (`haraprint/content.py`) | Current: "Tomorrow starts clean.", (437) 980-3464 only, the two confirmed security practices, harafacilitiescleaning@gmail.com |
-| Layout and type | **Old**: Mona Sans, rounded stone cards (the old website's language). Redraw in the Studio language |
-| Fonts (`haraprint/fonts.py`) | Mona Sans instanced to static TTFs. Add Archivo (from `archivo-latin-wdth-normal.woff2`, wdth 112, wght 850 like the site) and Hanken Grotesk, both OFL, in `~/afterhours/design-lab/public/fonts` |
-| Photos (`assets/photos`) | **Old** AI stills (04, 05, 06, 09, 10). Replace with the Unsplash masters in `~/afterhours/assets/raw` (11 to 19, free commercial licence, chosen by Krishna) |
-| Wording about photos | `build.py` notes and `haraprint/docs.py` approval form still say "generated for the website". Fix |
-| URL and QR | `https://haracleaning.ca` (the domain Krishna was buying on 2026-10-01). Ask him to confirm before anything is final |
-| Last build | 103 PASS, 1 FAIL (the URL check: the domain doesn't resolve yet, expected) |
+| Content (`haraprint/content.py`) | Current: the site's copy, its photo-card list and section labels, (437) 980-3464 only, the two confirmed security practices |
+| Layout and type | **Redrawn in the Studio language (2026-10-01 late, commit e3a2629):** card front deep navy with the white logo, back white with "TOMORROW / STARTS CLEAN." + contact + QR; brochure: white hero cover over a full-bleed photo, photo cards with Archivo titles, navy back cover and inside right flap, no boxes. Archivo + Hanken Grotesk (OFL) |
+| Photos | The website's Unsplash masters (11 to 19); the AI stills are gone; the approval form and notes say so |
+| URL and QR | `https://haracleaning.ca`: **waiting for Krishna to confirm the domain** (and buy it in HARA's name) |
+| Last build | 110 PASS, 1 FAIL (the URL check: the domain doesn't resolve yet, expected). Proof images were sent to Krishna; waiting for his notes |
 
 Krishna's rules: only the website's details on the card (no personal name or title); show the
 PROOF PDFs as images before anything is final; the client signs the approval form before release.

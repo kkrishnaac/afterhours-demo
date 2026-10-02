@@ -1,0 +1,26 @@
+/* Studio design, live site (moved from the design lab, 2026-10-01). Base: palette tokens, the
+   body font face, a quiet reset. g.css, h.css and site.css build on it, in that order (main.js). */
+@font-face { font-family: 'Hanken Grotesk'; src: url('./fonts/hanken-grotesk-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+
+:root {
+  --bg: #FAFBFD; --surface: #FFFFFF; --stone: #EDF1F8; --ink: #0E1A33; --ink-muted: #4B5873; --hairline: #D8DFEB;
+  --accent: #0B3A80; --accent-hover: #03275A; --accent-2: #0A95EF; --accent-ink: #FFFFFF; --wash: #E4ECFA;
+  --band: #03275A; --on-band: #F4F7FC; --on-band-muted: #B4C3E0;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { margin: 0; color: var(--ink); background: var(--surface); overflow-x: clip; -webkit-font-smoothing: antialiased; }
+img, picture, svg { display: block; max-width: 100%; }
+h1, h2, h3, p, ul, ol, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+button { font: inherit; }
+fieldset { border: 0; padding: 0; margin: 0; }
+legend { padding: 0; }
+.icon { width: 22px; height: 22px; fill: currentColor; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.logo-white { filter: brightness(0) invert(1); }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }

@@ -1,6 +1,7 @@
 // Generates every layer of the hero logo intro from the traced client logo (src/logo-parts.js).
 //   node design-lab/logo-layers.mjs        then        node design-lab/build.mjs
-// Writes public/brand/logo-*.svg and src/_logo.html (the stacked layers, included by index.html).
+// Writes public/brand/logo-*.svg and src/_logo.html (the stacked layers, included by index.html),
+// for the design lab and, identically, for the live site (../public/brand, ../partials/hero-logo.html).
 //
 // The intro (src/h-logo.js) opens on a normal H, then a star follows the ring's centre line from
 // its sharp tip by the left upright, draws the ring behind it and turns the H into the logo's H
@@ -12,7 +13,7 @@ import { resolve, dirname } from 'node:path';
 import { PARTS, VIEWBOX } from '../src/logo-parts.js';
 
 const here = dirname(new URL(import.meta.url).pathname);
-const brand = resolve(here, 'public/brand');
+const brands = [resolve(here, 'public/brand'), resolve(here, '../public/brand')];
 const VB = VIEWBOX.join(' ');
 const part = (id) => PARTS.find((p) => p.id === id);
 const stops = (g) => g.stops.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('');
@@ -23,7 +24,7 @@ const gradOf = (id, p) => {
 const svg = (defs, body, viewBox = VB) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}"><defs>${defs}</defs>${body}</svg>\n`;
 const draw = (ps) => svg(ps.filter((p) => p.gradient).map((p) => gradOf('g_' + p.id, p)).join(''),
   ps.map((p) => `<path fill-rule="evenodd" d="${p.d}" fill="${p.gradient ? `url(#g_${p.id})` : p.color}"/>`).join(''));
-const out = (name, text) => { writeFileSync(resolve(brand, name), text); console.log('wrote', name); };
+const out = (name, text) => { for (const dir of brands) writeFileSync(resolve(dir, name), text); console.log('wrote', name); };
 
 // 1. Everything that never moves: the logo without the H, the ring and the sparkles.
 out('logo-rest.svg', draw(PARTS.filter((p) => !['h', 'swoosh', 'spark1', 'spark2', 'spark3'].includes(p.id))));
@@ -109,4 +110,5 @@ ${layer('logo-cut__spark logo-cut__spark--3', 'logo-spark3.svg')}
               </div>
 `;
 writeFileSync(resolve(here, 'src/_logo.html'), partial);
-console.log('wrote src/_logo.html');
+writeFileSync(resolve(here, '../partials/hero-logo.html'), partial);
+console.log('wrote src/_logo.html and ../partials/hero-logo.html');

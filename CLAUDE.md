@@ -6,15 +6,16 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
 `docs/client/` (gitignored: the repo is public). Read `HANDOFF.md` for where things stand.
 
 - **Production (live, pre-domain):** https://hara-website.chaudharikrishna0415.workers.dev
-  (Cloudflare Worker `hara-website` in Krishna's account, version `3ea51993` as of 2026-10-01,
+  (Cloudflare Worker `hara-website` in Krishna's account, version `2d884e46` as of 2026-10-01,
   D1 `hara-walkthroughs`, `noindex`). The old GitHub Pages URL
   (https://kkrishnaac.github.io/afterhours-demo/) redirects to production.
-- **Redesign (2026-10-01): the Studio design**, chosen by Krishna, live for the client at
-  https://hara-design-lab.chaudharikrishna0415.workers.dev (Worker `hara-design-lab`, static,
-  noindex, source `design-lab/`, see "Design lab" and "Hero logo intro" below). The client had
-  found the old site's fonts too heavy. Production still shows the old design until it is ported.
-  **Next session:** polish the hero logo intro with Krishna, then redo the print collateral in
-  `~/hara-print` in the Studio language, then port to production (`HANDOFF.md` sections 0 and 5).
+- **The Studio design is live on production (2026-10-01, late):** Krishna chose it in the design
+  lab (https://hara-design-lab.chaudharikrishna0415.workers.dev, source `design-lab/`, see "Design
+  lab" and "Hero logo intro" below) and asked for it on the live site the same night. The port
+  kept the real four-step form, the legal pages, the CSP and the tests (section "Studio on
+  production" below). The design lab stays up until Krishna says to retire it.
+  **Next session:** the print collateral in `~/hara-print` in the Studio language
+  (`HANDOFF.md` section 0), then the domain.
 - **Status (2026-10-01): launch-ready apart from the domain.** Phase 5 QA done (Lighthouse mobile
   92 to 96, desktop 100, axe 0 violations, three engines + phone emulation, load test), full
   security gate GO (`security/golive/2026-10-01-full-GO.md`), 67 tests pass, tree clean.
@@ -43,9 +44,12 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
 
 ## Stack
 
-- **Front end:** Vite 8 (vanilla JS modules, plain CSS), Lenis 1.3 (desktop wheel only), Mona Sans
-  variable (self-hosted via @fontsource-variable), Phosphor icons inlined at build time. Page JS
-  ~10 KB gzip; three.js 0.186 loads lazily, only for the hero logo build. No framework, no Tailwind.
+- **Front end:** Vite 8 (vanilla JS modules, plain CSS), the Studio design in `src/studio/`:
+  Archivo (display) and Hanken Grotesk (body), both OFL and self-hosted in `src/studio/fonts`,
+  Motion 13 (`animate`, bundled) for the hero logo intro, Phosphor icons inlined at build time.
+  Native scrolling; the desktop photo reel is a CSS scroll timeline with a grid fallback. Page JS
+  25 KB gzip, CSS 8.6 KB. No framework, no Tailwind. (Lenis, three.js and Mona Sans went with
+  the old design; git history has them.)
 - **Pages:** `index.html`, `privacy.html`, `terms.html`, `accessibility.html`, `404.html`. The
   simple pages share `partials/nav-page.html` and all pages share `partials/footer.html` through
   `<x-include>` tags expanded at build time.
@@ -68,8 +72,8 @@ Commands:
 ```bash
 npm run dev            # design work on :4331
 npm run dev:worker     # full stack locally on :8787 (build:cf + local D1 + wrangler dev)
-npm test               # 60 Worker tests inside workerd with a local D1 (incl. test/stress.test.js)
-npm run contrast       # WCAG check of every palette token pair the site uses
+npm test               # 67 Worker tests inside workerd with a local D1 (incl. test/stress.test.js)
+npm run contrast       # WCAG check of every Studio colour pair the site uses
 npm run deploy         # tests + production build + wrangler deploy --env production
 npm run db:migrate     # apply new D1 migrations to production
 npm run leads          # CSV of recent walkthrough requests -> docs/client/leads/ (gitignored)
@@ -81,25 +85,24 @@ node scripts/qa/matrix.mjs <url> /tmp   # browser stress matrix (see scripts/qa/
 
 | Path | What it is |
 |---|---|
-| `index.html` | Home page: nav, hero (vision line + logo stage), why HARA (4 linked cards = the client's priorities), any day any time (week grid), what we clean (7 photo cards + 2 service lists as `<details>`), security band, how it works (5 steps), areas (chips + map), walkthrough request form, photo viewer |
-| `privacy.html`, `terms.html`, `accessibility.html`, `404.html` | Legal pages (PIPEDA, CASL, AODA) and 404. Entry script `src/page.js` (styles only) |
-| `partials/` | `nav-page.html` (header for the simple pages), `footer.html` (all pages; Privacy / Terms / Accessibility links) |
+| `index.html` | Home page, the Studio design: header (reel or grid toggle, CTA; wide screens), the phone menu bar, the dial menu with its knob, the reel (hero with the logo intro + 7 photo cards), then on navy: why HARA, what a visit includes, hours (live Toronto clock), security, how it works, service area (city links that preselect the form), the walkthrough form |
+| `privacy.html`, `terms.html`, `accessibility.html`, `404.html` | Legal pages (PIPEDA, CASL, AODA) and 404, `<body class="page">`. Entry script `src/page.js` (styles only) |
+| `partials/` | `nav-page.html` (header for the simple pages), `footer.html` (all pages: white logo on navy, phone, email, legal links), `hero-logo.html` (generated by `design-lab/logo-layers.mjs`, never hand-edit) |
 | `vite.config.js` | `static-markup` plugin (`<x-include>`, `<i data-icon>` Phosphor SVGs, `<x-photo>` pictures), CSP + `_headers`, font preload, `siteUrl` (robots/sitemap/canonical/security.txt), multi-page input |
-| `src/style.css` | All styles. **Palette and shape tokens in `:root`** |
-| `src/main.js` | Home entry: fonts, CSS, Lenis (non-touch, lerp 0.085), in-page link glide, service-list open state, hero logo, motion, form, viewer |
-| `src/hero-logo.js`, `src/hero-build.js`, `src/logo-parts.js` | Hero logo: decide 3D or vector; the three.js build (lazy chunk); the traced logo parts (generated) |
-| `src/motion.js` | IntersectionObserver reveals (`data-reveal`, staggered by `--i`), week grid wave, map light-up. One-time, no scroll listeners |
+| `src/studio/` | The Studio design. CSS in load order: `base.css` (tokens, Hanken), `g.css` (the coreastudios.com system, Archivo), `h.css` (HARA colours and every change Krishna made, dated), `site.css` (live-site additions: the form on navy, city links, skip link, dial contrast, reel fallback, legal pages). JS: `studio.js` (dial scroll-spy, knob to logo, toggle, image fade, clock), `logo-intro.js` (Motion), `tab-menu.js` (phone menu bar). Kept in step with `design-lab/src/` |
+| `src/main.js`, `src/page.js` | Entries: the home page (Studio CSS + JS + the form); the simple pages (CSS only) |
+| `src/logo-parts.js` | The traced logo parts; the source for `design-lab/logo-layers.mjs` |
 | `src/quote.js`, `src/turnstile.js` | 4-step walkthrough form (live build posts to the Worker; demo build sends nothing); Turnstile loaded only at the last step |
 | `src/form-options.js`, `src/cities.js` | Form choices shared by page and Worker (tests check `index.html` matches) |
-| `src/photos.js`, `src/viewer.js`, `src/map.js` | Photo data (also used by vite.config.js), photo viewer dialog, GTA SVG map |
+| `src/photos.js` | Photo data (also used by vite.config.js for `<x-photo>`) |
 | `worker/` | `index.js` (router, https redirect, cron), `walkthrough.js` (the endpoint), `validate.js`, `turnstile.js`, `email.js` (escaped templates, Resend, hold, dry-run), `maintenance.js` (retries, 24-month retention), `http.js` (API headers, PII-free logs) |
 | `migrations/`, `test/`, `vitest.config.js` | D1 schema (no IPs, CASL consent fields); Worker tests via `@cloudflare/vitest-plugin`; `test/stress.test.js` = concurrency + fuzz |
 | `wrangler.jsonc` | Worker config: local defaults at top level, `env.production` for the live Worker |
 | `scripts/` | `contrast.mjs` (palette WCAG check), `leads.mjs` (leads/PIPEDA CLI), `optimize-images.mjs` (4K masters -> AVIF/WebP), `favicons.mjs`, `qa/` (viewport matrix, fake-clock frames, cross-browser + device pass, axe scan, keyboard pass, accessibility tree, form end to end, load test; see its README) |
-| `public/` | `brand/` (logo SVGs), `favicon.svg`, `apple-touch-icon.png`, `og.jpg` (branded share image), `img/` photo ladders |
+| `public/` | `brand/` (logo SVGs, including the intro's generated `logo-*.svg` layers), `favicon.svg`, `apple-touch-icon.png`, `og.jpg` (branded share image), `img/` photo ladders |
 | `src/analytics.js`, `src/structured-data.js`, `src/business.js`, `scripts/favicons.mjs` | `analytics.js`: Cloudflare Web Analytics beacon, off until `CF_BEACON_TOKEN` is set (opens the CSP and adds a privacy sentence only then). `structured-data.js`: the home page's LocalBusiness JSON-LD (service-area business, no address, no hours, no ratings), emitted only when `VITE_SITE_URL` is set. `business.js`: name, phone, email. `favicons.mjs` builds the tab icons (logo mark on a white tile: favicon.svg/.ico, 48 and 192 px PNGs) from `public/brand/hara-mark.svg`; re-run it if `export_brand.py` rewrites `favicon.svg`. Icon links carry `?v=2` to beat browser caches |
 | `docs/DEPLOY.md` | Production state, launch blockers, connect-the-domain runbook, backups and restore (rehearsed), everyday commands |
-| `security/golive/` | Go-live reports; latest full gate `2026-09-28-full-GO.md` |
+| `security/golive/` | Go-live reports; latest full gate `2026-10-01-full-GO.md` (with the Studio production deploy at its end) |
 | `docs/client/` (gitignored) | Client brief + priorities, company notes, SOW (docx + generator), security plan (PDF), logo kit, leads exports |
 
 Photos (since 2026-10-01): Unsplash originals chosen by Krishna (Unsplash License: free for
@@ -193,18 +196,23 @@ actions, flat depth). Values are sampled from the client's logo.
 | `--band` / `--on-band` / `--on-band-muted` | `#03275A` / `#F4F7FC` / `#B4C3E0` | The one dark section (security) |
 | `--error` | `#B3261E` | Form errors (error box background `#FBEAE8`) |
 
-**Where colour lives (change all of them together):** `src/style.css` `:root` plus the `rgba()`
-values derived from it (`11, 58, 128` accent, `3, 39, 90` band overlay, `250, 251, 253` nav glass,
-`14, 26, 51` shadows, `216, 223, 235` nav hairline, `244, 247, 252` band lines, `#B8C4DB` map dots,
-`#FBEAE8`); `<meta name="theme-color">` in all five pages; `worker/email.js` inline colours; the
-logo files. After any change: `npm run contrast` (all PASS), then desktop + phone screenshots.
+The table above is the old design's token set (still in `src/studio/base.css`). The Studio design
+uses `h.css` `:root`: `--bg` #FAFBFD, `--paper` #0E1A33 (text), `--navy` #0B3A80, `--sky` #0A95EF,
+`--deep` #03275A, `--white`, with navy tints `--paper-20` and `--paper-08`.
+
+**Where colour lives (change all of them together):** `src/studio/h.css` `:root`, the colour run
+(`--run` and the `.reel-wrap` gradients in `h.css`), `src/studio/site.css` (form on navy, the
+menu-option `#DDE4EE`, error `#FFC4BD`), the stops copied into `src/studio/tab-menu.js` (the phone
+bar's colour), `<meta name="theme-color">` in all five pages, `worker/email.js` inline colours,
+and the logo files. After any change: `npm run contrast` (all PASS), then desktop + phone screenshots.
 
 ### Logo files (generated, don't hand-edit)
 
 - `public/brand/hara-logo.svg` full logo (hero rest state, footer), `hara-lockup.svg` mark + HARA
   (nav, photo viewer), `hara-mark.svg` = `public/favicon.svg`; `public/apple-touch-icon.png`
   (mark on white, 180px); `public/og.jpg` (source `docs/client/logo/og.html`, 1200x630 via the dev server).
-- `src/logo-parts.js`: the 16 traced parts (paths, gradients, boxes) the 3D hero build extrudes.
+- `src/logo-parts.js`: the 16 traced parts (paths, gradients, boxes); `design-lab/logo-layers.mjs`
+  builds the hero intro's layers from them.
 - Pipeline (in `docs/client/logo/`, gitignored): `client-logo-approved.jpg` (the client's file) ->
   `vectorize_original.py` (ink-coverage masks, seeded split of touching parts, potrace; building
   bars and windows are exact polygons) -> `original-vector/parts.json` + `hara-logo.svg` ->
@@ -213,18 +221,24 @@ logo files. After any change: `npm run contrast` (all PASS), then desktop + phon
 - Earlier explorations (tiles, custom lettering, font rounds) and the green kit are in
   `docs/client/logo/navy/` and `docs/client/logo/archive/`; none of them is in use.
 
-### Hero 3D build
+### Studio on production (2026-10-01, late)
 
-`src/hero-logo.js` (main bundle) decides; `src/hero-build.js` (lazy chunk with three.js) builds.
-Each traced part is extruded and arrives in turn over ~3.1s (H flies in, building rises, swoosh
-sweeps, letters flip up, sparkles pop, tagline settles) while the logo turns to face the viewer;
-the front faces land exactly on the vector `<img>`, which crossfades in, and the WebGL context is
-disposed. The vector is shown straight away when motion is reduced, WebGL is missing, the stage is
-off screen at load, or three.js takes over 2.5s. The `<img>` is painted from the first frame under
-a white `.hero__stage::after` cover (so it is the LCP element at once) that lifts when the build
-ends, with a 3.6s CSS-only failsafe for no-JS. Verified on a production build 2026-10-01: CLS 0 at
-10 viewports, LCP 80 to 190 ms (2.07s on a throttled 3G/6x CPU phone), JS-off shows the logo. Test frames deterministically with Playwright's fake clock
-(`page.clock.install` + `pauseAt` before `goto`, then `runFor`): `scripts/qa/clockframes.mjs`.
+The design lab's Studio page, moved onto the live site when Krishna asked for it ("commit and push
+this new design onto our live website"). What changed from the design lab, and why:
+- The real four-step form (`src/quote.js`, unchanged) sits in the navy "Book" panel instead of the
+  step-1 preview; its fields, errors, consent, Turnstile, send error and thank-you are styled in
+  `src/studio/site.css`. The city buttons are links (`data-city`) that preselect the form.
+- `<x-photo>` (AVIF + WebP ladders) instead of the lab's `<x-img>` (WebP only); a visible skip
+  link; the panels are `<section>` landmarks; the hidden "What we clean" heading follows the h1.
+- The dial's dimmed items are 65% and 80% (the lab had 20% and 40%, below WCAG AA).
+- Where CSS scroll timelines are missing (Firefox, Safari before 26), wide screens get the grid
+  layout instead of a reel that cannot move.
+- One phone number everywhere: (437) 980-3464. The simple pages wear the Studio header and footer.
+- Removed with the old design: the three.js hero build, Lenis, Mona Sans, the reveal script, the
+  GTA map, the photo viewer and `src/style.css` (git history has them).
+Verified before the deploy: 67 tests, the form end to end at 1440 and 390 px, axe 0 violations on
+every page and form step, Chromium, WebKit and Firefox on desktop and phone, the same hero sizes
+and menu behaviour as the lab. Lighthouse and the matrix were not re-run for this deploy.
 
 ## Design decisions (Krishna's calls; don't re-litigate without him)
 
@@ -262,8 +276,8 @@ only for now, security conscious, free walkthrough before every quote.
   off below 1200px so scrolling stays tight (Krishna reported a "loose" scroll on his iPhone).
 - Logo: the client's original (2026-09-28), shown off in the hero. This reverses his earlier "no
   swooshes, sparkles or gradients" wish; it is his call. Four rounds of new designs were rejected.
-- 3D: production has the one-time three.js hero logo build. The Studio design replaces it with the
-  vector logo intro (see "Hero logo intro"); ask Krishna before removing the 3D build at the port.
+- 3D: gone with the old design (2026-10-01); the hero now plays the vector logo intro (see "Hero
+  logo intro"). The three.js build is in git history.
   Previously rejected: sky-blue + warm beige gradient palette.
 - Security section (Krishna, 2026-10-01, from the client): HARA's security role is alarming and
   disarming, and responsibility for key fobs and access cards. The band now makes exactly those
@@ -287,7 +301,7 @@ final. Details: `HANDOFF.md` section 3. Memory: `hara-print-collateral.md`.
 ## Conventions
 
 - Visible copy: no em or en dashes. Sentence case. One CTA label per intent.
-- Every animation honours `prefers-reduced-motion` (JS checks + CSS override at the end of style.css).
+- Every animation honours `prefers-reduced-motion` (JS checks + the override in `src/studio/base.css`).
 - Contrast: every text pair >= 4.5:1 (`npm run contrast`). `translate="no"` on the brand.
   `[hidden]` is forced to `display: none`.
 - **Scope (Krishna, 2026-10-01): the client wants a simple ONE-PAGE website, nothing more.** No Services/Security/FAQ/About/Contact pages, no city pages, no Service areas hub, no Google Business Profile or directory listings (the SOW's Phase 4 is out for now). They were built and live briefly, then removed; they are in git under the tag `multi-page-archive` (`git checkout multi-page-archive -- <files>` restores them). Don't rebuild them unless he asks. The legal pages (privacy, terms, accessibility) stay: the SOW requires them.
@@ -321,13 +335,11 @@ scopes include D1, Workers and Turnstile widgets). Connecting the domain: `docs/
 - Turnstile test keys: site `1x00000000000000000000AA`, secret `1x0000000000000000000000000000000AA`
   (always pass). Siteverify with test keys reports a placeholder hostname, so `TURNSTILE_HOSTNAMES`
   is empty locally. Turnstile's iframe logs console noise (OTS font warning); not ours.
-- Lenis honours CSS `scroll-padding-top` and `scroll-margin-top`: never pass a manual offset to
-  `lenis.scrollTo`. `.section` uses a negative scroll-margin so nav links land on the heading.
 - Never clip an `<img loading="lazy">` fully (clip-path): Chrome won't lazy-load it.
-- `.legal a` styles must exclude `.btn` and `.call`, or buttons on the simple pages lose their text colour.
+- `.legal a` styles must exclude `.button` and `.call`, or buttons on the simple pages lose their text colour.
 - The security scan greps every file for "webhook"/"claude"; our own docs trigger false positives,
   and `.wrangler/tmp` source maps trip its SQL check. Verify matches are in shipped code first.
-- The Browser pane pauses requestAnimationFrame when hidden (Lenis stops, screenshots go blank).
+- The Browser pane pauses requestAnimationFrame when hidden (animations stop, screenshots go blank).
   Use the playwright MCP for scroll/animation tests and screenshots, or `scripts/qa/` when both
   Playwright MCPs are locked by another Claude session ("Browser is already in use"). The pane
   reads the home-level `~/.claude/launch.json`, not the project's.
@@ -337,17 +349,21 @@ scopes include D1, Workers and Turnstile widgets). Connecting the domain: `docs/
   measurement) and, for the SEO score, on a build with a placeholder `VITE_SITE_URL` so the
   pre-domain `noindex` is not counted. Mobile sits at 92 to 96; the remaining cost is the
   simulated LCP of the nav logo over slow 4G.
-- The hero decides 3D-or-static two frames after `load` (`src/hero-logo.js`): WebKit can run the
-  module before the stylesheet applies (random static fallbacks on big iPhones), and the three.js
-  chunk must not sit in the LCP's dependency graph. If the decision comes after the 3.6 s CSS
-  failsafe, `is-late` stops the logo rising a second time.
 - WebKit logs a `style-src-attr` CSP violation on every load. It is WebKit's own `<select>`
   styling (fires with JS off); the select works. Don't add `unsafe-inline` for it.
 - The Cloudflare rate limiter is approximate (per location, synced with a delay): a burst lets a
   few more than 5 through; Turnstile still stops them. The workerd tests are exact.
 - `wrangler tail hara-website` without `--env production` (that appends `-production`).
   `wrangler d1 time-travel restore` has no `-y`. A new `workers.dev` name can 404 for ~1 minute.
-- Vite's "chunk over 500 kB" warning for `hero-build` is expected (three.js, lazy loaded).
+- The local Worker only accepts the form from `http://localhost:8787` (`ALLOWED_ORIGINS`):
+  test the form at that address, not `127.0.0.1` (that gets a correct 403).
+- axe-core cannot be injected under the real CSP: `scripts/qa/axe.mjs` uses `bypassCSP` (testing
+  only). Playwright's screenshots in WebKit log "Refused to apply a stylesheet" for the same
+  reason; that is the harness, not the site.
+- The hero logo's layers and partial are generated for both the design lab and the live site by
+  `node design-lab/logo-layers.mjs`; edit the generator, never `partials/hero-logo.html`.
+- `src/studio/` is a copy of the design lab's CSS and JS (fonts, Motion import and `site.css` aside).
+  Change the live site there; mirror a change into `design-lab/src/` only while the lab is in use.
 - Logo pipeline venv doesn't survive sessions: recreate with fonttools, brotli, skia-pathops,
   pillow, numpy, scipy, potracer.
 - Files in `docs/client/` can be viewed through the dev server (`/docs/client/...`), which is how

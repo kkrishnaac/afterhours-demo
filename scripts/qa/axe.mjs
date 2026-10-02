@@ -1,5 +1,5 @@
 // WCAG 2.1 AA scan with axe-core at desktop and phone widths, on the page as loaded, with
-// the photo viewer open, and on each form step (including a validation error shown).
+// the phone menu open, and on each form step (including a validation error shown).
 //   node scripts/qa/axe.mjs <url>
 import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
@@ -19,7 +19,7 @@ const run = async (page, label) => {
   return res.incomplete.map((x) => x.id);
 };
 for (const [w, h] of [[1440, 900], [390, 844]]) {
-  const ctx = await b.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 2, isMobile: w < 768, hasTouch: w < 768, reducedMotion: 'reduce' });
+  const ctx = await b.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 2, isMobile: w < 768, hasTouch: w < 768, reducedMotion: 'reduce', bypassCSP: true }); // the site's CSP blocks axe's injected script
   const page = await ctx.newPage();
   for (const path of ['', 'privacy.html', 'terms.html', 'accessibility.html', '404.html']) {
     await page.goto(U + path, { waitUntil: 'load' });
@@ -28,9 +28,11 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
     if (!path) console.log('    incomplete (manual check):', [...new Set(inc)].join(', '));
   }
   await page.goto(U, { waitUntil: 'load' }); await page.waitForTimeout(400);
-  await page.locator('.svc__photo').first().click(); await page.waitForTimeout(400);
-  await run(page, `${w}px viewer open`);
-  await page.keyboard.press('Escape');
+  if (w < 1200) {  // the phone menu, opened from its bar at the top
+    await page.locator('.tabnav__tab').focus(); await page.keyboard.press('Enter'); await page.waitForTimeout(400);
+    await run(page, `${w}px phone menu open`);
+    await page.keyboard.press('Escape');
+  }
   await page.locator('#walkthrough').scrollIntoViewIfNeeded();
   await page.locator('[data-next]').click(); await page.waitForTimeout(200);   // step 1 error shown
   await run(page, `${w}px form step 1 with error`);

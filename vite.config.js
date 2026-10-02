@@ -97,17 +97,16 @@ const staticMarkup = {
   },
 };
 
-// Preload the one font file every visitor needs (Latin, variable width + weight),
-// so the hero headline paints in Mona Sans instead of flashing a fallback.
+// Preload the two font files every visitor needs (Latin, variable): Archivo for the headline,
+// Hanken Grotesk for everything else, so the hero paints in them instead of flashing a fallback.
 const fontPreload = {
   name: 'font-preload',
   apply: 'build',
   transformIndexHtml: {
     order: 'post',
     handler: (html, { bundle }) => {
-      const file = Object.keys(bundle ?? {}).find((f) => /mona-sans-latin-wdth-normal-.*\.woff2$/.test(f));
-      if (!file) return html;
-      return [{ tag: 'link', attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: `./${file}`, crossorigin: true }, injectTo: 'head' }];
+      const files = Object.keys(bundle ?? {}).filter((f) => /(archivo-latin-wdth|hanken-grotesk-latin-wght)-normal-.*\.woff2$/.test(f));
+      return files.map((file) => ({ tag: 'link', attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: `./${file}`, crossorigin: true }, injectTo: 'head' }));
     },
   },
 };

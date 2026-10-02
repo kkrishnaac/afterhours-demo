@@ -1,4 +1,6 @@
-// Entry for the simple pages (privacy, terms, accessibility, 404): type and
-// styles only. No motion, no map, no form.
-import '@fontsource-variable/mona-sans/wdth.css';
-import './style.css';
+// Entry for the simple pages (privacy, terms, accessibility, 404): the Studio type and colours
+// only. No motion, no menus, no form.
+import './studio/base.css';
+import './studio/g.css';
+import './studio/h.css';
+import './studio/site.css';

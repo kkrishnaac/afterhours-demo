@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-// `npm run contrast`: reads the colour tokens from src/style.css :root and checks
-// every text/background pair the site actually uses against WCAG 2.1 AA.
-// Run it after any palette change; a FAIL means a real readability problem.
+// `npm run contrast`: reads the Studio colour tokens (src/studio/base.css and h.css :root) and
+// checks every text/background pair the site actually uses against WCAG 2.1 AA. Translucent
+// text (white at 82% on navy) is blended first. Run it after any palette change.
 import { readFileSync } from 'node:fs';
 
-const css = readFileSync(new URL('../src/style.css', import.meta.url), 'utf8');
-const root = css.slice(css.indexOf(':root'), css.indexOf('}', css.indexOf(':root')));
-const tokens = Object.fromEntries([...root.matchAll(/--([a-z0-9-]+):\s*(#[0-9A-Fa-f]{6})/g)].map((m) => [m[1], m[2]]));
+const rootOf = (file) => { const css = readFileSync(new URL(file, import.meta.url), 'utf8'); return css.slice(css.indexOf(':root'), css.indexOf('}', css.indexOf(':root'))); };
+const tokens = Object.fromEntries([...(rootOf('../src/studio/base.css') + rootOf('../src/studio/h.css')).matchAll(/--([a-z0-9-]+):\s*(#[0-9A-Fa-f]{6})/g)].map((m) => [m[1], m[2]]));
+// Colours used directly in the stylesheets rather than as tokens.
+Object.assign(tokens, { 'menu-option': '#DDE4EE', 'error-on-navy': '#FFC4BD', 'invalid-ring': '#D93025', 'pale-sky': '#BFE3FF' });
 
 const lum = (hex) => {
   const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
@@ -14,25 +15,26 @@ const lum = (hex) => {
   return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
 };
 const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+const blend = (fg, bg, a) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(fg.slice(i, i + 2), 16) * a + parseInt(bg.slice(i, i + 2), 16) * (1 - a)).toString(16).padStart(2, '0')).join('');
+tokens['white-82-on-deep'] = blend(tokens.white, tokens.deep, 0.82);
 
 // [foreground token, background token, minimum, where it is used]
 const PAIRS = [
-  ['ink', 'bg', 4.5, 'body text'],
-  ['ink', 'surface', 4.5, 'text on cards and inputs'],
-  ['ink-muted', 'bg', 4.5, 'secondary text'],
-  ['ink-muted', 'stone', 4.5, 'secondary text on stone panels'],
-  ['ink-muted', 'surface', 4.5, 'card descriptions'],
-  ['accent-ink', 'accent', 4.5, 'button labels'],
-  ['accent-ink', 'accent-hover', 4.5, 'button labels on hover'],
-  ['accent', 'bg', 3, 'icons, focus ring, links (non-text 3:1; link text needs 4.5)'],
-  ['accent', 'bg', 4.5, 'link text'],
-  ['accent', 'wash', 3, 'icons on wash chips'],
-  ['accent-2', 'bg', 3, 'logo sparkles and swoosh on the page (graphic, 3:1)'],
-  ['accent-2', 'surface', 3, 'logo sparkles and swoosh on the nav bar (graphic, 3:1)'],
-  ['on-band', 'band', 4.5, 'text in the dark security band'],
-  ['on-band-muted', 'band', 4.5, 'secondary text in the band'],
-  ['error', 'bg', 4.5, 'field errors'],
-  ['error', 'surface', 4.5, 'errors inside the form card'],
+  ['paper', 'bg', 4.5, 'body text'],
+  ['navy', 'bg', 4.5, 'headline, labels and links on the white page'],
+  ['ink-muted', 'bg', 4.5, 'secondary text on the simple pages'],
+  ['white', 'navy', 4.5, 'button labels'],
+  ['white', 'deep', 4.5, 'headings and text on the navy sections'],
+  ['white-82-on-deep', 'deep', 4.5, 'body text at 82% on the navy sections'],
+  ['navy', 'white', 4.5, 'form buttons and the white chips on navy'],
+  ['ink', 'white', 4.5, 'text typed into the form'],
+  ['error-on-navy', 'deep', 4.5, 'form errors on navy'],
+  ['invalid-ring', 'white', 3, 'invalid field ring (non-text 3:1)'],
+  ['navy', 'menu-option', 4.5, 'phone menu options'],
+  ['deep', 'bg', 4.5, 'phone menu bar text on white'],
+  ['deep', 'pale-sky', 4.5, 'phone menu bar text on the pale sky'],
+  ['deep', 'sky', 4.5, 'phone menu bar text on the sky (it turns white past this)'],
+  ['sky', 'bg', 3, 'logo sparkles, swoosh and focus ring (graphic, 3:1)'],
 ];
 
 let failed = 0;

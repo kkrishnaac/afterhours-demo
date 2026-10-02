@@ -38,7 +38,16 @@ h1, h2, h3 { font-weight: 400; }
 .gradient-blob::after { content: ''; position: absolute; inset: -20%; background: inherit; animation: drift 18s ease-in-out infinite alternate; }
 .gradient-blob--nav, .gradient-blob--panels { background: radial-gradient(100% 85% at 0 0, #010102 0%, #060a14 30%, #0000 65%), radial-gradient(70% 60% at 5% 5%, #020308 0%, #0000 55%), radial-gradient(55% 50% at 92% 12%, #6a7098 0%, #0000 48%), radial-gradient(circle at 18% 60%, #0c3488 0%, #0000 38%), radial-gradient(circle at 15% 85%, #00a8e8 0%, #0000 38%), radial-gradient(circle at 45% 75%, #12b8e8 0%, #0000 35%), radial-gradient(circle at 85% 85%, #5ad4a8 0%, #0000 38%), radial-gradient(circle at 78%, #28b8a8 0%, #0000 42%), radial-gradient(circle at 85% 18%, #8890b0 0%, #0000 45%), radial-gradient(circle at 28% 90%, #000610 0%, #0000 30%), radial-gradient(circle at 58% 82%, #001018 0%, #0000 26%), radial-gradient(circle at 78% 92%, #081410 0%, #0000 28%), radial-gradient(circle at 8% 25%, #020408 0%, #0000 40%), linear-gradient(135deg, #4a5278, #082838 50%, #0890d8); }
 @keyframes drift { 0% { transform: translate(-3%, -2%) scale(1); } to { transform: translate(3%, 2%) scale(1.12); } }
-@media (max-width: 1199px) { .gradient-blob { filter: blur(20px); } }
+/* Phones and tablets: no live blur, no drifting blob, no frosted panels. Those are what make a
+   phone scroll feel rubbery; the radial gradients are soft enough on their own. */
+@media (max-width: 1199px) {
+  .gradient-blob { filter: none; transform: none; }
+  .gradient-blob::after { animation: none; transform: translate(1%, 1%) scale(1.06); }
+  #loader-blur { backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+  .panel, .button, .menu-item.is-active a, .nav .button { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .track { will-change: auto; }
+  .project-client { max-width: 72%; }
+}
 
 /* 4. Buttons: translucent cream, 4px blur, 35px tall, 4px radius. */
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; min-width: 5.6875rem; height: 2.1875rem; padding: 0.3125rem 1.125rem; border: 0; border-radius: var(--r-button); background-color: var(--paper-20); color: var(--paper); font: inherit; font-size: 0.875rem; line-height: 1.1; white-space: nowrap; text-decoration: none; cursor: pointer; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); transition: background-color 0.25s, opacity 0.25s; }

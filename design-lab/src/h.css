@@ -11,8 +11,10 @@ body { background: var(--bg); color: var(--paper); }
 /* Loader: light tint, like their light-bg pages */
 #loader-blur { background-color: rgba(250, 251, 253, 0.5); }
 
-/* Glare: navy to white, smooth, no spectrum */
-.glare-beam--spectrum { background: linear-gradient(#0000 0%, rgba(3, 39, 90, 0.35) 14%, rgba(11, 58, 128, 0.85) 30%, rgba(10, 149, 239, 0.75) 46%, rgba(191, 227, 255, 0.85) 60%, rgba(255, 255, 255, 0.95) 74%, rgba(255, 255, 255, 0.5) 86%, #0000 100%); }
+/* No colour sweep on navigation (Krishna, 2026-10-01): sections just scroll into view. */
+#glare-overlay { display: none; }
+/* The phone menu opens on plain white, no gradient behind it. */
+.gradient-blob--nav { display: none; }
 
 /* Gradient blobs in the brand blues */
 .gradient-blob { background: radial-gradient(90% 75% at 100% 0, #03275A 0%, #0B3A80 25%, #0000 60%), radial-gradient(circle at 15% 80%, #0A95EF 0%, #0000 38%), radial-gradient(circle at 45% 75%, #7FD3FF 0%, #0000 35%), radial-gradient(circle at 85% 85%, #E4ECFA 0%, #0000 36%), radial-gradient(circle at 15% 15%, #1C57B0 0%, #0000 45%), radial-gradient(circle at 60% 30%, #03275A 0%, #0000 40%), linear-gradient(135deg, #03275A, #0B3A80 45%, #0A95EF); }

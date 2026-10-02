@@ -157,37 +157,41 @@ body.is-grid .reel-wrap { background: linear-gradient(180deg, var(--bg) 0%, var(
 .hero-card__logo { margin-inline: auto; }
 @media (max-width: 1199px) { .hero-card { padding: 1.5rem 0.25rem 1rem; } }
 
-/* The ring cuts the H (Krishna, 2026-10-01 late, second version). The logo is a stack of
-   vector layers. It starts as a complete H with no ring and no sparkles; a small star travels in
-   from behind the H along the ring's curve, the H opens in its wake and its trail is the ring;
-   then the sparkles twinkle into place and a shine passes over the H. Driven by h-logo.js
-   (Motion). Without the script the final logo appears after 2.4 s; with reduced motion, at once. */
+/* The ring cuts the H (Krishna, 2026-10-01 late, third version). Vector layers of the real logo.
+   It opens on a normal H (the logo's own uprights, a straight crossbar). A small star starts at
+   the ring's sharp tip by the left upright, follows the ring's own path (down round the left
+   end, along the front through the middle of the H, into the curl at the right) and draws the
+   ring as it goes; the H opens in its wake into the logo's H. Then the sparkles twinkle into
+   place. Nothing on the H moves or is laid over it. Driven by h-logo.js with Motion. Without the script the finished logo shows after 2.4 s;
+   with reduced motion, at once. */
 .logo-cut { position: relative; aspect-ratio: 1174.5 / 871.5; }
 .logo-cut > * { position: absolute; inset: 0; width: 100%; height: 100%; }
-.logo-cut__piece { transform-origin: 50% 70%; }
-.logo-cut__ring { clip-path: inset(0 100% 0 0); }
+.logo-cut__fx { overflow: visible; }
+.logo-cut__track { stroke: none; }
 .logo-cut__solid { clip-path: inset(0 0 0 0); }
+/* The real H pieces stay hidden until the star has cut past them, so only one H is ever on screen. */
+.logo-cut__piece { clip-path: inset(0 100% 0 0); }
 .logo-cut__spark { opacity: 0; }
 .logo-cut__spark:nth-of-type(1) { transform-origin: 77.5% 8%; }
 .logo-cut__spark:nth-of-type(2) { transform-origin: 82.8% 15.9%; }
 .logo-cut__spark:nth-of-type(3) { transform-origin: 79.1% 23.9%; }
-.logo-cut__star, .logo-cut__glint { inset: auto; left: 0; top: 0; width: 7%; height: auto; aspect-ratio: 1; will-change: transform; }
-.logo-cut__glint { width: 4.5%; }
-.logo-cut__star img, .logo-cut__glint img { display: block; width: 100%; height: 100%; opacity: 0; filter: drop-shadow(0 0 4px rgba(10, 149, 239, 0.9)) drop-shadow(0 0 12px rgba(155, 220, 255, 0.85)); }
-.logo-cut__shine { -webkit-mask: url(/brand/logo-h.svg) center / 100% 100% no-repeat; mask: url(/brand/logo-h.svg) center / 100% 100% no-repeat; background: linear-gradient(122deg, transparent 41%, rgba(255, 255, 255, 0.5) 50%, transparent 59%) 140% 0 / 260% 100% no-repeat; opacity: 0; pointer-events: none; }
 /* Failsafe: no script, the finished logo shows after a beat. */
-.logo-cut:not(.is-live) .logo-cut__ring { animation: lc-ring 0.01s 2.4s forwards; }
+.logo-cut:not(.is-live) .logo-cut__draw { animation: lc-draw 0.01s 2.4s forwards; }
 .logo-cut:not(.is-live) .logo-cut__solid { animation: lc-solid 0.01s 2.4s forwards; }
+.logo-cut:not(.is-live) .logo-cut__piece { animation: lc-piece 0.01s 2.4s forwards; }
 .logo-cut:not(.is-live) .logo-cut__spark { animation: lc-show 0.01s 2.4s forwards; }
-@keyframes lc-ring { to { clip-path: inset(0 0 0 0); } }
+@keyframes lc-draw { to { stroke-dashoffset: 0; } }
 @keyframes lc-solid { to { clip-path: inset(0 0 0 100%); } }
+@keyframes lc-piece { to { clip-path: inset(0 0 0 0); } }
 @keyframes lc-show { to { opacity: 1; } }
-.logo-cut.is-done .logo-cut__ring { clip-path: none; }
-.logo-cut.is-done .logo-cut__solid, .logo-cut.is-done .logo-cut__star, .logo-cut.is-done .logo-cut__glint, .logo-cut.is-done .logo-cut__shine { display: none; }
+.logo-cut.is-done .logo-cut__draw { stroke-dashoffset: 0; }
+.logo-cut.is-done .logo-cut__piece { clip-path: none; }
+.logo-cut.is-done .logo-cut__solid, .logo-cut.is-done .logo-cut__star { display: none; }
 .logo-cut.is-done .logo-cut__spark { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
-  .logo-cut__ring { clip-path: none; }
-  .logo-cut__solid, .logo-cut__star, .logo-cut__glint, .logo-cut__shine { display: none; }
+  .logo-cut__draw { stroke-dashoffset: 0; }
+  .logo-cut__piece { clip-path: none; }
+  .logo-cut__solid, .logo-cut__star { display: none; }
   .logo-cut__spark { opacity: 1; }
 }
 

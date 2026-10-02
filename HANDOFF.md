@@ -118,15 +118,16 @@ write secrets or account security status into this public repo.
   section links as a scrollable row (no hamburger); no boxes below the photos; a fixed gradient
   that stays white until the Reception and lounges card, then runs sky to dark navy; the lower
   sections and footer sit on navy with white type and the white logo; the hero logo plays a
-  ~1.6 s intro: the H starts complete (no ring, no sparkles), a small glowing star travels in
-  from behind it along the ring's sampled centre line, the H opens in its wake and the star's
-  trail becomes the ring, then the star bursts, the three sparkles twinkle into place with a
-  glow, a soft shine crosses the H and two tiny glints flash. Vector layers in
-  `public/brand/` (`logo-rest.svg`, `logo-h-{a,b,c}.svg`, `logo-h-solid.svg`, `logo-h.svg` (shine
-  mask), `logo-ring.svg`, `logo-spark{1,2,3}.svg`, `logo-star.svg`, generated from
-  `src/logo-parts.js`); choreography in `src/h-logo.js` using Motion 13.5 (`public/motion.js`,
-  the UMD bundle from the `motion` package); states and a 2.4 s no-script failsafe in `h.css`.
-  Nothing else in the logo moves.
+  ~1.3 s intro (third version, after Krishna's corrections): it opens on a normal H (the real
+  H's uprights with the ring's gaps filled and a straight crossbar, `logo-h-normal.svg`); a small
+  star appears at the ring's sharp tip by the left upright and follows the ring's own centre line
+  (down round the left end, along the front through the middle of the H, into the right curl),
+  drawing the ring behind it (SVG mask, stroke-dashoffset); the H swaps to the logo's H exactly
+  where the star has passed (complementary clip-paths, so only one H is ever visible and the
+  uprights never change); the star bursts and the three sparkles twinkle in. No jolt, no shine,
+  nothing laid over the H (he asked). Layers in `public/brand/`, inline SVG for the ring and star
+  in `index.html`, choreography in `src/h-logo.js` with Motion 13.5 (`public/motion.js`), states
+  and a 2.4 s no-script failsafe in `h.css`. Nothing else in the logo moves.
 - **Then he deleted B** ("nah, delete B"). The Studio page is back at the lab root as the only
   design and the client link; `/a`, `/b`, `/g`, `/h` all 301 to `/`. B's files are in git history
   (commit ab362f1) if ever wanted.

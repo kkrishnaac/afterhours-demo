@@ -207,7 +207,7 @@ body.is-grid .project { width: auto; }
   .reel-wrap { height: auto; view-timeline: none; }
   .reel { position: static; height: auto; overflow: visible; display: block; padding: 5rem 0 0; }
   .reel__viewport { margin: 0; overflow: visible; }
-  .track { display: grid; grid-template-columns: 1fr; gap: 0.75rem; padding: 0 var(--gutter); animation: none; transform: none; }
+  .track { display: grid; grid-template-columns: 1fr; gap: 0.75rem; width: auto; padding: 0 var(--gutter); animation: none; transform: none; }
   .project { width: auto; aspect-ratio: 4 / 5; }
   .project--hero { aspect-ratio: auto; min-height: 70svh; }
   .hero-card { padding: 1.5rem; gap: 1rem; }
@@ -233,4 +233,5 @@ body.is-grid .project { width: auto; }
   .reel-wrap { height: auto; }
   .reel { position: static; height: auto; display: block; padding-top: 5rem; }
   .reel__viewport { overflow-x: auto; padding-bottom: 1rem; }
+  .track { width: auto; }
 }

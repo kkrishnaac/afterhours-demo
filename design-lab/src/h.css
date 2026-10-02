@@ -75,3 +75,41 @@ body { background: var(--bg); color: var(--paper); }
 .site-footer { display: none; }
 .page-footer__logo { width: clamp(150px, 22vw, 260px); height: auto; }
 .page-footer__row { margin-top: 2rem; }
+
+/* Krishna, 2026-10-01 late: no boxes anywhere except the photos. The lower sections sit
+   straight on the gradient as plain text with air between them. */
+.panels { padding: 6rem 0 5rem; }
+.panels__in { gap: 5rem; }
+.panel { background: transparent; border: 0; padding: 0; backdrop-filter: none; -webkit-backdrop-filter: none; border-radius: 0; }
+.panel__label { color: var(--navy); opacity: 1; }
+.cards li, .steps li, .now, .form { background: transparent; padding: 0; border-radius: 0; }
+.cards { gap: 2rem 2.5rem; }
+.cards li { min-height: 0; }
+.cards h3 { color: var(--navy); }
+.steps { gap: 2rem 2.5rem; }
+.steps span { opacity: 1; color: var(--navy); }
+.now { gap: 0.5rem; }
+.lists li, .facts li { border-left-color: rgba(11, 58, 128, 0.3); }
+.form__step { opacity: 0.7; }
+.form__actions { margin-top: 1.5rem; }
+.panel--book { gap: 3rem 4rem; }
+.project--panel { box-shadow: 0 24px 50px -30px rgba(3, 39, 90, 0.35); }
+@media (max-width: 1199px) { .panels { padding: 4rem 0 3rem; } .panels__in { gap: 3.5rem; } .cards { gap: 1.5rem; } .steps { gap: 1.5rem; } }
+
+/* Phones and tablets: the section links live in the header, always visible, one tap each. */
+.quick-nav { display: none; }
+@media (max-width: 1199px) {
+  .menu-trigger { display: none; }
+  .site-header { grid-template-columns: 1fr; gap: 0.75rem; padding: 0.75rem var(--gutter) 0.75rem; }
+  .site-header .layout-toggle { display: none; }
+  .site-header .header-right { display: none; }
+  .site-title { font-size: 1rem; font-weight: 500; }
+  .quick-nav { display: flex; gap: 0.5rem; overflow-x: auto; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter) 0.25rem; }
+  .quick-nav::-webkit-scrollbar { display: none; }
+  .quick-nav { -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent); }
+  .quick-nav a { flex: none; scroll-snap-align: start; display: inline-flex; align-items: center; min-height: 44px; padding: 0 1rem; border-radius: var(--r-button); background: var(--paper-20); color: var(--navy); font-size: 0.9375rem; font-weight: 500; text-decoration: none; white-space: nowrap; }
+  .quick-nav a:active { background: rgba(11, 58, 128, 0.2); }
+  .quick-nav__cta { background: var(--navy) !important; color: var(--white) !important; }
+  html { scroll-padding-top: 7.25rem; }
+  .reel { padding-top: 7.5rem; }
+}

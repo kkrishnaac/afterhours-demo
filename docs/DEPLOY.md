@@ -3,7 +3,7 @@
 **Production is live** on Cloudflare at
 https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `3ea51993` as of 2026-10-01).
 **Launch-ready apart from the domain** (final gate GO: `security/golive/2026-10-01-full-GO.md`). What is
-still open is in `HANDOFF.md` section 3; the domain steps are below. Infrastructure state:
+still open is in `HANDOFF.md` section 5; the domain steps are below. Infrastructure state:
 
 | Piece | State |
 |---|---|
@@ -18,7 +18,7 @@ No secret ever goes in this repo. Local secrets live in `.dev.vars` and `.env.*`
 
 ## Before the domain goes live (launch blockers)
 
-- [ ] **2FA confirmed** on Cloudflare, GitHub, registrar, Resend and the Gmail inbox (steps: `HANDOFF.md` section 3).
+- [ ] **2FA confirmed** on Cloudflare, GitHub, registrar, Resend and the Gmail inbox (steps: `HANDOFF.md` section 5).
 - [x] **Cloudflare notification for Worker errors** (alert policy "HARA website Worker errors", 2026-10-01).
 - [x] Security claims reduced to the two HARA confirmed (alarms; fobs and cards); photos replaced with licensed Unsplash originals (2026-10-01).
 - [ ] Lawyer review of the privacy policy and terms (recommended).

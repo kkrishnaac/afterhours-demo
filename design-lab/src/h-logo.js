@@ -4,7 +4,7 @@
 // through the middle of the H, up into the curl at the right. The ring is drawn behind it,
 // and the H opens in its wake into the logo's own H. When it reaches the end of the ring the
 // star bursts and the three sparkles twinkle into place. Nothing on the H moves or is laid over it.
-// About 1.6 s, once, on load. Uses Motion's vanilla animate() (window.Motion from /motion.js).
+// About 1.7 s from the load event, once. Uses Motion's vanilla animate() (window.Motion from /motion.js).
 (() => {
   const logo = document.querySelector('.logo-cut');
   const M = window.Motion;

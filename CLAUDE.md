@@ -9,15 +9,16 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
   (Cloudflare Worker `hara-website` in Krishna's account, version `3ea51993` as of 2026-10-01,
   D1 `hara-walkthroughs`, `noindex`). The old GitHub Pages URL
   (https://kkrishnaac.github.io/afterhours-demo/) redirects to production.
-- **Design lab (2026-10-01):** three alternate layouts for the client to choose from, live at
-  https://hara-design-lab.chaudharikrishna0415.workers.dev (Worker `hara-design-lab`, static, noindex).
-  Source in `design-lab/` (see the section below). The client's feedback on the live site: design OK,
-  **fonts too heavy**, wants "super professional, user friendly, good photos"; same logo, palette,
-  copy and photos, different template. Next session: implement the chosen one on the live site.
+- **Redesign (2026-10-01): the Studio design**, chosen by Krishna, live for the client at
+  https://hara-design-lab.chaudharikrishna0415.workers.dev (Worker `hara-design-lab`, static,
+  noindex, source `design-lab/`, see "Design lab" and "Hero logo intro" below). The client had
+  found the old site's fonts too heavy. Production still shows the old design until it is ported.
+  **Next session:** polish the hero logo intro with Krishna, then redo the print collateral in
+  `~/hara-print` in the Studio language, then port to production (`HANDOFF.md` sections 0 and 5).
 - **Status (2026-10-01): launch-ready apart from the domain.** Phase 5 QA done (Lighthouse mobile
   92 to 96, desktop 100, axe 0 violations, three engines + phone emulation, load test), full
   security gate GO (`security/golive/2026-10-01-full-GO.md`), 67 tests pass, tree clean.
-  Worker-error alert is set in Cloudflare. Left: Krishna's 2FA confirmation and HARA's confirmations (`HANDOFF.md` section 3), then the
+  Worker-error alert is set in Cloudflare. Left: Krishna's 2FA confirmation (`HANDOFF.md` section 5), then the
   domain (`docs/DEPLOY.md`). One page only: see Scope below.
 - **Reference only:** the original "Afterhours" design (commit `dea9337`) runs as a separate
   static Worker at https://afterhours-design.chaudharikrishna0415.workers.dev (`noindex`).
@@ -112,28 +113,58 @@ Stills only: no people, no before/after, no video.
 
 ## Design lab (`design-lab/`)
 
-The proposed redesign for client review, on a separate assets-only Worker (`hara-design-lab`,
-noindex): https://hara-design-lab.chaudharikrishna0415.workers.dev. `node design-lab/build.mjs`
+The Studio design, for client review, on a separate assets-only Worker (`hara-design-lab`,
+noindex): https://hara-design-lab.chaudharikrishna0415.workers.dev. It is a single page,
+`design-lab/src/index.html`, which is also the client link. Build: `node design-lab/build.mjs`
 expands `<x-include>`, `<i data-icon>` (Phosphor) and `<x-img id sizes alt>` (webp ladder from
-`design-lab/public/img`) into `design-lab/dist/`, writes `_headers` (noindex + CSP, `script-src
-'self'`) and `_redirects`; `cd design-lab && npx wrangler deploy` publishes it. Local preview:
-`python3 -m http.server 4340 --directory design-lab/dist`.
+`design-lab/public/img`) into `design-lab/dist/`, copies `src/*.css` and `src/*.js`, writes
+`_headers` (noindex + CSP, `script-src 'self'`) and `_redirects` (`/a`, `/b`, `/g`, `/h` 301 to `/`).
+Deploy: `cd design-lab && npx wrangler deploy` (the new version can take 10 to 15 s to show).
+Local preview: `python3 -m http.server 4340 --directory design-lab/dist`.
 
-History (2026-10-01): A, B, C (lighter re-skins) and D, E, F (Apple / IBM / BMW structures) were
-rejected; G rebuilt coreastudios.com's system for HARA at Krishna's request and he loved it; H is G
-in the live site's colours. The old A to G were removed from `src/` the same day (git history has
-them). A B direction after collection.industries was built and deleted the same night (commit
-ab362f1 has it). H is `index.html`, the only page and the client link. Files: `base.css`
-(palette + Hanken Grotesk),
-`g.css` (the Studio system: blur-in loader, spectrum glare, dial menu, reel, gradient blob, panels,
-clock, wordmark; Archivo display), `h.css` (imports g.css, HARA colours, navy-to-white glare),
-`g.js` (loader, glare, dial scroll-spy, grid toggle, image fade, Toronto clock, phone menu),
-`_form.html` (step-1 preview linking to the live form). Fonts: Hanken Grotesk and Archivo (OFL)
-stand in for Corea's TWK Lausanne and Record Disc.
-**To put the Studio design on the live site:** port `index.html` + `g.css`/`h.css`/`g.js` into `index.html`,
-`src/style.css` and `src/main.js`, keeping the real form (`src/quote.js`), the legal pages, the
-`x-photo` pipeline, the tests and the CSP (no inline scripts); decide the hero 3D logo build with
-Krishna (H has no logo build; the loader blur replaces it); then full QA + gate as before.
+Files: `index.html` (the page), `_logo.html` (generated hero logo layers, see "Hero logo intro"),
+`_form.html` (booking step 1 preview, links to the production form), `base.css` (palette tokens,
+Hanken Grotesk), `g.css` (the Studio system after coreastudios.com: dial menu, reel, panels,
+gradient blob, clock, buttons; Archivo display; also the loader and glare, now switched off),
+`h.css` (imports `g.css`; HARA colours and every change Krishna made, in order, with dated
+comments: white hero with no box, centred, solid header, phone link row, no boxes below the
+photos, white-to-navy colour run, navy footer with the white logo, the logo intro states),
+`g.js` (dial scroll-spy and its white-on-dark switch, reel/grid toggle, image fade, Toronto clock,
+phone menu; the loader and glare code is inert), `h-logo.js` (the logo intro). Fonts in
+`public/fonts`: Hanken Grotesk and Archivo (OFL, from `@fontsource-variable/*`), standing in for
+Corea's commercial TWK Lausanne and Record Disc.
+
+History (2026-10-01): directions A to F were rejected; G rebuilt coreastudios.com's system for HARA
+and Krishna loved it; H (G in HARA's colours) became the Studio design; a Collection-style B was
+built and deleted. All of them are in git history only (B: commit ab362f1; G: `git log --
+design-lab/src/g.html`).
+**To put the Studio design on production:** see `HANDOFF.md` section 5.
+
+## Hero logo intro (design lab, 2026-10-01)
+
+A one-time intro on the Studio page's hero logo, built to Krishna's corrections over three
+versions. It opens on a normal H (the logo H's own uprights, a straight crossbar). A small star
+appears at the ring's sharp tip beside the left upright, follows the ring's centre line the way
+the ring is drawn (down round the left end, along the front through the middle of the H, into
+the right curl), draws the ring behind it, and turns the H into the logo's H where it has passed.
+Then it bursts and the three sparkles twinkle in. About 1.7 s from the load event.
+
+- `design-lab/logo-layers.mjs` generates every layer from `src/logo-parts.js` (plus
+  `design-lab/logo-gaps.json`, the two gaps the ring cuts in the uprights) and writes
+  `design-lab/src/_logo.html`. Edit `CENTRE` (the star's path) or `CROSSBAR` there, never the
+  generated files. Run it, then `node design-lab/build.mjs`.
+- `design-lab/src/h-logo.js` is the choreography, on Motion 13.5's vanilla `animate()`
+  (`design-lab/public/motion.js` = `node_modules/motion/dist/motion.js`, `window.Motion`). The
+  ring is revealed by a stroke along the centre line in an SVG mask (`pathLength="1"`, dashoffset
+  1 to 0). The normal H and the real H pieces are clipped to opposite sides of the star with the
+  same edge, so only one H is ever visible and the uprights never change.
+- `design-lab/src/h.css` holds the resting states, a no-script failsafe (finished logo after
+  2.4 s) and reduced motion (finished logo at once).
+- `design-lab/logo-frames.mjs [url] [outDir] [desktop|phone] [ms,...]` captures cropped frames.
+  Look at them, desktop and phone, before and after every change.
+- Krishna's rules: nothing on the H moves or is laid over it (no jolt, shine or glints); the H
+  renders perfectly smooth; the star starts at the ring's sharp left tip and travels the way the
+  ring is drawn; sparkles appear in place after the cut; quick; no loader before it.
 
 ## Brand (2026-09-28: the client's own logo, navy palette)
 
@@ -202,38 +233,49 @@ only for now, security conscious, free walkthrough before every quote.
   The same line is the tagline in the footer under the logo (`.footer__tag`). Earlier candidate "Ready before you
   are." was replaced because it repeated "ready" from the headline.
   One CTA label everywhere: "Book a free walkthrough" ("Free walkthrough" in the nav under 400px).
-- Type: Mona Sans only on the live site. Headings at `font-stretch: 112%`, weight 560, tight tracking.
-  **Client (2026-10-01): the fonts are too heavy.** The design-lab variants use 420-500 weights at
-  normal width (A, C) or Plus Jakarta Sans (B); whichever is chosen sets the new rule. Hero lines
-  never wrap mid-sentence.
-- Shapes: interactive = pill; cards 24px; photos inside cards 16px; panels 32px. Nothing sharp.
+- Type: production uses Mona Sans (headings `font-stretch: 112%`, weight 560). **Client
+  (2026-10-01): too heavy.** The Studio design replaces it with Archivo for display (wide 112%,
+  weight 850, uppercase, used for the headline and section titles) and Hanken Grotesk for
+  everything else. Hero lines never wrap mid-sentence.
+- Shapes: production: pills, 24px cards, 16px photos, 32px panels. Studio: 4px buttons, 7px photo
+  cards, and no boxes anywhere except the photos (Krishna, 2026-10-01).
 - Motion: professional and quiet. Hero rises on load, sections settle in once, cards lift 4px
   (transform + opacity only), week grid wave, map light-up. Removed for good: loader, squeegee
   wordmark, photo wipes, button glint, clock pill, the night story, and any other 3D (the one
   exception is the hero logo build below).
-- Header: slim (54px) floating bar, always visible, aligned to the content column, links centred.
-- Light theme only ("white gives very clean vibes"). No background gradients. **Reversed by Krishna
-  on 2026-10-01 for the redesign:** he asked for animated colour gradients and the dark
-  coreastudios.com look (design lab `/g/`). Whichever direction he confirms sets the new rule.
-- Phone: native scroll, no pinning or parallax, `svh` units, services become a swipe row.
+- Header: production: slim floating bar. Studio: solid white bar; on phones the section links sit
+  in a scrollable row of 44px buttons under the company name, "Book a free walkthrough" filled navy,
+  no hamburger (Krishna: "super accessible" for customers).
+- Colour: production is light only. **Studio (Krishna, 2026-10-01):** white page and hero; a fixed
+  gradient (no animation) that stays white until the Reception and lounges card, then runs sky to
+  dark navy; everything below the photos sits on dark navy with white type; the page ends on navy
+  with the white logo. No colour sweep on navigation, no blur-in loader, no bottom clock bar.
+- Phone: native scroll, no pinning or parallax, `svh` units. In the Studio design the photo cards
+  stack full width and fill with their photo; blur, backdrop filters and the drifting gradient are
+  off below 1200px so scrolling stays tight (Krishna reported a "loose" scroll on his iPhone).
 - Logo: the client's original (2026-09-28), shown off in the hero. This reverses his earlier "no
   swooshes, sparkles or gradients" wish; it is his call. Four rounds of new designs were rejected.
-- 3D: only the one-time hero logo build, which ends on crisp vector (he had rejected 3D as "not
-  crisp" before). Previously rejected: sky-blue + warm beige gradient palette.
+- 3D: production has the one-time three.js hero logo build. The Studio design replaces it with the
+  vector logo intro (see "Hero logo intro"); ask Krishna before removing the 3D build at the port.
+  Previously rejected: sky-blue + warm beige gradient palette.
 - Security section (Krishna, 2026-10-01, from the client): HARA's security role is alarming and
   disarming, and responsibility for key fobs and access cards. The band now makes exactly those
   two claims; the earlier six (same team, confidential by default, lock-up check, visit log) were
   removed as unconfirmed. The "Why HARA" security card matches.
 
-## Print collateral (separate project, later session)
+## Print collateral (next session, after the logo intro)
 
-`~/hara-print` (local git, not pushed): business card + tri-fold brochure, `python3 build.py`, 102
-preflight checks passing on 2026-10-01, PDF/X-1a via a user-built Ghostscript. Its content
-(`haraprint/content.py`) is now **stale**: old headline "Every desk ready. Every door locked.",
-six security claims, one phone number, and `haracleaning.ca` as the printed URL and QR target (the
-domain Krishna was buying on 2026-10-01; confirm). Refresh it to match the site and the chosen
-design before anything goes to print. Krishna's rule there: only the website's details on the card
-(no personal name or title). Memory: `hara-print-collateral.md`.
+`~/hara-print` (its own local git, not pushed): business card + letter tri-fold brochure,
+`python3 build.py`, ReportLab in DeviceCMYK, PDF/X-1a via a user-built Ghostscript, 100+
+preflight checks (last run: 103 pass, 1 expected fail, the URL check, until the domain resolves).
+Content (`haraprint/content.py`) is current: "Tomorrow starts clean.", (437) 980-3464 only, the two
+confirmed security practices. Still old: the layout and type (Mona Sans, rounded cards), the
+photos (AI stills; replace with the Unsplash masters in `assets/raw`), and the wording calling the
+photos generated (`build.py`, `haraprint/docs.py`). Redraw both pieces in the Studio language
+(Archivo display, Hanken Grotesk body, navy and white, no boxes, photos first, navy end). Confirm
+`haracleaning.ca` with Krishna for the printed URL and QR. Krishna's rules: only the website's
+details on the card (no personal name or title); show PROOF PDFs as images before anything is
+final. Details: `HANDOFF.md` section 3. Memory: `hara-print-collateral.md`.
 
 ## Conventions
 
@@ -300,11 +342,21 @@ scopes include D1, Workers and Turnstile widgets). Connecting the domain: `docs/
   `wrangler d1 time-travel restore` has no `-y`. A new `workers.dev` name can 404 for ~1 minute.
 - Vite's "chunk over 500 kB" warning for `hero-build` is expected (three.js, lazy loaded).
 - Logo pipeline venv doesn't survive sessions: recreate with fonttools, brotli, skia-pathops,
-  pillow, numpy, scipy, potracer (`HANDOFF.md` section 7).
+  pillow, numpy, scipy, potracer.
 - Files in `docs/client/` can be viewed through the dev server (`/docs/client/...`), which is how
   the logo sheets and share image are rendered.
 - The Write tool can turn ` `-style escapes in JS source into literal characters; write such
   regexes with Python or check the bytes afterwards.
 - `git push` of large image sets 400s without `http.postBuffer 524288000`.
+- Motion's vanilla `animate()` on `scale`/`rotate`/`x` writes the element's whole `transform`, so
+  it wipes any position you set yourself. Keep position on a wrapper (or, for SVG, set the
+  `transform` attribute yourself in `onUpdate`, as `h-logo.js` does for the star).
+- Sparkles drawn on full-size logo layers must scale from their own centre: `transform-origin`
+  per layer in percentages of the logo box (`h.css`), or they fly across the logo.
+- Two shapes that only meet edge to edge show a hairline seam when antialiased at small sizes;
+  overlap same-colour fills by several units (the starting H's gap fills overlap by 9).
+- Krishna reviews on his iPhone and sends WhatsApp screen recordings to `~/Downloads`. `ffmpeg` is
+  not installed: read them with Python OpenCV (`cv2`) into a contact sheet (`HANDOFF.md` section 6).
+  His screenshots can show a Safari-cached old version; check before "fixing" something twice.
 - Higgsfield spend gate: paid runs need Krishna to type `yes` in a terminal. Start them with
   `run_in_terminal` AND show the terminal pane.

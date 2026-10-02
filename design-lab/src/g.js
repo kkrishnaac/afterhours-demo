@@ -45,6 +45,7 @@
     const targets = items.map((li) => document.querySelector(li.querySelector('a').getAttribute('href')));
     const setActive = (i) => {
       menu.style.setProperty('--dial', `${-angles[i]}deg`);
+      menu.parentElement.style.setProperty('--dial', `${-angles[i]}deg`); // the knob turns with the arc (h.css)
       items.forEach((li, j) => {
         const d = Math.abs(i - j);
         li.classList.toggle('is-active', d === 0);
@@ -64,6 +65,12 @@
     // While the page moves, only the active item and the logo stay (their .scrolling state).
     let scrollTimer = 0;
     const dial = menu.closest('.main-menu');
+    // Krishna, 2026-10-01 late: the knob at the pivot turns into the logo mark once the hero's
+    // logo is out of sight (clipped by the reel or scrolled away), and back when it returns.
+    const heroLogo = document.querySelector('.logo-cut');
+    if (heroLogo && 'IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => dial.classList.toggle('is-mark', !e.isIntersecting)).observe(heroLogo);
+    }
     addEventListener('scroll', () => {
       const wrap = document.querySelector('.reel-wrap');
       dial.classList.toggle('on-dark', wrap && scrollY > wrap.offsetTop + wrap.offsetHeight * 0.84);

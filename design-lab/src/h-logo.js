@@ -3,13 +3,16 @@
 // upright and follows the ring's own path: down and round the left end, along the front
 // through the middle of the H, up into the curl at the right. The ring is drawn behind it,
 // and the H opens in its wake into the logo's own H. When it reaches the end of the ring the
-// star bursts and the three sparkles twinkle into place. Nothing on the H moves or is laid over it.
+// star winks out and the three sparkles twinkle on in place. Nothing on the H moves or is laid over it.
 // About 1.7 s from the load event, once. Uses Motion's vanilla animate() (window.Motion from /motion.js).
+// html.intro-in marks the start, so the wide-screen dial menu fades in alongside it (h.css).
 (() => {
+  const html = document.documentElement;
+  html.classList.add('intro-js'); // the dial waits for intro-in rather than its CSS failsafe
   const logo = document.querySelector('.logo-cut');
   const M = window.Motion;
-  if (!logo) return;
-  if (!M || matchMedia('(prefers-reduced-motion: reduce)').matches) { logo.classList.add('is-live', 'is-done'); return; }
+  if (!logo) { html.classList.add('intro-in'); return; }
+  if (!M || matchMedia('(prefers-reduced-motion: reduce)').matches) { logo.classList.add('is-live', 'is-done'); html.classList.add('intro-in'); return; }
   logo.classList.add('is-live'); // takes over from the CSS failsafe
 
   const { animate } = M;
@@ -45,6 +48,7 @@
   };
 
   const run = async () => {
+    html.classList.add('intro-in');
     const start = track.getPointAtLength(0);
     // The star appears at the ring's sharp tip.
     await animate(0, 1, { duration: 0.15, ease: 'easeOut', onUpdate: (k) => setStar(start.x, start.y, 0, k, k) }).finished;
@@ -52,12 +56,18 @@
     solid.style.clipPath = 'inset(0 0 0 100%)';
     for (const el of pieces) el.style.clipPath = 'none';
 
-    // At the end of the ring the star bursts, and the sparkles twinkle into place.
+    // At the end of the ring the star winks out where it stands (it no longer swells over the
+    // H's corner), and the sparkles twinkle on in their own places (Krishna, 2026-10-01: not out
+    // of the H). Nearest the star first: the big one, the low one, then the far one. Each opens
+    // from its own centre with a small turn, catches the light, and settles; nothing travels.
     const end = track.getPointAtLength(L);
-    animate(0, 1, { duration: 0.3, ease: 'easeOut', onUpdate: (k) => setStar(end.x, end.y, 220 + k * 90, 1 + Math.sin(k * Math.PI) * 0.9 - k * 0.6, 1 - k) });
-    sparks.forEach((s, i) => {
-      animate(s, { opacity: [0, 1, 1], scale: [0, 1.25, 1], rotate: [-45, 8, 0] }, { duration: 0.5, delay: 0.04 + i * 0.07, ease: 'easeOut' });
-      animate(s, { filter: ['drop-shadow(0 0 0 rgba(10,149,239,0))', 'drop-shadow(0 0 10px rgba(10,149,239,0.95))', 'drop-shadow(0 0 0 rgba(10,149,239,0))'] }, { duration: 0.65, delay: 0.04 + i * 0.07 });
+    animate(0, 1, { duration: 0.24, ease: 'easeIn', onUpdate: (k) => setStar(end.x, end.y, 220 + k * 60, 1 - k * 0.7, 1 - k) });
+    const glint = (blur, a, b) => `brightness(${b}) drop-shadow(0 0 ${blur}px rgba(155,220,255,${a}))`;
+    [0, 2, 1].forEach((n, i) => {
+      const s = sparks[n]; const delay = 0.05 + i * 0.09;
+      animate(s, { opacity: [0, 1, 1, 1], scale: [0, 1.18, 0.96, 1], rotate: [-30, 0, 0, 0] },
+        { duration: 0.55, delay, times: [0, 0.45, 0.75, 1], ease: ['easeOut', 'easeInOut', 'easeOut'] });
+      animate(s, { filter: [glint(0, 0, 1), glint(9, 0.95, 1.35), glint(0, 0, 1)] }, { duration: 0.6, delay, times: [0, 0.35, 1] });
     });
     setTimeout(() => logo.classList.add('is-done'), 900);
   };

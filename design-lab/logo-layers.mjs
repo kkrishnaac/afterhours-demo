@@ -5,8 +5,9 @@
 // The intro (src/h-logo.js) opens on a normal H, then a star follows the ring's centre line from
 // its sharp tip by the left upright, draws the ring behind it and turns the H into the logo's H
 // where it has passed. To change the star's path, edit CENTRE below. To change the starting H's
-// crossbar, edit CROSSBAR. Everything else comes from the logo itself.
-import { writeFileSync, readFileSync } from 'node:fs';
+// crossbar, edit CROSSBAR; the uprights, LEFT, RIGHT, TOP and FOOT. Everything else comes from
+// the logo itself.
+import { writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { PARTS, VIEWBOX } from '../src/logo-parts.js';
 
@@ -28,24 +29,38 @@ const out = (name, text) => { writeFileSync(resolve(brand, name), text); console
 out('logo-rest.svg', draw(PARTS.filter((p) => !['h', 'swoosh', 'spark1', 'spark2', 'spark3'].includes(p.id))));
 
 // 2. The logo's H as its three pieces (the ring cuts it in two places), one gradient across the H.
+//    Squared (Krishna, 2026-10-01): both uprights are plain rectangles with level tops and
+//    straight sides. The traced right upright had a top that slanted up to the right and an
+//    upper half 7.5 units narrower than its lower half, which read as crooked. Only the ring's
+//    cut and the crossbar's top edge are taken from the traced H; the starting H (step 3) uses
+//    the same rectangles, so the uprights never change when the star turns one H into the other.
 const h = part('h');
 const hGrad = gradOf('g', h);
-h.d.split(/(?=M)/).filter(Boolean).forEach((d, i) => out(`logo-h-${'abc'[i]}.svg`, svg(hGrad, `<path d="${d}" fill="url(#g)"/>`)));
+const LEFT = [401, 522]; const RIGHT = [692.5, 808.5]; const TOP = 274.25; const FOOT = 678;
+const [ta, tb, tc] = h.d.split(/(?=M)/).filter(Boolean);
+// The traced commands strictly after point `from`, up to and including point `to`.
+const between = (d, from, to) => {
+  const i = d.indexOf(from); const j = d.indexOf(to, i + from.length);
+  if (i < 0 || j < 0) throw new Error(`H path changed: ${from} .. ${to} not found`);
+  return d.slice(i + from.length, j + to.length);
+};
+// a: the left upright below the cut. b: the right upright below the cut (its cut edge carried on
+// to the right side at the same slope). c: everything above the cut (the cut carried on to the
+// right side at the same slope).
+const pieces = [
+  `M${LEFT[0]} ${FOOT}L401 628.69${between(ta, '401.00 628.69', '521.27 592.61')}L${LEFT[1]} 592.35L${LEFT[1]} ${FOOT}Z`,
+  `M${RIGHT[0]} ${FOOT}L${RIGHT[0]} 530.46L692.88 530.20${between(tb, '692.88 530.20', '804.91 454.82')}L${RIGHT[1]} 452.18L${RIGHT[1]} ${FOOT}Z`,
+  `M${LEFT[0]} ${TOP}L${LEFT[1]} ${TOP}L${LEFT[1]} 459.6L522.68 459.79${between(tc, '522.68 459.79', '691.88 411.88')}` +
+    `L${RIGHT[0]} 411.5L${RIGHT[0]} ${TOP}L${RIGHT[1]} ${TOP}L${RIGHT[1]} 364.62L800.62 370.29${between(tc, '800.62 370.29', '401.84 536.17')}L${LEFT[0]} 536.2Z`,
+];
+pieces.forEach((d, i) => out(`logo-h-${'abc'[i]}.svg`, svg(hGrad, `<path d="${d}" fill="url(#g)"/>`)));
 
-// 3. The starting H: the logo H's own uprights (crossbar clipped away), the two gaps the ring
-//    cuts filled from logo-gaps.json (traced from the H path, overlapping by 9 units so no seam
-//    shows), the right upright squared through the cut, and a straight crossbar.
+// 3. The starting H: the same two uprights, uncut, and a straight crossbar (one path, so the
+//    overlaps are a plain union with no seams).
 const CROSSBAR = { x: 519, y: 443, w: 177, h: 66 };
-const gaps = JSON.parse(readFileSync(resolve(here, 'logo-gaps.json'), 'utf8'));
-const rightPts = gaps.right.slice(1, -1).split('L').map((s) => s.split(' ').map(Number));
-const half = rightPts.length / 2;
-const [tl, tr] = [rightPts[0], rightPts[half - 1]];
-const bl = rightPts.at(-1);
-const squareRight = `M${tl[0]} ${tl[1]}L${tr[0]} ${tr[1]}L808.4 462.5L${bl[0]} ${bl[1]}Z`;
-const uprights = '<clipPath id="u"><rect x="390" y="240" width="132.6" height="450"/><rect x="692.2" y="240" width="130" height="450"/></clipPath>';
-out('logo-h-normal.svg', svg(hGrad + uprights,
-  `<g fill="url(#g)"><g clip-path="url(#u)"><path fill-rule="evenodd" d="${h.d}"/><path d="${gaps.left}"/><path d="${gaps.right}"/><path d="${squareRight}"/></g>` +
-  `<rect x="${CROSSBAR.x}" y="${CROSSBAR.y}" width="${CROSSBAR.w}" height="${CROSSBAR.h}"/></g>`));
+const rect = (x0, y0, x1, y1) => `M${x0} ${y0}H${x1}V${y1}H${x0}Z`;
+out('logo-h-normal.svg', svg(hGrad, `<path fill="url(#g)" d="${rect(LEFT[0], TOP, LEFT[1], FOOT)}${rect(RIGHT[0], TOP, RIGHT[1], FOOT)}` +
+  `${rect(CROSSBAR.x, CROSSBAR.y, CROSSBAR.x + CROSSBAR.w, CROSSBAR.y + CROSSBAR.h)}"/>`));
 
 // 4. The three sparkles, each on its own full-size layer so it can twinkle in place.
 for (const id of ['spark1', 'spark2', 'spark3']) out(`logo-${id}.svg`, draw([part(id)]));
@@ -54,6 +69,8 @@ for (const id of ['spark1', 'spark2', 'spark3']) out(`logo-${id}.svg`, draw([par
 const s1 = part('spark1'); const [a, b, c, d] = s1.bbox;
 out('logo-star.svg', svg('<radialGradient id="s" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.35" stop-color="#9BDCFF"/><stop offset="1" stop-color="#0A95EF"/></radialGradient>',
   `<path fill-rule="evenodd" d="${s1.d}" fill="url(#s)"/>`, `${a} ${b} ${c - a} ${d - b}`));
+// 5b. The phone menu tab's icon (index.html, .tabnav__spark): the same sparkle, solid sky.
+out('logo-sparkle.svg', svg('', `<path fill-rule="evenodd" d="${s1.d}" fill="#0A95EF"/>`, `${a} ${b} ${c - a} ${d - b}`));
 
 // 6. The ring's centre line, in the direction the ring is drawn: from the sharp tip beside the
 //    left upright, down round the left end, along the front through the H, into the right curl.
@@ -86,9 +103,9 @@ ${layer('logo-cut__piece logo-cut__c', 'logo-h-c.svg')}
                   <g class="logo-cut__star" transform="translate(${CENTRE[0][0]} ${CENTRE[0][1]}) scale(0)"><circle r="46" fill="url(#lc-glow)"/><image href="/brand/logo-star.svg" x="-28" y="-28" width="56" height="56"/></g>
                 </svg>
 ${layer('logo-cut__solid', 'logo-h-normal.svg')}
-${layer('logo-cut__spark', 'logo-spark1.svg')}
-${layer('logo-cut__spark', 'logo-spark2.svg')}
-${layer('logo-cut__spark', 'logo-spark3.svg')}
+${layer('logo-cut__spark logo-cut__spark--1', 'logo-spark1.svg')}
+${layer('logo-cut__spark logo-cut__spark--2', 'logo-spark2.svg')}
+${layer('logo-cut__spark logo-cut__spark--3', 'logo-spark3.svg')}
               </div>
 `;
 writeFileSync(resolve(here, 'src/_logo.html'), partial);

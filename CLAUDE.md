@@ -127,10 +127,11 @@ Files: `index.html` (the page), `_logo.html` (generated hero logo layers, see "H
 Hanken Grotesk), `g.css` (the Studio system after coreastudios.com: dial menu, reel, panels,
 gradient blob, clock, buttons; Archivo display; also the loader and glare, now switched off),
 `h.css` (imports `g.css`; HARA colours and every change Krishna made, in order, with dated
-comments: white hero with no box, centred, solid header, phone link row, no boxes below the
+comments: white hero with no box, centred, solid header, the phone menu tab, no boxes below the
 photos, white-to-navy colour run, navy footer with the white logo, the logo intro states),
 `g.js` (dial scroll-spy and its white-on-dark switch, reel/grid toggle, image fade, Toronto clock,
-phone menu; the loader and glare code is inert), `h-logo.js` (the logo intro). Fonts in
+the old phone overlay; the loader, glare and overlay code is inert), `h-logo.js` (the logo intro),
+`tab-menu.js` (the menu tab below 1200px). Fonts in
 `public/fonts`: Hanken Grotesk and Archivo (OFL, from `@fontsource-variable/*`), standing in for
 Corea's commercial TWK Lausanne and Record Disc.
 
@@ -147,12 +148,13 @@ versions. It opens on a normal H (the logo H's own uprights, a straight crossbar
 appears at the ring's sharp tip beside the left upright, follows the ring's centre line the way
 the ring is drawn (down round the left end, along the front through the middle of the H, into
 the right curl), draws the ring behind it, and turns the H into the logo's H where it has passed.
-Then it bursts and the three sparkles twinkle in. About 1.7 s from the load event.
+Then it winks out and the three sparkles twinkle on in place. About 1.7 s from the load event.
+The H's uprights are clean rectangles with level tops (Krishna, 2026-10-01 late: the traced right
+upright looked crooked); the header mark, footer logo and print still carry the traced H.
 
-- `design-lab/logo-layers.mjs` generates every layer from `src/logo-parts.js` (plus
-  `design-lab/logo-gaps.json`, the two gaps the ring cuts in the uprights) and writes
-  `design-lab/src/_logo.html`. Edit `CENTRE` (the star's path) or `CROSSBAR` there, never the
-  generated files. Run it, then `node design-lab/build.mjs`.
+- `design-lab/logo-layers.mjs` generates every layer from `src/logo-parts.js` and writes
+  `design-lab/src/_logo.html`. Edit `CENTRE` (the star's path), `CROSSBAR`, or the uprights
+  (`LEFT`, `RIGHT`, `TOP`, `FOOT`) there, never the generated files. Run it, then `node design-lab/build.mjs`.
 - `design-lab/src/h-logo.js` is the choreography, on Motion 13.5's vanilla `animate()`
   (`design-lab/public/motion.js` = `node_modules/motion/dist/motion.js`, `window.Motion`). The
   ring is revealed by a stroke along the centre line in an SVG mask (`pathLength="1"`, dashoffset
@@ -243,9 +245,14 @@ only for now, security conscious, free walkthrough before every quote.
   (transform + opacity only), week grid wave, map light-up. Removed for good: loader, squeegee
   wordmark, photo wipes, button glint, clock pill, the night story, and any other 3D (the one
   exception is the hero logo build below).
-- Header: production: slim floating bar. Studio: solid white bar; on phones the section links sit
-  in a scrollable row of 44px buttons under the company name, "Book a free walkthrough" filled navy,
-  no hamburger (Krishna: "super accessible" for customers).
+- Header: production: slim floating bar. Studio (Krishna, 2026-10-01 late, many rounds): no
+  company name anywhere. Wide screens: toggle + CTA bar; the hero sized to the screen and centred;
+  the dial fades in with the logo intro; a navy knob at the dial's pivot on the hero, turning into
+  the logo mark once the hero logo is out of sight (tap: back to the hero). Phones: no header; a
+  top bar in the page's own colour (white, sky, navy as the page) with "Menu" in deep navy or white
+  slides in only while scrolling down past the hero, and drops the six options as buttons. History:
+  an always-open row of section buttons ("super accessible"), then a tab at the bottom, then a
+  gradient bar with a white box; each replaced at his request. Details: HANDOFF.md section 2.
 - Colour: production is light only. **Studio (Krishna, 2026-10-01):** white page and hero; a fixed
   gradient (no animation) that stays white until the Reception and lounges card, then runs sky to
   dark navy; everything below the photos sits on dark navy with white type; the page ends on navy
@@ -352,9 +359,14 @@ scopes include D1, Workers and Turnstile widgets). Connecting the domain: `docs/
   it wipes any position you set yourself. Keep position on a wrapper (or, for SVG, set the
   `transform` attribute yourself in `onUpdate`, as `h-logo.js` does for the star).
 - Sparkles drawn on full-size logo layers must scale from their own centre: `transform-origin`
-  per layer in percentages of the logo box (`h.css`), or they fly across the logo.
+  per layer in percentages of the logo box (`h.css`), or they fly across the logo. Target them by
+  class (`.logo-cut__spark--1`), not `:nth-of-type`: they are the 6th to 8th `img` in the stack.
 - Two shapes that only meet edge to edge show a hairline seam when antialiased at small sizes;
   overlap same-colour fills by several units (the starting H's gap fills overlap by 9).
+- iPhone Safari tints the strip behind the clock from the background-color of a fixed bar at the
+  top (not its background-image). The phone menu bar sets its background-color to the page colour
+  at its top edge every frame (`tab-menu.js`); a navy fallback colour once turned that strip navy
+  over the white page.
 - Krishna reviews on his iPhone and sends WhatsApp screen recordings to `~/Downloads`. `ffmpeg` is
   not installed: read them with Python OpenCV (`cv2`) into a contact sheet (`HANDOFF.md` section 6).
   His screenshots can show a Safari-cached old version; check before "fixing" something twice.

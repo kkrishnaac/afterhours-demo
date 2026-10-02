@@ -13,28 +13,48 @@
   <script src="/g.js" defer></script>
   <script src="/motion.js" defer></script>
   <script src="/h-logo.js" defer></script>
+  <script src="/tab-menu.js" defer></script>
 </head>
 <body>
   <div id="glare-overlay" aria-hidden="true"><div class="glare-wipe"><div class="glare-beam glare-beam--spectrum"></div></div></div>
   <a class="sr-only" href="#main">Skip to content</a>
 
   <header class="site-header">
-    <a class="site-title" href="#top" translate="no">HARA Facilities Cleaning</a>
     <div class="layout-toggle" role="group" aria-label="View">
       <button class="button toggle-button square-button is-active" type="button" data-view="list" aria-pressed="true" aria-label="Reel view"><i data-icon="rows"></i></button>
       <button class="button toggle-button square-button" type="button" data-view="grid" aria-pressed="false" aria-label="Grid view"><i data-icon="grid-four"></i></button>
     </div>
     <div class="header-right">
       <a class="button" href="#walkthrough" data-glare>Book a free walkthrough</a>
-      <button class="button square-button menu-trigger" type="button" aria-controls="nav-overlay" aria-expanded="false" aria-label="Open menu"><i data-icon="list"></i></button>
     </div>
-    <nav class="quick-nav" aria-label="Sections">
-      <a href="#services">Services</a><a href="#hours">Hours</a><a href="#security">Security</a><a href="#process">How it works</a><a href="#areas">Areas</a><a class="quick-nav__cta" href="#walkthrough">Book a free walkthrough</a>
-    </nav>
   </header>
 
+  <!-- Phones and narrow windows: a bar in the page's own colour slides in at the top while scrolling down past the hero (tab-menu.js). -->
+  <div class="tabnav" data-tabnav>
+    <div class="tabnav__veil" hidden></div>
+    <div class="tabnav__bar">
+      <button class="tabnav__tab" type="button" aria-expanded="false" aria-controls="tabnav-menu"><span class="tabnav__spark" aria-hidden="true"></span><span class="tabnav__label">Menu</span></button>
+    </div>
+    <nav class="tabnav__menu" id="tabnav-menu" aria-label="Sections" hidden>
+      <ul>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#hours">Hours</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#process">How it works</a></li>
+        <li><a href="#areas">Areas</a></li>
+        <li><a class="tabnav__cta" href="#walkthrough">Book a free walkthrough</a></li>
+      </ul>
+    </nav>
+  </div>
+
   <nav class="main-menu" aria-label="Sections">
-    <a class="logo" href="#top" aria-label="HARA, back to top"><img class="logo-white" src="/brand/hara-mark.svg" alt="" width="72" height="72" /></a>
+    <a class="logo dial-knob" href="#services" aria-label="Back to the top"><img class="dial-knob__mark logo-white" src="/brand/hara-mark.svg" alt="" width="72" height="72" /><svg class="dial-knob__dial" viewBox="-36 -36 72 72" width="72" height="72" aria-hidden="true" focusable="false">
+      <defs><linearGradient id="dial-navy" gradientUnits="userSpaceOnUse" x1="0" y1="-27" x2="0" y2="27"><stop offset="0" stop-color="#0B3A80" /><stop offset="1" stop-color="#03275A" /></linearGradient></defs>
+      <circle class="dial-knob__face" r="27" />
+      <g class="dial-knob__ticks"><line x1="16" x2="22" transform="rotate(-44)" /><line x1="16" x2="22" transform="rotate(-22)" /><line x1="16" x2="22" /><line x1="16" x2="22" transform="rotate(22)" /><line x1="16" x2="22" transform="rotate(44)" /></g>
+      <line class="dial-knob__pointer" x1="14" x2="24" />
+      <image href="/brand/logo-sparkle.svg" x="-7" y="-7" width="14" height="14" />
+    </svg></a>
     <ul class="menu" data-dial>
       <li class="menu-item"><a href="#services" data-glare>Services</a></li>
       <li class="menu-item"><a href="#hours" data-glare>Hours</a></li>
@@ -43,22 +63,6 @@
       <li class="menu-item"><a href="#walkthrough" data-glare>Book</a></li>
     </ul>
   </nav>
-
-  <div id="nav-overlay" hidden>
-    <div class="gradient-blob gradient-blob--nav" aria-hidden="true"></div>
-    <div class="nav-overlay__in">
-      <button class="button square-button nav-overlay__close" type="button" aria-label="Close menu"><i data-icon="x"></i></button>
-      <ul class="nav-overlay__links">
-        <li><a href="#services">Services</a></li>
-        <li><a href="#hours">Hours</a></li>
-        <li><a href="#security">Security</a></li>
-        <li><a href="#process">How it works</a></li>
-        <li><a href="#areas">Areas</a></li>
-        <li><a href="#walkthrough">Book a free walkthrough</a></li>
-      </ul>
-      <p class="nav-overlay__contact"><a href="tel:+14379803464">(437) 980-3464</a><a href="mailto:harafacilitiescleaning@gmail.com">harafacilitiescleaning@gmail.com</a></p>
-    </div>
-  </div>
 
   <main id="main" class="page-wrap" tabindex="-1">
     <section class="reel-wrap" id="services" aria-labelledby="services-title">

@@ -122,7 +122,7 @@ write secrets or account security status into this public repo.
 |---|---|
 | Production URL | https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `3ea51993`, deployed 2026-10-01 from commit `main`) |
 | Scope | **One page** plus privacy, terms, accessibility and 404. Krishna, 2026-10-01: "the client only wants a simple 1 page website." The multi-page build (Services, Security, FAQ, About, Contact, Service areas, six city pages) and the Google Business Profile pack are out of scope; archived in git tag `multi-page-archive`; the pack is parked in `docs/client/` |
-| Contact details | Real: (416) 990-3995, harafacilitiescleaning@gmail.com (from Krishna, 2026-10-01), on every page |
+| Contact details | Live site: (416) 990-3995 (+ 437 second), harafacilitiescleaning@gmail.com. **Krishna, 2026-10-01 evening: only (437) 980-3464 should be on the website.** The design lab and print already use it; the live site changes when the redesign is ported |
 | Hours | None shown: HARA has no set hours (every day, any time a contract needs). The page's "Any day. Any time." covers it |
 | Form | Live, stores to D1, `EMAIL_MODE=hold` until the domain can send email. Requests will go to harafacilitiescleaning@gmail.com (`LEAD_TO_EMAIL` set 2026-10-01; `EMAIL_FROM` waits for the domain). 0 real requests at last check |
 | Secrets in the Worker | `TURNSTILE_SECRET_KEY` only |

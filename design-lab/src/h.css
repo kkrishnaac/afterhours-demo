@@ -141,3 +141,11 @@ body.is-grid .reel-wrap { background: linear-gradient(180deg, var(--bg) 0%, var(
 .main-menu.on-dark .logo-white { filter: brightness(0) invert(1); }
 .main-menu.on-dark .menu-item a { color: var(--white); }
 .main-menu.on-dark .menu-item.is-active a { background: rgba(255, 255, 255, 0.18); }
+
+/* Hero content centred (Krishna, 2026-10-01 late): logo, headline, line, buttons all on the middle axis. */
+.hero-card { align-items: center; text-align: center; padding-left: 3cqi; }
+.hero-card .project-name { max-width: 10em; }
+.hero-card__sub { margin-inline: auto; }
+.hero-card .buttons-wrap { justify-content: center; }
+.hero-card__logo { margin-inline: auto; }
+@media (max-width: 1199px) { .hero-card { padding: 1.5rem 0.25rem 1rem; } }

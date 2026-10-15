@@ -7,9 +7,9 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
 
 - **Production (live):** https://haracleaning.ca since 2026-10-14 (Cloudflare Worker
   `hara-website` in Krishna's account, version `d31549ec`, custom domains for the apex and `www`,
-  D1 `hara-walkthroughs`, indexable). It also still answers on
-  https://hara-website.chaudharikrishna0415.workers.dev until `workers_dev` goes off. The old GitHub Pages URL
-  (https://kkrishnaac.github.io/afterhours-demo/) redirects to production.
+  D1 `hara-walkthroughs`, indexable; version `379aa2ab`). workers.dev is off since 2026-10-14
+  (404). The old GitHub Pages URL (https://kkrishnaac.github.io/afterhours-demo/) redirects to
+  https://haracleaning.ca.
 - **The Studio design is live on production (2026-10-01, late):** Krishna chose it in the design
   lab (https://hara-design-lab.chaudharikrishna0415.workers.dev, source `design-lab/`, see "Design
   lab" and "Hero logo intro" below) and asked for it on the live site the same night. The port
@@ -20,8 +20,8 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
   to end, axe 0 violations, three engines, Lighthouse phone 97 / desktop 100, security gate GO
   (`security/golive/2026-10-01-full-GO.md`). The domain `haracleaning.ca` was bought and connected
   on 2026-10-14 (`HANDOFF.md` section 3). Left: Krishna's 2FA confirmation and the domain checklist
-  in `docs/DEPLOY.md` (DNSSEC, workers.dev off, Search Console, print rebuild). Email is live since 2026-10-14. One page only: see Scope below.
-- **Next session:** the rest of the domain checklist (`HANDOFF.md` section 3). Print is final: the business card
+  done (`docs/DEPLOY.md`): DNSSEC, workers.dev off, Search Console and Bing, email, print rebuilt. Left: the Cloudflare beacon and the client's print sign-off. One page only: see Scope below.
+- **Next session:** whatever Krishna asks; open items in `HANDOFF.md` sections 0 and 5. Print is final: the business card
   (2026-10-02, `~/hara-print` commit `6758db5`: hero front, footer back) and the brochure as built.
 - **Reference only:** the original "Afterhours" design (commit `dea9337`) runs as a separate
   static Worker at https://afterhours-design.chaudharikrishna0415.workers.dev (`noindex`).

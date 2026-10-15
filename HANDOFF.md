@@ -1,30 +1,28 @@
 # Handoff: HARA website and print collateral
 
-Updated 2026-10-02, after the business-card colour session (the long 2026-10-01 session before it). Read in this order: this file, `CLAUDE.md`
+Updated 2026-10-14, after the domain session (haracleaning.ca live, email on, print rebuilt). Read in this order: this file, `CLAUDE.md`
 (especially "Studio on production", "Print collateral", "Design decisions", "Gotchas"),
 `~/hara-print/README.md` for the print work, and `docs/DEPLOY.md` for the domain.
 
 **State in one paragraph.** The **Studio** design (the coreastudios.com system rebuilt in HARA's
-colours, approved by Krishna in the design lab) is **live on production**:
-https://hara-website.chaudharikrishna0415.workers.dev (Worker version `4411dbf9`), with the real
-four-step form, the legal pages and the same CSP. Security gate GO, Lighthouse phone 97 and
+colours, approved by Krishna in the design lab) is **live on production** at
+**https://haracleaning.ca** (Worker `hara-website`, version `379aa2ab`; workers.dev off), with the
+real four-step form emailing HARA and the requester, the legal pages and the same CSP. Security gate GO, Lighthouse phone 97 and
 desktop 100, axe 0 violations. The design lab is **offline** (not deleted). The **business card
 and tri-fold brochure** in `~/hara-print` were redrawn in the Studio language (commit `e3a2629`);
 on 2026-10-02 the **business card took the website's colourway** (commit `6758db5`, Krishna's
 final): front = the hero (white, full-colour logo), back = the footer (deep navy, white type, QR on
 its white tile). The **brochure** is approved as final as built (Krishna, 2026-10-02; its copy
-matches the live site word for word). 110 checks PASS, the URL check fails until the domain exists. The **domain is not
-bought**: `haracleaning.ca` was still free on 2026-10-02 (CIRA WHOIS); Krishna or HARA buys it,
-then the site, email and print move onto it (section 3).
+matches the live site word for word). Rebuilt 2026-10-14 with the domain live: 123 PASS, 0 FAIL
+(`~/hara-print` commit `8ae4be2`). The **domain** `haracleaning.ca` was bought and connected on
+2026-10-14 (section 3).
 
 ## 0. Next step
 
-The business-card colour session is done (2026-10-02, commit `6758db5` in `~/hara-print`, Krishna
-said final) and the brochure was approved as final as it stands the same day. Nothing in print
-waits on design now. The next step is the **domain** (section 3):
-once `haracleaning.ca` is bought and the site answers on it, run `python3 build.py` in
-`~/hara-print` for a clean report (the URL check then passes), and the client signs
-`deliverables/CLIENT_APPROVAL_FORM.md` before press. For any further print change, start a session
+The domain work is done (section 3). Left: the client signs
+`~/hara-print/deliverables/CLIENT_APPROVAL_FORM.md` before press; HARA answers the 2026-10-01
+request (emailed to them late, on 2026-10-14); the Cloudflare analytics beacon (section 3); and
+section 5. For any further print change, start a session
 in `~/hara-print`, read section 1 and `~/hara-print/README.md`, run the engineering-team skill,
 and show Krishna the PROOF images before anything is final.
 
@@ -110,14 +108,14 @@ PROOF PDFs as images before anything is final; the client signs the approval for
 
 | Thing | State |
 |---|---|
-| Production URL | https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `4411dbf9`) |
+| Production URL | https://haracleaning.ca (Worker `hara-website`, version `379aa2ab`); `www` and http 301 to it; workers.dev off (404); the old GitHub Pages URL redirects to it |
 | Design | The Studio design, source in `src/studio/` (CLAUDE.md "Studio on production") |
 | Scope | One page plus privacy, terms, accessibility and 404. The old multi-page build is in git tag `multi-page-archive` |
 | Contact | (437) 980-3464 only (page, legal pages, structured data), harafacilitiescleaning@gmail.com |
 | Form | Live, stores to D1, emails HARA and the requester through Resend from `walkthroughs@haracleaning.ca` (since 2026-10-14) |
 | Quality | 67 tests; form end to end at 1440 and 390 px; axe 0 violations on every page and form step; Chromium, WebKit, Firefox (grid fallback without scroll timelines); Lighthouse phone 97, desktop 100, accessibility and best practices 100, SEO 100 once `noindex` lifts |
-| Gate | GO (the Studio and performance deploys at the end of `security/golive/2026-10-01-full-GO.md`) |
-| Indexing | `noindex` until `VITE_SITE_URL` is set at the domain step |
+| Gate | GO: `security/golive/2026-10-01-full-GO.md` (code) and `2026-10-14-domain-GO.md` (domain, email, workers.dev off) |
+| Indexing | Indexable; Google Search Console (Domain property, DNS-verified) and Bing Webmaster Tools (CNAME-verified) both have `sitemap.xml`, in Krishna's accounts |
 | Design lab | Offline: `workers_dev: false` in `design-lab/wrangler.jsonc` (flip to true and `cd design-lab && npx wrangler deploy` to bring it back). Delete it for good only when Krishna says so |
 | Repo | `kkrishnaac/afterhours-demo`, public, `main` pushed |
 
@@ -150,10 +148,11 @@ the domain are GO (`security/golive/2026-10-14-domain-GO.md`). Email went live a
 Resend (version `9f86e130`): the two held requests reached HARA at 22:00, and a test request at 22:01
 delivered both the HARA notification and the requester's confirmation.
 
-Still open, in order (checklist in `docs/DEPLOY.md`, "Connect the domain"): the beacon Cloudflare
-injects (blocked by our CSP, console error); DNSSEC (Cloudflare, then the DS record at GoDaddy);
-`workers_dev: false`; Search Console and Bing with the sitemap; then `python3 build.py` in `~/hara-print` (the
-URL check passes) and the client signs the approval form.
+Finished later that night (version `379aa2ab`): DNSSEC (Cloudflare signs; DS 2371/13/2 at GoDaddy,
+CIRA shows `signedDelegation`); workers.dev off (the gh-pages redirect now points to the domain,
+Turnstile lists only `haracleaning.ca`); Google Search Console and Bing with the sitemap; print
+rebuilt (123 PASS). Still open: the beacon Cloudflare injects (blocked by our CSP, console error);
+the client signs the print approval form.
 
 ## 4. The hero logo intro (live on production)
 
@@ -183,7 +182,7 @@ top: ask him before changing those.
    Security), Gmail (Google Account, Security, 2-Step Verification), and the registrar once the
    domain is bought.
 2. **Analytics token (optional):** Cloudflare Web Analytics, Add a site, hostname
-   `hara-website.chaudharikrishna0415.workers.dev`, manual snippet, copy the 32-character token,
+   `haracleaning.ca`, manual snippet, copy the 32-character token,
    put `CF_BEACON_TOKEN=<token>` in `.env.production-cf`, `npm run deploy`.
 3. **Decisions:** keep or delete the Afterhours reference Worker
    (https://afterhours-design.chaudharikrishna0415.workers.dev); delete the design lab for good or

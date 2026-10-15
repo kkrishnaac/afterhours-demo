@@ -1,9 +1,8 @@
 # HARA website: deployment
 
 **Production is live** on Cloudflare at **https://haracleaning.ca** (Worker `hara-website`, version
-`d31549ec` deployed 2026-10-14 with the domain; the Studio design). The workers.dev address
-(https://hara-website.chaudharikrishna0415.workers.dev) still serves the same Worker until
-`workers_dev` is switched off. Domain progress and what is still open: the checklist under
+`379aa2ab` as of 2026-10-14; the Studio design). The workers.dev address is off (404) and the
+old GitHub Pages URL redirects to the domain. Domain progress and what is still open: the checklist under
 "Connect the domain" below and `HANDOFF.md` sections 3 and 5. Infrastructure state:
 
 | Piece | State |
@@ -60,11 +59,14 @@ Wired but **off until a token exists** (`src/analytics.js`). To switch it on:
   disable it once the site shows in Web Analytics, or switch analytics on with `CF_BEACON_TOKEN`.
 - [x] A real walkthrough request on the domain (2026-10-14 22:01 ET): HARA's notification and the
   requester's confirmation both delivered (Resend log).
-- [ ] DNSSEC: enable in Cloudflare, paste the DS record in GoDaddy (DNS, DNSSEC).
-- [ ] `workers_dev: false` and the workers.dev origin out of `ALLOWED_ORIGINS` / `TURNSTILE_HOSTNAMES`.
+- [x] DNSSEC: on in Cloudflare; DS `2371 13 2 E0E54C11…1310E` added at GoDaddy (DNS, DS Records);
+  CIRA shows `signedDelegation` (22:09 ET).
+- [x] `workers_dev: false`, workers.dev out of `ALLOWED_ORIGINS`, `TURNSTILE_HOSTNAMES` and the Turnstile
+  widget; the gh-pages redirect points to the domain (version `379aa2ab`).
 - [x] Email (step 3): Resend live, version `9f86e130`; the two held requests were delivered to HARA by
   the 22:00 cron (held requests get no late confirmation, by design).
-- [ ] Search Console, Bing; print rebuild in `~/hara-print`.
+- [x] Google Search Console (Domain property, TXT-verified) and Bing Webmaster Tools (CNAME-verified),
+  both with `https://haracleaning.ca/sitemap.xml`; print rebuilt in `~/hara-print` (123 PASS).
 
 1. **DNS on Cloudflare.** Add `DOMAIN` as a site in this Cloudflare account (or HARA's, see
    below) and switch the registrar's nameservers to Cloudflare. Then in the zone: SSL/TLS

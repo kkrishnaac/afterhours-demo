@@ -38,10 +38,10 @@
   "env": {
     "production": {
       "name": "hara-website",
-      "workers_dev": true,
+      "workers_dev": false,
       "preview_urls": false,
       // haracleaning.ca (bought 2026-10-14, GoDaddy; DNS on Cloudflare). www 301s to
-      // the bare domain in worker/index.js.
+      // the bare domain in worker/index.js. The workers.dev address is off since 2026-10-14.
       "routes": [
         { "pattern": "haracleaning.ca", "custom_domain": true },
         { "pattern": "www.haracleaning.ca", "custom_domain": true }
@@ -54,8 +54,8 @@
       ],
       "triggers": { "crons": ["*/15 * * * *"] },
       "vars": {
-        "ALLOWED_ORIGINS": "https://haracleaning.ca,https://hara-website.chaudharikrishna0415.workers.dev",
-        "TURNSTILE_HOSTNAMES": "haracleaning.ca,hara-website.chaudharikrishna0415.workers.dev",
+        "ALLOWED_ORIGINS": "https://haracleaning.ca",
+        "TURNSTILE_HOSTNAMES": "haracleaning.ca",
         // resend since 2026-10-14 (haracleaning.ca verified in Resend; key in Worker secrets).
         // "hold" stores requests without emailing; the cron delivers the backlog on switching back.
         "EMAIL_MODE": "resend",

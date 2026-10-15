@@ -145,11 +145,14 @@ Full (strict), Always Use HTTPS, minimum TLS 1.2, `haracleaning.ca` on the Turns
 custom domains for the apex and `www` (www 301s to the apex), `VITE_SITE_URL` set (indexable,
 sitemap, JSON-LD, security.txt to HARA's Gmail), deployed as version `d31549ec`.
 
-Still open, in order (checklist in `docs/DEPLOY.md`, "Connect the domain"): DNSSEC (Cloudflare,
-then the DS record at GoDaddy); `workers_dev: false`; email (no Resend account yet, `EMAIL_MODE`
-stays `hold`); Search Console and Bing with the sitemap; the security gate against the domain;
-then `python3 build.py` in `~/hara-print` (the URL check passes) and the client signs the approval
-form.
+The zone went active at 20:40 ET the same evening; the live checks and the security gate against
+the domain are GO (`security/golive/2026-10-14-domain-GO.md`).
+
+Still open, in order (checklist in `docs/DEPLOY.md`, "Connect the domain"): the beacon Cloudflare
+injects (blocked by our CSP, console error); a real request from a phone; DNSSEC (Cloudflare, then
+the DS record at GoDaddy); `workers_dev: false`; email (no Resend account yet, `EMAIL_MODE` stays
+`hold`); Search Console and Bing with the sitemap; then `python3 build.py` in `~/hara-print` (the
+URL check passes) and the client signs the approval form.
 
 ## 4. The hero logo intro (live on production)
 

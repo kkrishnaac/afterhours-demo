@@ -104,7 +104,7 @@ node scripts/qa/matrix.mjs <url> /tmp   # browser stress matrix (see scripts/qa/
 | `public/` | `brand/` (logo SVGs, including the intro's generated `logo-*.svg` layers), `favicon.svg`, `apple-touch-icon.png`, `og.jpg` (branded share image), `img/` photo ladders |
 | `src/analytics.js`, `src/structured-data.js`, `src/business.js`, `scripts/favicons.mjs` | `analytics.js`: Cloudflare Web Analytics beacon, off until `CF_BEACON_TOKEN` is set (opens the CSP and adds a privacy sentence only then). `structured-data.js`: the home page's LocalBusiness JSON-LD (service-area business, no address, no hours, no ratings), emitted only when `VITE_SITE_URL` is set. `business.js`: name, phone, email. `favicons.mjs` builds the tab icons (logo mark on a white tile: favicon.svg/.ico, 48 and 192 px PNGs) from `public/brand/hara-mark.svg`; re-run it if `export_brand.py` rewrites `favicon.svg`. Icon links carry `?v=2` to beat browser caches |
 | `docs/DEPLOY.md` | Production state, launch blockers, connect-the-domain runbook, backups and restore (rehearsed), everyday commands |
-| `security/golive/` | Go-live reports; latest full gate `2026-10-01-full-GO.md` (with the Studio production deploy at its end) |
+| `security/golive/` | Go-live reports; latest full gate `2026-10-01-full-GO.md` (with the Studio and domain deploys at its end); domain gate `2026-10-14-domain-GO.md` |
 | `docs/client/` (gitignored) | Client brief + priorities, company notes, SOW (docx + generator), security plan (PDF), logo kit, leads exports |
 
 Photos (since 2026-10-01): Unsplash originals chosen by Krishna (Unsplash License: free for

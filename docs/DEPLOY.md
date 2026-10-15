@@ -53,11 +53,16 @@ Wired but **off until a token exists** (`src/analytics.js`). To switch it on:
 - [x] Turnstile widget "HARA website": `haracleaning.ca` added (covers `www`).
 - [x] `routes` and `vars` in `wrangler.jsonc`; `VITE_SITE_URL` and `VITE_SECURITY_CONTACT`
   (HARA's Gmail, no domain mailbox yet) in `.env.production-cf`; deployed (`d31549ec`).
-- [ ] Zone active (waiting on the .ca registry to publish the delegation), then the checks in step 7.
+- [x] Zone active (2026-10-14 20:40 ET, once CIRA published the delegation); step 7 checks pass
+  (https, redirects, certificate, headers, robots, sitemap, security.txt, origin check).
+- [x] Security gate against the domain: GO (`security/golive/2026-10-14-domain-GO.md`).
+- [ ] Cloudflare's auto-injected Web Analytics beacon (blocked by the CSP, logs a console error):
+  disable it once the site shows in Web Analytics, or switch analytics on with `CF_BEACON_TOKEN`.
+- [ ] A real walkthrough request from a phone on the domain.
 - [ ] DNSSEC: enable in Cloudflare, paste the DS record in GoDaddy (DNS, DNSSEC).
 - [ ] `workers_dev: false` and the workers.dev origin out of `ALLOWED_ORIGINS` / `TURNSTILE_HOSTNAMES`.
 - [ ] Email (step 3): no Resend account yet, so `EMAIL_MODE` stays `hold`.
-- [ ] Search Console, Bing; the security gate against the domain; print rebuild in `~/hara-print`.
+- [ ] Search Console, Bing; print rebuild in `~/hara-print`.
 
 1. **DNS on Cloudflare.** Add `DOMAIN` as a site in this Cloudflare account (or HARA's, see
    below) and switch the registrar's nameservers to Cloudflare. Then in the zone: SSL/TLS

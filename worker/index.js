@@ -11,9 +11,13 @@ export default {
     const url = new URL(request.url);
     const { pathname } = url;
     // Plain http never serves a page: permanent redirect to https. (Once the domain
-    // is on Cloudflare, "Always Use HTTPS" does this at the edge as well.)
-    if (url.protocol === 'http:' && !['localhost', '127.0.0.1'].includes(url.hostname)) {
+    // is on Cloudflare, "Always Use HTTPS" does this at the edge as well.) The www
+    // address redirects to the bare domain, the one address on the print and in links.
+    const local = ['localhost', '127.0.0.1'].includes(url.hostname);
+    const www = url.hostname.startsWith('www.');
+    if ((url.protocol === 'http:' && !local) || www) {
       url.protocol = 'https:';
+      if (www) url.hostname = url.hostname.slice(4);
       return Response.redirect(url.toString(), 301);
     }
     if (pathname === '/api/walkthrough') {

@@ -5,9 +5,10 @@ Website for Krishna's friend's office-cleaning company in the Greater Toronto Ar
 it survives only in the repo name and the old GitHub Pages URL. Client material lives in
 `docs/client/` (gitignored: the repo is public). Read `HANDOFF.md` for where things stand.
 
-- **Production (live, pre-domain):** https://hara-website.chaudharikrishna0415.workers.dev
-  (Cloudflare Worker `hara-website` in Krishna's account, version `4411dbf9` as of 2026-10-01,
-  D1 `hara-walkthroughs`, `noindex`). The old GitHub Pages URL
+- **Production (live):** https://haracleaning.ca since 2026-10-14 (Cloudflare Worker
+  `hara-website` in Krishna's account, version `d31549ec`, custom domains for the apex and `www`,
+  D1 `hara-walkthroughs`, indexable). It also still answers on
+  https://hara-website.chaudharikrishna0415.workers.dev until `workers_dev` goes off. The old GitHub Pages URL
   (https://kkrishnaac.github.io/afterhours-demo/) redirects to production.
 - **The Studio design is live on production (2026-10-01, late):** Krishna chose it in the design
   lab (https://hara-design-lab.chaudharikrishna0415.workers.dev, source `design-lab/`, see "Design
@@ -17,11 +18,11 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
   `design-lab/wrangler.jsonc`; set it back to true and deploy to bring it back).
 - **Status (2026-10-02): launch-ready apart from the domain.** Studio deploy: 67 tests, form end
   to end, axe 0 violations, three engines, Lighthouse phone 97 / desktop 100, security gate GO
-  (`security/golive/2026-10-01-full-GO.md`). The domain is **not bought** (`haracleaning.ca` was
-  free on 2026-10-02; `HANDOFF.md` section 3). Left: Krishna's 2FA confirmation, then the domain
-  (`docs/DEPLOY.md`). One page only: see Scope below.
-- **Next session:** the business card's colours in `~/hara-print` (Krishna likes the Studio
-  template, wants new card colours); the paste-ready prompt is `HANDOFF.md` section 0.
+  (`security/golive/2026-10-01-full-GO.md`). The domain `haracleaning.ca` was bought and connected
+  on 2026-10-14 (`HANDOFF.md` section 3). Left: Krishna's 2FA confirmation and the domain checklist
+  in `docs/DEPLOY.md` (DNSSEC, workers.dev off, email, Search Console, gate, print rebuild). One page only: see Scope below.
+- **Next session:** the rest of the domain checklist (`HANDOFF.md` section 3). Print is final: the business card
+  (2026-10-02, `~/hara-print` commit `6758db5`: hero front, footer back) and the brochure as built.
 - **Reference only:** the original "Afterhours" design (commit `dea9337`) runs as a separate
   static Worker at https://afterhours-design.chaudharikrishna0415.workers.dev (`noindex`).
 - **Krishna wants changes shipped to the live URL**, never handed over as a localhost link.
@@ -299,12 +300,16 @@ Its own local git (not pushed): business card + letter tri-fold brochure, `pytho
 ReportLab in DeviceCMYK, PDF/X-1a via a user-built Ghostscript (`~/.local/bin/gs`), 110 preflight
 checks. **Redrawn in the Studio language on 2026-10-01 late (commit `e3a2629`):** Archivo
 capitals and Hanken Grotesk (OFL, instanced in `haraprint/fonts.py`), the website's Unsplash photos
-as photo cards with white titles over a scrim baked into the pixels, deep navy card front with the
-white logo, white card back with "TOMORROW / STARTS CLEAN.", contact and QR; brochure with a white
+as photo cards with white titles over a scrim baked into the pixels, card (colours final 2026-10-02,
+commit `6758db5`) = the website hero on the front (white, full-colour logo) and the footer on the
+back (deep navy, "TOMORROW / STARTS CLEAN.", contact knocked out in white 8pt+ medium, QR on its
+white tile); brochure with a white
 hero cover over a full-bleed photo, a navy back cover and inside right flap, no boxes. Last build:
 110 PASS, 1 expected FAIL (the URL check, until `haracleaning.ca` is live).
-**Next:** Krishna wants new colours on the business card, same template (`HANDOFF.md` sections 0
-and 1: prompt, colour recipe, print rules, proof rendering). Krishna's rules: only the website's
+Both designs approved as final on 2026-10-02 (the brochure as built, its copy matching the live
+site word for word). **Next:** nothing in print waits on design; when `haracleaning.ca` is live, rebuild for a clean
+report and get the client's signature (`HANDOFF.md` sections 0 and 1: colour recipe, print rules,
+proof rendering). Krishna's rules: only the website's
 details on the card (no personal name or title); show PROOF PDFs as images before anything is
 final; the client signs the approval form before press. Memory: `hara-print-collateral.md`.
 

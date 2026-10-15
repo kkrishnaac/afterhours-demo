@@ -1,9 +1,10 @@
 # HARA website: deployment
 
-**Production is live** on Cloudflare at
-https://hara-website.chaudharikrishna0415.workers.dev (Worker `hara-website`, version `4411dbf9` as of 2026-10-01, late: the Studio design).
-**Launch-ready apart from the domain** (final gate GO: `security/golive/2026-10-01-full-GO.md`). What is
-still open is in `HANDOFF.md` section 5; the domain steps are below. Infrastructure state:
+**Production is live** on Cloudflare at **https://haracleaning.ca** (Worker `hara-website`, version
+`d31549ec` deployed 2026-10-14 with the domain; the Studio design). The workers.dev address
+(https://hara-website.chaudharikrishna0415.workers.dev) still serves the same Worker until
+`workers_dev` is switched off. Domain progress and what is still open: the checklist under
+"Connect the domain" below and `HANDOFF.md` sections 3 and 5. Infrastructure state:
 
 | Piece | State |
 |---|---|
@@ -12,7 +13,8 @@ still open is in `HANDOFF.md` section 5; the domain steps are below. Infrastruct
 | Turnstile widget "HARA website" (managed) | Site key in `.env.production-cf` (gitignored), secret in Worker secrets |
 | Rate limit, security headers, http→https, legal pages, 404, robots.txt | Live |
 | Email | `EMAIL_MODE=hold`: requests are stored; HARA's notifications wait (no confirmations) until the domain can send email |
-| Indexing | `noindex` on every page until `VITE_SITE_URL` is set |
+| Domain | `haracleaning.ca`, registered 2026-10-14 at GoDaddy (renews 2027-10-15, domain lock on); nameservers `robert` / `rosa.ns.cloudflare.com`; zone `92d6d4ea…` on the Free plan; Worker custom domains for the apex and `www` (www 301s to the apex in `worker/index.js`) |
+| Indexing | Indexable since 2026-10-14 (`VITE_SITE_URL=https://haracleaning.ca`): canonical links, sitemap, robots, JSON-LD, security.txt |
 
 No secret ever goes in this repo. Local secrets live in `.dev.vars` and `.env.*` (gitignored).
 
@@ -42,9 +44,20 @@ Wired but **off until a token exists** (`src/analytics.js`). To switch it on:
    `'self'`), so `cloudflareinsights.com` can be removed from `connect-src` in `src/analytics.js`.
    Re-run the security gate after any change to the CSP.
 
-## Connect the domain (the remaining step)
+## Connect the domain
 
-Replace `DOMAIN` with the real one, e.g. `harafacilities.ca`.
+`DOMAIN` = `haracleaning.ca`. Progress (2026-10-14):
+- [x] Zone added in Krishna's Cloudflare account (Free, DNS records entered manually so GoDaddy's
+  parking records were never imported); GoDaddy nameservers switched to Cloudflare's.
+- [x] SSL/TLS Full (strict), Always Use HTTPS, minimum TLS 1.2.
+- [x] Turnstile widget "HARA website": `haracleaning.ca` added (covers `www`).
+- [x] `routes` and `vars` in `wrangler.jsonc`; `VITE_SITE_URL` and `VITE_SECURITY_CONTACT`
+  (HARA's Gmail, no domain mailbox yet) in `.env.production-cf`; deployed (`d31549ec`).
+- [ ] Zone active (waiting on the .ca registry to publish the delegation), then the checks in step 7.
+- [ ] DNSSEC: enable in Cloudflare, paste the DS record in GoDaddy (DNS, DNSSEC).
+- [ ] `workers_dev: false` and the workers.dev origin out of `ALLOWED_ORIGINS` / `TURNSTILE_HOSTNAMES`.
+- [ ] Email (step 3): no Resend account yet, so `EMAIL_MODE` stays `hold`.
+- [ ] Search Console, Bing; the security gate against the domain; print rebuild in `~/hara-print`.
 
 1. **DNS on Cloudflare.** Add `DOMAIN` as a site in this Cloudflare account (or HARA's, see
    below) and switch the registrar's nameservers to Cloudflare. Then in the zone: SSL/TLS

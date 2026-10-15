@@ -1,6 +1,6 @@
 # Handoff: HARA website and print collateral
 
-Updated 2026-10-02, after the long 2026-10-01 session. Read in this order: this file, `CLAUDE.md`
+Updated 2026-10-02, after the business-card colour session (the long 2026-10-01 session before it). Read in this order: this file, `CLAUDE.md`
 (especially "Studio on production", "Print collateral", "Design decisions", "Gotchas"),
 `~/hara-print/README.md` for the print work, and `docs/DEPLOY.md` for the domain.
 
@@ -9,57 +9,24 @@ colours, approved by Krishna in the design lab) is **live on production**:
 https://hara-website.chaudharikrishna0415.workers.dev (Worker version `4411dbf9`), with the real
 four-step form, the legal pages and the same CSP. Security gate GO, Lighthouse phone 97 and
 desktop 100, axe 0 violations. The design lab is **offline** (not deleted). The **business card
-and tri-fold brochure** in `~/hara-print` were redrawn in the Studio language (commit `e3a2629`,
-110 checks PASS, the URL check fails until the domain exists). Krishna likes the template and
-**wants to change the business card's colours next** (prompt in section 0). The **domain is not
+and tri-fold brochure** in `~/hara-print` were redrawn in the Studio language (commit `e3a2629`);
+on 2026-10-02 the **business card took the website's colourway** (commit `6758db5`, Krishna's
+final): front = the hero (white, full-colour logo), back = the footer (deep navy, white type, QR on
+its white tile). The **brochure** is approved as final as built (Krishna, 2026-10-02; its copy
+matches the live site word for word). 110 checks PASS, the URL check fails until the domain exists. The **domain is not
 bought**: `haracleaning.ca` was still free on 2026-10-02 (CIRA WHOIS); Krishna or HARA buys it,
 then the site, email and print move onto it (section 3).
 
-## 0. Prompt for the next session (business card colours)
+## 0. Next step
 
-Start a new Claude Code session **in `~/hara-print`** and paste this:
-
-```
-You are continuing the HARA Facilities Cleaning print work. Read in full first:
-~/afterhours/HANDOFF.md (sections 0, 1 and 6), the "Print collateral" section of
-~/afterhours/CLAUDE.md, and ~/hara-print/README.md. Then read haraprint/card.py,
-haraprint/colors.py, haraprint/layout.py and haraprint/logo.py before touching anything. Run the
-engineering-team skill first.
-
-The job: I like the current business card and brochure template (the website's Studio design,
-commit e3a2629). I only want to CHANGE THE COLOURS OF THE BUSINESS CARD. Keep the layout, the
-type, the content and the brochure exactly as they are unless I say otherwise. The card today:
-front = deep navy flood (web #03275A, CMYK 100/94/40/25) with the logo in white; back = white
-paper, a 100K label, "TOMORROW / STARTS CLEAN." in HARA navy Archivo capitals (#0B3A80, CMYK
-100/86/18/3), contact details in 100K, the QR in 100K.
-
-How to work:
-1. Ask me which colours I want before building. If I'm not sure, show me 2 or 3 options as
-   rendered proof images side by side (front and back), using colours from the website's palette
-   (white #FAFBFD, navy #0B3A80, deep navy #03275A, sky #0A95EF, pale sky #BFE3FF) or the
-   logo's own colours, and let me pick.
-2. Convert every new colour from its web hex to CMYK through Coated GRACoL 2006 with the recipe
-   in ~/afterhours/HANDOFF.md section 1, add it to haraprint/colors.py with a comment and to
-   SWATCH_TABLE, and note it in docs/00-INPUTS_AND_COLOUR_REPORT.md.
-3. Keep the print rules the preflight enforces: text under 14pt is 100K or a paper-white
-   knockout (never a colour mix); coloured text only at 14pt and up; white knocked-out text 8pt
-   or more, medium weight; total ink 280% or less; no transparency, no gradients (the logo's
-   flat colours come from colors.LOGO). If a background changes, check the logo still reads on
-   it (full colour, or white with mono=colors.PAPER, as the front does now) and that the QR keeps
-   its white quiet zone.
-4. Rebuild with python3 build.py. Every check must PASS except the URL check, which fails until
-   haracleaning.ca is live (the domain isn't bought yet; keep it in the QR and on the card).
-5. Show me the business-card PROOF as images (render command in HANDOFF.md section 1) and the
-   mockup deliverables/business-card_MOCKUP.png before anything is final. Iterate until I say
-   it's done.
-6. Commit in ~/hara-print (local repo, not pushed). At the end update ~/afterhours/HANDOFF.md
-   (section 1 and the state paragraph), the "Print collateral" section of ~/afterhours/CLAUDE.md
-   and memory (hara-print-collateral.md).
-
-Ground rules: I direct the design. Only the website's details on the card (no personal name or
-title). No em or en dashes in visible copy, sentence case, the CTA label is "Book a free
-walkthrough". Company facts only from the website or me.
-```
+The business-card colour session is done (2026-10-02, commit `6758db5` in `~/hara-print`, Krishna
+said final) and the brochure was approved as final as it stands the same day. Nothing in print
+waits on design now. The next step is the **domain** (section 3):
+once `haracleaning.ca` is bought and the site answers on it, run `python3 build.py` in
+`~/hara-print` for a clean report (the URL check then passes), and the client signs
+`deliverables/CLIENT_APPROVAL_FORM.md` before press. For any further print change, start a session
+in `~/hara-print`, read section 1 and `~/hara-print/README.md`, run the engineering-team skill,
+and show Krishna the PROOF images before anything is final.
 
 ## 1. Print collateral (`~/hara-print`)
 
@@ -68,14 +35,25 @@ Its own local git repo (not pushed). Business card 3.5 x 2 in and letter tri-fol
 Ghostscript at `~/.local/bin/gs`, 110 preflight checks. `python3 build.py` rebuilds everything into
 `deliverables/` (PRINT and PROOF PDFs, mockups, fold diagram and paper fold template, preflight
 report, printer spec sheet, client approval form, colour report, how to print, zip with checksums).
+Since 2026-10-02 (commit `b2a6d39`) it also makes four presentation PDFs from the press files
+(`haraprint/sheets.py`, artwork and photo streams byte for byte the press artwork):
+`HARA_business-card_1_HOW-IT-LOOKS.pdf`, `HARA_business-card_2_HOW-TO-CUT.pdf`,
+`HARA_brochure_1_HOW-IT-LOOKS.pdf`, `HARA_brochure_2_HOW-TO-CUT-AND-FOLD.pdf`; 122 checks now.
 It exits non-zero on any FAIL.
 
 **The design (2026-10-01 late, commit `e3a2629`), the website's Studio language:**
 - Fonts: Archivo (capitals, width 112, weight 850) for headings and Hanken Grotesk (400, 500,
   600) for text, the website's fonts, SIL OFL 1.1, instanced and renamed at build time
   (`haraprint/fonts.py`, licences in `assets/fonts`).
-- Card: front deep navy flood with the logo in white (like the site's footer); back white with a
-  small label, "TOMORROW / STARTS CLEAN." in navy, contact details and the QR (`haraprint/card.py`).
+- Card (colours since 2026-10-02, commit `6758db5`, Krishna's final): front = the website hero,
+  white paper with the full-colour logo (2.1 in, the approved flat logo colours, as on the brochure
+  cover); back = the website footer, deep navy 100/94/40/25 (web `--deep` #03275A) to the bleed with
+  a small label, "TOMORROW / STARTS CLEAN." in white Archivo, the contact details knocked out in
+  white (medium weight, 8pt and up; the QR caption went from 7pt to 8pt for that rule) and the QR in
+  100K on its own paper-white quiet-zone tile (`haraprint/card.py`; the choice lives in
+  `colors.CARD_FRONT` and `colors.CARD_BACK`, the white card-back styles `card_tw`, `contact_lw`,
+  `contact_blw`, `small_lw` in `layout.py`). A sky front (#0A95EF, 74/32/0/0) was proofed and set
+  aside. Colour notes: `docs/00-INPUTS_AND_COLOUR_REPORT.md` section 6.
 - Brochure (`haraprint/brochure.py`): front cover = the white hero (logo, headline, line, navy
   button) over a full-bleed office photo; back cover = navy footer (white logo, booking, QR,
   contact); inside flap = how it works (01 to 05), the 16 cities as chips, a photo card;
@@ -120,7 +98,7 @@ The mockups in `deliverables/*_MOCKUP*.png` are rendered from the PRINT PDFs.
 | Item | State |
 |---|---|
 | Content | Current: the site's copy, photo-card list and section labels, (437) 980-3464 only, the two security practices HARA confirmed |
-| Design | Studio redraw done; Krishna likes the template; **next: new colours for the business card** |
+| Design | **Final** (Krishna, 2026-10-02): business card in the website colourway (hero front, footer back, `6758db5`); brochure as built in `e3a2629`, copy checked against the live site word for word |
 | URL and QR | `https://haracleaning.ca` (domain not bought yet, section 3) |
 | Last build | 110 PASS, 1 FAIL (the URL check, expected until the domain is live) |
 | Before press | the domain live, a clean rebuild, the client signs `deliverables/CLIENT_APPROVAL_FORM.md` |
@@ -155,22 +133,23 @@ PROOF PDFs as images before anything is final; the client signs the approval for
   clock), security, how it works, the 16 cities (links that preselect the form), the real form,
   then the footer with the white logo.
 
-## 3. The domain (next after the print work)
+## 3. The domain: haracleaning.ca (connected 2026-10-14)
 
-**Not bought.** On 2026-10-02 CIRA's WHOIS showed `haracleaning.ca` (and `harafacilitiescleaning.ca`)
-as not registered. Buying is Krishna's or HARA's step (it is a purchase in HARA's name):
-1. Any CIRA-certified registrar that sells `.ca` (for example Namecheap, GoDaddy, Hover).
-2. Registrant **HARA Facilities Cleaning** (a Canadian business, as `.ca` requires), contact
-   harafacilitiescleaning@gmail.com, so HARA owns its address after the handoff.
-3. Auto-renew, registrar lock and two-factor login on the registrar account. No add-ons (hosting,
-   email, SSL, site builder): Cloudflare and Resend cover those.
+**Bought 2026-10-14** at GoDaddy (renews 2027-10-15, domain lock on, contact email
+harafacilitiescleaning@gmail.com).
 
-Then (runbook in `docs/DEPLOY.md`, "Connect the domain"): add the zone to Cloudflare and paste
-Cloudflare's two nameservers at the registrar (in Krishna's accounts, he does the clicks); SSL
-Full (strict), Always Use HTTPS, DNSSEC; Turnstile hostnames; Resend with SPF, DKIM, DMARC;
-`routes` and `vars` in `wrangler.jsonc`; `VITE_SITE_URL` in `.env.production-cf`; deploy; Search
-Console; the security gate against the domain. Then rebuild the print files: the URL check passes
-and the approval form goes to the client.
+Done the same evening (Claude in Krishna's Chrome, with his go-ahead): zone in Krishna's
+Cloudflare account (Free plan, records entered manually so GoDaddy's parking records stayed out),
+nameservers at GoDaddy switched to `robert.ns.cloudflare.com` and `rosa.ns.cloudflare.com`, SSL
+Full (strict), Always Use HTTPS, minimum TLS 1.2, `haracleaning.ca` on the Turnstile widget, Worker
+custom domains for the apex and `www` (www 301s to the apex), `VITE_SITE_URL` set (indexable,
+sitemap, JSON-LD, security.txt to HARA's Gmail), deployed as version `d31549ec`.
+
+Still open, in order (checklist in `docs/DEPLOY.md`, "Connect the domain"): DNSSEC (Cloudflare,
+then the DS record at GoDaddy); `workers_dev: false`; email (no Resend account yet, `EMAIL_MODE`
+stays `hold`); Search Console and Bing with the sitemap; the security gate against the domain;
+then `python3 build.py` in `~/hara-print` (the URL check passes) and the client signs the approval
+form.
 
 ## 4. The hero logo intro (live on production)
 
@@ -242,3 +221,4 @@ notes, the parked Google Business Profile pack).
 - 10-01 (day): real contact details, one-page scope, Phase 5 QA, gate GO; print collateral built in `~/hara-print`. Client: "fonts too heavy".
 - 10-01 (evening): design lab; A to F rejected; the coreastudios.com system in HARA's colours chosen as the Studio design; the hero logo intro in three versions.
 - 10-01 (late night): straight H and in-place sparkles; new menus (phone bar, wide-screen knob); the Studio design ported to production with the real form (gate GO, Lighthouse 97/100); design lab offline; business card and brochure redrawn in the Studio language.
+- 10-02: business card colours: sky front proofed and set aside; final = hero front (white, full-colour logo) and footer back (deep navy, white type); brochure unchanged (`~/hara-print` `6758db5`); then the brochure checked against the live site (every line matches) and approved as final as it stands.

@@ -40,6 +40,12 @@
       "name": "hara-website",
       "workers_dev": true,
       "preview_urls": false,
+      // haracleaning.ca (bought 2026-10-14, GoDaddy; DNS on Cloudflare). www 301s to
+      // the bare domain in worker/index.js.
+      "routes": [
+        { "pattern": "haracleaning.ca", "custom_domain": true },
+        { "pattern": "www.haracleaning.ca", "custom_domain": true }
+      ],
       "d1_databases": [
         { "binding": "DB", "database_name": "hara-walkthroughs", "database_id": "e055cd87-bc11-40d9-843d-3c26a0e5a7a2", "migrations_dir": "migrations" }
       ],
@@ -48,8 +54,8 @@
       ],
       "triggers": { "crons": ["*/15 * * * *"] },
       "vars": {
-        "ALLOWED_ORIGINS": "https://hara-website.chaudharikrishna0415.workers.dev",
-        "TURNSTILE_HOSTNAMES": "hara-website.chaudharikrishna0415.workers.dev",
+        "ALLOWED_ORIGINS": "https://haracleaning.ca,https://hara-website.chaudharikrishna0415.workers.dev",
+        "TURNSTILE_HOSTNAMES": "haracleaning.ca,hara-website.chaudharikrishna0415.workers.dev",
         // hold: requests are stored and HARA's notifications wait until the
         // domain can send email; switch to "resend" then (cron delivers the backlog).
         "EMAIL_MODE": "hold",

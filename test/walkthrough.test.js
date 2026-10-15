@@ -214,6 +214,14 @@ describe('POST /api/walkthrough: refusals', () => {
     expect(res.headers.get('Location')).toBe('https://hara.test/privacy?x=1');
   });
 
+  it('redirects www to the bare domain, on http and https', async () => {
+    for (const from of ['https://www.hara.test/privacy?x=1', 'http://www.hara.test/privacy?x=1']) {
+      const res = await worker.fetch(new Request(from), env);
+      expect(res.status).toBe(301);
+      expect(res.headers.get('Location')).toBe('https://hara.test/privacy?x=1');
+    }
+  });
+
   it('returns a JSON 404 for other API paths', async () => {
     const res = await worker.fetch(new Request('https://hara.test/api/admin'), env);
     expect(res.status).toBe(404);

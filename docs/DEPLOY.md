@@ -12,7 +12,7 @@
 | D1 `hara-walkthroughs` (ENAM, id `e055cd87-…`) | Schema applied (`migrations/`) |
 | Turnstile widget "HARA website" (managed) | Site key in `.env.production-cf` (gitignored), secret in Worker secrets |
 | Rate limit, security headers, http→https, legal pages, 404, robots.txt | Live |
-| Email | `EMAIL_MODE=hold`: requests are stored; HARA's notifications wait (no confirmations) until the domain can send email |
+| Email | Live since 2026-10-14: `EMAIL_MODE=resend`, from `walkthroughs@haracleaning.ca` through Resend (Krishna's Resend account, domain verified, us-east-1, no open or click tracking); `RESEND_API_KEY` (sending access) in Worker secrets; SPF, DKIM and DMARC (`p=none`) in the zone |
 | Domain | `haracleaning.ca`, registered 2026-10-14 at GoDaddy (renews 2027-10-15, domain lock on); nameservers `robert` / `rosa.ns.cloudflare.com`; zone `92d6d4ea…` on the Free plan; Worker custom domains for the apex and `www` (www 301s to the apex in `worker/index.js`) |
 | Indexing | Indexable since 2026-10-14 (`VITE_SITE_URL=https://haracleaning.ca`): canonical links, sitemap, robots, JSON-LD, security.txt |
 
@@ -58,10 +58,12 @@ Wired but **off until a token exists** (`src/analytics.js`). To switch it on:
 - [x] Security gate against the domain: GO (`security/golive/2026-10-14-domain-GO.md`).
 - [ ] Cloudflare's auto-injected Web Analytics beacon (blocked by the CSP, logs a console error):
   disable it once the site shows in Web Analytics, or switch analytics on with `CF_BEACON_TOKEN`.
-- [ ] A real walkthrough request from a phone on the domain.
+- [x] A real walkthrough request on the domain (2026-10-14 22:01 ET): HARA's notification and the
+  requester's confirmation both delivered (Resend log).
 - [ ] DNSSEC: enable in Cloudflare, paste the DS record in GoDaddy (DNS, DNSSEC).
 - [ ] `workers_dev: false` and the workers.dev origin out of `ALLOWED_ORIGINS` / `TURNSTILE_HOSTNAMES`.
-- [ ] Email (step 3): no Resend account yet, so `EMAIL_MODE` stays `hold`.
+- [x] Email (step 3): Resend live, version `9f86e130`; the two held requests were delivered to HARA by
+  the 22:00 cron (held requests get no late confirmation, by design).
 - [ ] Search Console, Bing; print rebuild in `~/hara-print`.
 
 1. **DNS on Cloudflare.** Add `DOMAIN` as a site in this Cloudflare account (or HARA's, see

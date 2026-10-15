@@ -20,7 +20,7 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
   to end, axe 0 violations, three engines, Lighthouse phone 97 / desktop 100, security gate GO
   (`security/golive/2026-10-01-full-GO.md`). The domain `haracleaning.ca` was bought and connected
   on 2026-10-14 (`HANDOFF.md` section 3). Left: Krishna's 2FA confirmation and the domain checklist
-  in `docs/DEPLOY.md` (DNSSEC, workers.dev off, email, Search Console, gate, print rebuild). One page only: see Scope below.
+  in `docs/DEPLOY.md` (DNSSEC, workers.dev off, Search Console, print rebuild). Email is live since 2026-10-14. One page only: see Scope below.
 - **Next session:** the rest of the domain checklist (`HANDOFF.md` section 3). Print is final: the business card
   (2026-10-02, `~/hara-print` commit `6758db5`: hero front, footer back) and the brochure as built.
 - **Reference only:** the original "Afterhours" design (commit `dea9337`) runs as a separate
@@ -61,8 +61,9 @@ it survives only in the repo name and the old GitHub Pages URL. Client material 
   Turnstile blocks bots, the Workers rate-limit binding caps abuse (checked before the body is
   read; the body is streamed with an 8 KB cap), the duplicate check and insert are one atomic
   statement, Resend sends email.
-  `EMAIL_MODE`: `hold` in production until the domain can send email (requests stored, HARA's
-  notifications pending, delivered by the cron once switched to `resend`); `dry-run` locally.
+  `EMAIL_MODE`: `resend` in production since 2026-10-14 (from `walkthroughs@haracleaning.ca`, Resend
+  domain verified, key in Worker secrets); `hold` stores requests without emailing (the cron delivers
+  them once switched back); `dry-run` locally.
 - **Builds from one codebase:** `build:prod` = production (`.env.production-cf`, real Turnstile
   site key; setting `VITE_SITE_URL` at domain launch drops `noindex` and adds sitemap, canonical
   links and security.txt). `build:cf` = local Worker testing (Turnstile test key, `.env.cloudflare`).
@@ -326,8 +327,8 @@ final; the client signs the approval form before press. Memory: `hara-print-coll
   instruction that evening ("the only phone number that should be available on the website"); the
   design lab and the print collateral carry it. The live site still shows (416) 990-3995 with the
   437 number second, until the redesign is ported: swap it then (`src/business.js`, `index.html`,
-  `partials/footer.html`, `worker/email.js`, structured data). Email harafacilitiescleaning@gmail.com. Still placeholders: `EMAIL_FROM` and `LEAD_TO_EMAIL` in `wrangler.jsonc`
-  (set at the domain step). The footer's demo note is gone.
+  `partials/footer.html`, `worker/email.js`, structured data). Email harafacilitiescleaning@gmail.com (`LEAD_TO_EMAIL`); the site sends from
+  `walkthroughs@haracleaning.ca` (`EMAIL_FROM`). The footer's demo note is gone.
 - Company facts come from the client's docs. Krishna directs the site; the client's layout
   instructions are not followed unless he says so.
 - Never record account security status (2FA etc.) or secrets in this public repo.

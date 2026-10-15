@@ -56,10 +56,10 @@
       "vars": {
         "ALLOWED_ORIGINS": "https://haracleaning.ca,https://hara-website.chaudharikrishna0415.workers.dev",
         "TURNSTILE_HOSTNAMES": "haracleaning.ca,hara-website.chaudharikrishna0415.workers.dev",
-        // hold: requests are stored and HARA's notifications wait until the
-        // domain can send email; switch to "resend" then (cron delivers the backlog).
-        "EMAIL_MODE": "hold",
-        "EMAIL_FROM": "HARA Facilities Cleaning <walkthroughs@example.com>",
+        // resend since 2026-10-14 (haracleaning.ca verified in Resend; key in Worker secrets).
+        // "hold" stores requests without emailing; the cron delivers the backlog on switching back.
+        "EMAIL_MODE": "resend",
+        "EMAIL_FROM": "HARA Facilities Cleaning <walkthroughs@haracleaning.ca>",
         "LEAD_TO_EMAIL": "harafacilitiescleaning@gmail.com",
         "RETENTION_DAYS": "730"
       }

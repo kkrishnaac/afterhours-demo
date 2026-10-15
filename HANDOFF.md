@@ -114,7 +114,7 @@ PROOF PDFs as images before anything is final; the client signs the approval for
 | Design | The Studio design, source in `src/studio/` (CLAUDE.md "Studio on production") |
 | Scope | One page plus privacy, terms, accessibility and 404. The old multi-page build is in git tag `multi-page-archive` |
 | Contact | (437) 980-3464 only (page, legal pages, structured data), harafacilitiescleaning@gmail.com |
-| Form | Live, stores to D1, `EMAIL_MODE=hold` until the domain can send email |
+| Form | Live, stores to D1, emails HARA and the requester through Resend from `walkthroughs@haracleaning.ca` (since 2026-10-14) |
 | Quality | 67 tests; form end to end at 1440 and 390 px; axe 0 violations on every page and form step; Chromium, WebKit, Firefox (grid fallback without scroll timelines); Lighthouse phone 97, desktop 100, accessibility and best practices 100, SEO 100 once `noindex` lifts |
 | Gate | GO (the Studio and performance deploys at the end of `security/golive/2026-10-01-full-GO.md`) |
 | Indexing | `noindex` until `VITE_SITE_URL` is set at the domain step |
@@ -146,12 +146,13 @@ custom domains for the apex and `www` (www 301s to the apex), `VITE_SITE_URL` se
 sitemap, JSON-LD, security.txt to HARA's Gmail), deployed as version `d31549ec`.
 
 The zone went active at 20:40 ET the same evening; the live checks and the security gate against
-the domain are GO (`security/golive/2026-10-14-domain-GO.md`).
+the domain are GO (`security/golive/2026-10-14-domain-GO.md`). Email went live at 21:58 ET through
+Resend (version `9f86e130`): the two held requests reached HARA at 22:00, and a test request at 22:01
+delivered both the HARA notification and the requester's confirmation.
 
 Still open, in order (checklist in `docs/DEPLOY.md`, "Connect the domain"): the beacon Cloudflare
-injects (blocked by our CSP, console error); a real request from a phone; DNSSEC (Cloudflare, then
-the DS record at GoDaddy); `workers_dev: false`; email (no Resend account yet, `EMAIL_MODE` stays
-`hold`); Search Console and Bing with the sitemap; then `python3 build.py` in `~/hara-print` (the
+injects (blocked by our CSP, console error); DNSSEC (Cloudflare, then the DS record at GoDaddy);
+`workers_dev: false`; Search Console and Bing with the sitemap; then `python3 build.py` in `~/hara-print` (the
 URL check passes) and the client signs the approval form.
 
 ## 4. The hero logo intro (live on production)
